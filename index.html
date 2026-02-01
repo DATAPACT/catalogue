@@ -3,24 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <title>Datapact Tools Catalogue</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { 
       height: 100%; 
-      font-family: Arial, sans-serif; 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
       overflow-x: hidden;
     }
     
     body { 
       display: flex; 
-      background: #f5f5f5;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
     }
 
     .sidebar { 
-      width: 300px; 
-      background: #2c3e50; 
+      width: 320px; 
+      background: linear-gradient(180deg, #2c3e50 0%, #1a252f 100%); 
       color: white; 
-      padding: 2rem; 
+      padding: 2.5rem 1.5rem; 
       height: 100vh; 
       overflow-y: auto;
       flex-shrink: 0;
@@ -28,121 +30,193 @@
       left: 0;
       top: 0;
       z-index: 1000;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.1);
     }
 
-    .sidebar h1 { margin-bottom: 2rem; }
+    .sidebar h1 { 
+      margin-bottom: 2.5rem; 
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
     .home-btn { 
       display: block; 
-      padding: 0.75rem 1rem 0.75rem 1.5rem; 
+      padding: 1rem 1.5rem; 
       color: #3498db; 
-      background: #34495e; 
+      background: rgba(255,255,255,0.1); 
       text-decoration: none; 
-      border-radius: 6px; 
-      margin-bottom: 1.5rem;
+      border-radius: 12px; 
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s ease;
     }
-    .home-btn:hover { background: #3498db; color: white; }
+    .home-btn:hover { 
+      background: #3498db; 
+      color: white; 
+      transform: translateX(5px);
+      box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+    }
 
-    .category { margin-bottom: 1.5rem; }
-    .category h3 { color: #3498db; margin-bottom: 0.5rem; }
+    .category { margin-bottom: 2rem; }
+    .category h3 { 
+      color: #3498db; 
+      margin-bottom: 1rem; 
+      font-size: 1.2rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid rgba(52,152,219,0.3);
+    }
 
     .tool a { 
       display: block; 
-      padding: 0.75rem 1rem 0.75rem 1.5rem; 
+      padding: 1rem 1.5rem; 
       color: #bdc3c7; 
       text-decoration: none; 
-      border-radius: 6px;
-      transition: all 0.3s; 
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
+      transition: all 0.3s ease; 
+      position: relative;
+      border-left: 4px solid transparent;
     }
-    .tool a:hover, .tool a.active { background: #3498db; color: white; }
+    .tool a:hover, .tool a.active { 
+      background: rgba(52,152,219,0.2); 
+      color: white; 
+      border-left-color: #3498db;
+      transform: translateX(8px);
+    }
 
     .main { 
-      margin-left: 300px;
+      margin-left: 320px;
       flex: 1;
-      padding: 2rem;
+      padding: 3rem;
       min-height: 100vh;
-      max-width: calc(100vw - 300px);
-      overflow-x: hidden;
+      max-width: calc(100vw - 320px);
     }
 
-    #main-content { min-height: 70vh; }
+    #main-content { min-height: 80vh; }
 
     .content-card {
-      background: white; 
-      padding: 3rem; 
-      border-radius: 12px; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+      background: rgba(255, 255, 255, 0.95); 
+      backdrop-filter: blur(20px);
+      padding: 3.5rem; 
+      border-radius: 24px; 
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1); 
       text-align: center;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: all 0.4s ease;
+    }
+
+    .content-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.15);
     }
 
     .markdown-content {
-      padding: 2rem;
-      line-height: 1.6;
+      padding: 1rem 0;
+      line-height: 1.8;
       font-size: 16px;
       text-align: left;
     }
 
     .markdown-content h1, .markdown-content h2, .markdown-content h3 {
       color: #2c3e50;
-      margin-top: 2rem;
-      margin-bottom: 1rem;
+      margin: 2rem 0 1rem 0;
     }
 
-    .markdown-content h1 { font-size: 2rem; }
-    .markdown-content h2 { font-size: 1.5rem; }
-    .markdown-content h3 { font-size: 1.25rem; }
+    .markdown-content h1 { font-size: 2.5rem; font-weight: 700; }
+    .markdown-content h2 { font-size: 2rem; font-weight: 600; }
+    .markdown-content h3 { font-size: 1.5rem; font-weight: 600; }
 
-    .markdown-content p { margin-bottom: 1rem; }
+    .markdown-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      margin: 2rem 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .markdown-content p { margin-bottom: 1.5rem; }
     .markdown-content code { 
-      background: #f4f4f4; 
-      padding: 0.2rem 0.4rem; 
-      border-radius: 4px; 
-      font-family: monospace;
+      background: #f8f9fa; 
+      padding: 0.3rem 0.6rem; 
+      border-radius: 6px; 
+      font-family: 'Monaco', 'Menlo', monospace;
+      color: #e83e8c;
     }
     .markdown-content pre { 
-      background: #2c3e50; 
-      color: white; 
-      padding: 1rem; 
-      border-radius: 8px; 
+      background: linear-gradient(135deg, #2c3e50, #34495e); 
+      color: #ecf0f1; 
+      padding: 2rem; 
+      border-radius: 16px; 
       overflow-x: auto;
-      margin: 1rem 0;
+      margin: 2rem 0;
+      position: relative;
+    }
+    .markdown-content blockquote {
+      border-left: 4px solid #3498db;
+      background: rgba(52,152,219,0.1);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      border-radius: 0 12px 12px 0;
     }
     .markdown-content ul, .markdown-content ol { 
       padding-left: 2rem; 
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
-    .markdown-content strong { font-weight: bold; }
+    .markdown-content strong { font-weight: 600; }
+    .markdown-content a {
+      color: #3498db;
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .markdown-content a:hover {
+      border-bottom-color: #3498db;
+      color: #2980b9;
+    }
+
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      color: #7f8c8d;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(52,152,219,0.2);
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .main { margin-left: 0; }
+    }
   </style>
 </head>
 <body>
   <!-- FIXED LEFT SIDEBAR -->
-  <nav class="sidebar">
-    <h1>📋 Tools Catalogue</h1>
+  <nav class="sidebar" id="sidebar">
+    <h1>📋 Datapact Tools</h1>
     <a href="#" class="home-btn" onclick="loadHome(); return false;">🏠 Home</a>
     
-    <div class="category">
-      <h3>PipelineR</h3>
-      <div class="tool"><a href="#" data-repo="KubePipe" onclick="loadTool('KubePipe', this); return false;">KubePipe</a></div>
-    </div>
-    
-    <div class="category">
-      <h3>PolicyR</h3>
-      <div class="tool"><a href="#" data-repo="Policy-Editor" onclick="loadTool('Policy-Editor', this); return false;">Policy Editor</a></div>
-    </div>
-    
-    <div class="category">
-      <h3>TrustR</h3>
-      <!-- Future tools -->
-    </div>
-    
-    <div class="category">
-      <h3>AssessR</h3>
-      <div class="tool"><a href="#" data-repo="DPIA-Support" onclick="loadTool('DPIA-Support', this); return false;">DPIA Support</a></div>
-    </div>
-    
-    <div class="category">
-      <h3>ApplyR</h3>
-      <!-- Future tools -->
+    <div id="tools-menu">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Loading tools...</p>
+      </div>
     </div>
   </nav>
 
@@ -150,108 +224,204 @@
   <main class="main">
     <div id="main-content">
       <div class="content-card">
-        <h1>Loading...</h1>
+        <div class="loading">
+          <div class="spinner"></div>
+          <h1>Loading...</h1>
+        </div>
       </div>
     </div>
   </main>
 
   <script>
-    // Simple markdown parser (basic but functional)
-    function parseMarkdown(md) {
-      let html = md;
-      
-      // Headers
-      html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
-      html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
-      html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
-      
-      // Bold and italic
-      html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-      
-      // Code blocks
-      html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-      
-      // Lists (basic)
-      html = html.replace(/^\s*[-*+] (.*$)/gim, '<li>$1</li>');
-      
-      // Line breaks to paragraphs
-      html = html.replace(/\n\s*\n/g, '</p><p>');
-      html = html.split('\n').join('<br>');
-      
-      return '<div>' + html + '</div>';
+    let toolsConfig = null;
+    let currentActiveLink = null;
+
+    // Enhanced marked.js configuration for GitHub-flavored markdown
+    marked.setOptions({
+      breaks: true,
+      gfm: true,
+      headerIds: false
+    });
+
+    // Load tools configuration and populate sidebar
+    async function loadToolsConfig() {
+      try {
+        const response = await fetch('config/tools.yml');
+        if (!response.ok) throw new Error('tools.yml not found');
+        
+        const ymlText = await response.text();
+        toolsConfig = parseYAML(ymlText);
+        
+        renderSidebar(toolsConfig);
+      } catch (error) {
+        console.error('Failed to load tools.yml:', error);
+        document.getElementById('tools-menu').innerHTML = `
+          <div style="text-align: center; padding: 2rem; color: #e74c3c;">
+            <h3>⚠️ Configuration Error</h3>
+            <p>Could not load <code>DATAPACT/catalogue/config/tools.yml</code></p>
+            <p>Please ensure the file exists and is valid YAML.</p>
+          </div>
+        `;
+      }
     }
 
-    // Load home page first
-    loadHome();
-    
-    function loadHome() {
-      fetch('home.html')
-        .then(r => {
-          if (!r.ok) throw new Error('home.html not found');
-          return r.text();
-        })
-        .then(html => {
-          document.getElementById('main-content').innerHTML = html;
-        })
-        .catch(err => {
-          document.getElementById('main-content').innerHTML = 
-            '<div class="content-card"><h1>📋 Datapact Tools Catalogue</h1><p><strong>Welcome!</strong> Browse tools in the sidebar to get started.</p></div>';
-        });
+    // Simple YAML parser (handles basic structure)
+    function parseYAML(yml) {
+      const lines = yml.split('\n');
+      const config = { categories: [] };
+      let currentCategory = null;
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+
+        if (trimmed.startsWith('categories:')) continue;
+        
+        if (trimmed.match(/^-\s+name:\s+"(.+?)"/)) {
+          const name = trimmed.match(/^-\s+name:\s+"(.+?)"$/)[1];
+          currentCategory = { name, tools: [] };
+          config.categories.push(currentCategory);
+        } else if (currentCategory && trimmed.match(/^-\s+name:\s+"(.+?)"/)) {
+          const toolName = trimmed.match(/^-\s+name:\s+"(.+?)"$/)[1];
+          currentCategory.tools.push({ name: toolName, repo: toolName.replace(/[^a-zA-Z0-9-]/g, '-') });
+        }
+      }
+
+      return config;
     }
-    
-    function loadTool(repo, linkElement) {
-      document.querySelectorAll('.tool a').forEach(a => a.classList.remove('active'));
-      linkElement.classList.add('active');
+
+    // Render sidebar from config
+    function renderSidebar(config) {
+      let html = '';
+      config.categories.forEach(category => {
+        html += `
+          <div class="category">
+            <h3>${category.name}</h3>
+            ${category.tools.map(tool => `
+              <div class="tool">
+                <a href="#" data-repo="${tool.repo}" onclick="loadTool('${tool.repo}', this); return false;">
+                  ${tool.name}
+                </a>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      });
+      document.getElementById('tools-menu').innerHTML = html;
+    }
+
+    // Load home page
+    async function loadHome() {
+      if (currentActiveLink) currentActiveLink.classList.remove('active');
       
-      // Try multiple possible paths for README
+      try {
+        const response = await fetch('home.html');
+        if (response.ok) {
+          const html = await response.text();
+          document.getElementById('main-content').innerHTML = html;
+          return;
+        }
+      } catch (e) {
+        console.log('home.html not found, showing default home');
+      }
+
+      // Default home content
+      document.getElementById('main-content').innerHTML = `
+        <div class="content-card">
+          <h1>📋 Datapact Tools Catalogue</h1>
+          <p><strong>Welcome to the Datapact Tools Catalogue!</strong></p>
+          <p>Browse tools from various categories in the sidebar to get started. Each tool displays its full README documentation including images and formatting.</p>
+          <div style="margin-top: 2rem; font-size: 0.9rem; color: #7f8c8d;">
+            <p><strong>🔄 Auto-refresh:</strong> Save changes to README.md files and refresh the page (F5) to see updates instantly.</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Load tool README with image support
+    async function loadTool(repo, linkElement) {
+      if (currentActiveLink) currentActiveLink.classList.remove('active');
+      linkElement.classList.add('active');
+      currentActiveLink = linkElement;
+
+      const content = document.getElementById('main-content');
+      content.innerHTML = `
+        <div class="content-card">
+          <div class="loading">
+            <div class="spinner"></div>
+            <h2>Loading ${repo}...</h2>
+          </div>
+        </div>
+      `;
+
+      // Try multiple README paths (prioritizing your structure)
       const paths = [
         `output/${repo}/README.md`,
         `output/${repo}/readme.md`,
-        `output/${repo}/README.MD`,
-        `output/${repo}/docs/README.md`,
-        `output/${repo}/docs/readme.md`
+        `output/${repo}/README.MD`
       ];
-      
-      function tryNextPath(index) {
-        if (index >= paths.length) {
-          // Show debug info
-          document.getElementById('main-content').innerHTML = `
-            <div class="content-card">
-              <h1 style="color: #2c3e50;">${linkElement.textContent}</h1>
-              <p><strong>❌ README not found</strong> in any expected location</p>
-              <p>Checked paths:</p>
-              <ul>
-                ${paths.map(p => `<li><code>${p}</code></li>`).join('')}
-              </ul>
-              <p>✅ Verify files exist at these exact paths relative to <strong>index.html</strong></p>
-            </div>
-          `;
-          return;
-        }
-        
-        fetch(paths[index])
-          .then(r => {
-            if (!r.ok) throw new Error(`404: ${paths[index]}`);
-            return r.text();
-          })
-          .then(md => {
-            document.getElementById('main-content').innerHTML = `
+
+      for (const path of paths) {
+        try {
+          const response = await fetch(path);
+          if (response.ok) {
+            const md = await response.text();
+            const htmlContent = marked.parse(md);
+            
+            // Fix image paths for your structure
+            const finalHtml = htmlContent
+              .replace(/src="([^"]*?)"/g, (match, src) => {
+                // Handle relative images in output/[TOOL]/images/
+                if (src.startsWith('images/')) {
+                  return `src="output/${repo}/${src}"`;
+                }
+                return match;
+              });
+
+            content.innerHTML = `
               <div class="content-card">
                 <h1 style="color: #2c3e50; margin-bottom: 2rem;">${linkElement.textContent}</h1>
-                <div class="markdown-content">${parseMarkdown(md)}</div>
+                <div class="markdown-content">${finalHtml}</div>
               </div>
             `;
-          })
-          .catch(err => {
-            console.log(`Failed ${paths[index]}:`, err);
-            tryNextPath(index + 1);
-          });
+            return;
+          }
+        } catch (e) {
+          console.log(`Failed to load ${path}`);
+        }
       }
-      
-      tryNextPath(0);
+
+      // Fallback error message
+      content.innerHTML = `
+        <div class="content-card">
+          <h1 style="color: #2c3e50;">${repo}</h1>
+          <div style="color: #e74c3c; padding: 2rem;">
+            <h3>❌ README not found</h3>
+            <p>Checked paths:</p>
+            <ul style="text-align: left;">
+              ${paths.map(p => `<li><code>${p}</code></li>`).join('')}
+            </ul>
+            <p><strong>Expected location:</strong> <code>output/${repo}/README.md</code></p>
+          </div>
+        </div>
+      `;
     }
+
+    // Initialize on page load
+    window.addEventListener('load', () => {
+      loadToolsConfig();
+      loadHome();
+      
+      // Auto-refresh every 30 seconds (optional - for demo purposes)
+      // setInterval(() => location.reload(), 30000);
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        loadHome();
+      }
+    });
   </script>
 </body>
 </html>
