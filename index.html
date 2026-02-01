@@ -4,11 +4,20 @@
   <title>Datapact Tools Catalogue</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; }
-    .container { display: flex; min-height: 100vh; }
+    html, body { height: 100%; overflow: hidden; }
+    .container { 
+      display: flex; 
+      height: 100vh; 
+      width: 100%; 
+    }
     .sidebar { 
-      width: 300px; background: #2c3e50; color: white; padding: 2rem; 
-      position: fixed; height: 100vh; overflow-y: auto;
+      width: 300px; 
+      background: #2c3e50; 
+      color: white; 
+      padding: 2rem; 
+      position: fixed; 
+      height: 100vh; 
+      overflow-y: auto;
     }
     .sidebar h1 { margin-bottom: 2rem; }
     .home-btn { 
@@ -25,78 +34,15 @@
       transition: all 0.3s; position: relative;
     }
     .tool a:hover, .tool a.active { background: #3498db; color: white; }
-    .main { margin-left: 300px; padding: 2rem; background: #f5f5f5; min-height: 100vh; }
+    .main { 
+      margin-left: 300px; 
+      padding: 2rem; 
+      background: #f5f5f5; 
+      flex: 1; 
+      overflow-y: auto;
+      height: 100vh;
+    }
     #main-content { min-height: 70vh; }
   </style>
 </head>
-<body>
-  <div class="container">
-    <!-- FIXED LEFT SIDEBAR -->
-    <nav class="sidebar">
-      <h1>📋 Tools Catalogue</h1>
-      <a href="#" class="home-btn" onclick="loadHome()">🏠 Home</a>
-      
-      <div class="category">
-        <h3>PipelineR</h3>
-        <div class="tool"><a href="#" data-repo="KubePipe" onclick="loadTool('KubePipe')">KubePipe</a></div>
-      </div>
-      
-      <div class="category">
-        <h3>PolicyR</h3>
-        <div class="tool"><a href="#" data-repo="Policy-Editor" onclick="loadTool('Policy-Editor')">Policy Editor</a></div>
-      </div>
-      
-      <div class="category">
-        <h3>TrustR</h3>
-        <!-- Future tools -->
-      </div>
-      
-      <div class="category">
-        <h3>AssessR</h3>
-        <div class="tool"><a href="#" data-repo="DPIA-Support" onclick="loadTool('DPIA-Support')">DPIA Support</a></div>
-      </div>
-      
-      <div class="category">
-        <h3>ApplyR</h3>
-        <!-- Future tools -->
-      </div>
-    </nav>
-
-    <!-- MAIN CONTENT -->
-    <main class="main">
-      <div id="main-content">
-        <div style="background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;">
-          <h1>Loading...</h1>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <script>
-    // Load home page first
-    loadHome();
-    
-    function loadHome() {
-      fetch('home.html')
-        .then(r => r.text())
-        .then(html => {
-          document.getElementById('main-content').innerHTML = html;
-        });
-    }
-    
-    function loadTool(repo) {
-      // Clear active states
-      document.querySelectorAll('.tool a').forEach(a => a.classList.remove('active'));
-      event.target.classList.add('active');
-      
-      // Load README iframe
-      document.getElementById('main-content').innerHTML = `
-        <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-          <h1 style="color: #2c3e50; margin-bottom: 2rem;">${event.target.textContent}</h1>
-          <iframe src="output/${repo}/docs/README.md" style="width:100%; height:70vh; border:none; border-radius:8px;"></iframe>
-        </div>
-      `;
-    }
-  </script>
-</body>
-</html>
+<b
