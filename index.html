@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>Datapact Tools Catalogue</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -12,66 +13,24 @@
       overflow: hidden;
     }
 
-    /* Sidebar fixed on the left */
     .sidebar {
-      width: 300px;
+      width: 250px;
       background: #2c3e50;
       color: white;
-      padding: 2rem;
-      position: fixed;
-      height: 100%;
+      padding: 1rem;
       overflow-y: auto;
+      flex-shrink: 0;
     }
 
-    .sidebar h1 { margin-bottom: 2rem; }
+    .sidebar h1 { margin-bottom: 1rem; font-size: 1.2rem; }
 
-    .home-btn {
-      display: block;
-      padding: 0.75rem 1rem 0.75rem 1.5rem;
-      color: #3498db;
-      background: #34495e;
-      text-decoration: none;
-      border-radius: 6px;
-      margin-bottom: 1.5rem;
-    }
-    .home-btn:hover { background: #3498db; color: white; }
-
-    .category { margin-bottom: 1.5rem; }
-    .category h3 { color: #3498db; margin-bottom: 0.5rem; }
-
+    .category { margin-bottom: 1rem; }
+    .category h3 { color: #3498db; margin-bottom: 0.5rem; font-size: 1rem; }
     .tool a {
       display: block;
-      padding: 0.75rem 1rem 0.75rem 1.5rem;
+      padding: 0.3rem 0.5rem;
       color: #bdc3c7;
       text-decoration: none;
-      border-radius: 6px;
-      transition: all 0.3s;
-      position: relative;
+      border-radius: 4px;
     }
-    .tool a:hover, .tool a.active { background: #3498db; color: white; }
-
-    /* Main content to the right of fixed sidebar */
-    .main {
-      margin-left: 300px; /* same as sidebar width */
-      padding: 2rem;
-      background: #f5f5f5;
-      height: 100%;
-      overflow-y: auto;
-    }
-
-    #main-content { min-height: 70vh; }
-  </style>
-</head>
-<body>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h1>Catalogue</h1>
-    <a href="#" class="home-btn">Home</a>
-
-    <div class="category">
-      <h3>Category 1</h3>
-      <div class="tool">
-        <a href="#">Tool 1</a>
-        <a href="#">Tool 2</a>
-      </div>
-    </d
+    .too
