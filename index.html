@@ -31,10 +31,12 @@
   </style>
 </head>
 <body>
-<nav class="sidebar" id="sidebar">
+<nav class="sidebar">
   <h1>📋 Tools Catalogue</h1>
   <a href="#" class="home-btn" onclick="loadHome(); return false;">🏠 Home</a>
-  <div id="categories"></div>
+  <div id="categories">
+    <!-- DYNAMIC CATEGORIES LOAD HERE -->
+  </div>
 </nav>
 
   <main class="main">
@@ -49,60 +51,54 @@
     // Configure marked
     marked.setOptions({ gfm: true, breaks: true });
 
-    async function loadCategories() {
+   async function loadCategories() {
   try {
-    const response = await fetch('config/tools.yml');
-    const yamlText = await response.text();
+    const res = await fetch('config/tools.yml');
+    const text = await res.text();
     
-    // Parse YAML manually (extract tools array)
-    const tools = [];
-    const categories = [];
+    // Simple line-by-line parsing that matches your exact YAML
+    const lines = text.split('\n');
+    const toolsByCategory = {};
     
-    // Extract categories first
-    const catMatch = yamlText.match(/categories:\s*\[(.*?)\]/s);
-    if (catMatch) {
-      catMatch[1].split(',').forEach(cat => {
-        categories.push(cat.trim().replace(/["']/g, ''));
-      });
-    }
-    
-    // Extract tools with their category/name
-    const toolRegex = /- repo: "([^"]+)"[^}]+category: "([^"]+)"\s*(?:name: "([^"]+)")?/gm;
-    let match;
-    while ((match = toolRegex.exec(yamlText)) !== null) {
-      tools.push({
-        repo: match[1],
-        category: match[2],
-        name: match[3] || match[1].replace(/-/g, ' ')
-      });
-    }
-    
-    const sidebar = document.getElementById('categories');
-    sidebar.innerHTML = '';
-    
-    categories.forEach(category => {
-      const catTools = tools.filter(tool => tool.category === category);
-      if (catTools.length > 0) {
-        const catDiv = document.createElement('div');
-        catDiv.className = 'category';
-        catDiv.innerHTML = `<h3>${category}</h3>`;
+    lines.forEach(line => {
+      if (line.includes('category: ')) {
+        const category = line.match(/category: ["']([^"']+)["']/)?.[1];
+        const repoMatch = line.match(/repo: ["']([^"']+)["']/);
+        const nameMatch = line.match(/name: ["']([^"']+)["']/);
         
-        catTools.forEach(tool => {
-          const toolDiv = document.createElement('div');
-          toolDiv.className = 'tool';
-          toolDiv.innerHTML = `<a href="#" data-repo="${tool.repo}" onclick="loadTool('${tool.repo}', this); return false;">${tool.name}</a>`;
-          catDiv.appendChild(toolDiv);
-        });
-        
-        sidebar.appendChild(catDiv);
+        if (category && repoMatch) {
+          const repo = repoMatch[1];
+          const name = nameMatch ? nameMatch[1] : repo.replace(/-/g, ' ');
+          
+          if (!toolsByCategory[category]) toolsByCategory[category] = [];
+          toolsByCategory[category].push({repo, name});
+        }
       }
     });
-  } catch (e) {
-    console.error('Failed to load categories:', e);
+    
+    const categoriesDiv = document.getElementById('categories');
+    categoriesDiv.innerHTML = '';
+    
+    Object.keys(toolsByCategory).forEach(category => {
+      const catDiv = document.createElement('div');
+      catDiv.className = 'category';
+      catDiv.innerHTML = `<h3>${category}</h3>`;
+      
+      toolsByCategory[category].forEach(tool => {
+        const toolDiv = document.createElement('div');
+        toolDiv.className = 'tool';
+        toolDiv.innerHTML = `<a href="#" data-repo="${tool.repo}" onclick="loadTool('${tool.repo}', this); return false;">${tool.name}</a>`;
+        catDiv.appendChild(toolDiv);
+      });
+      
+      categoriesDiv.appendChild(catDiv);
+    });
+  } catch(e) {
+    console.log('YAML load failed, using fallback');
   }
 }
 
-    
+ 
     function loadHome() {
       fetch('home.html')
         .then(r => r.ok ? r.text() : Promise.reject())
