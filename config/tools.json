@@ -1,0 +1,29 @@
+{
+  "categories": ["PipelineR","PolicyR","TrustR","AssessR","ApplyR"],
+  "tools": [
+    {
+      "repo": "DPIA-Support",
+      "name": "DPIA Support",
+      "category": "AssessR",
+      "branch": "main",
+      "readme_path": "docs/README.md",
+      "docs_root": "docs"
+    },
+    {
+      "repo": "Policy-Editor",
+      "name": "Policy Editor",
+      "category": "PolicyR",
+      "branch": "main",
+      "readme_path": "docs/README.md",
+      "docs_root": "docs"
+    },
+    {
+      "repo": "KubePipe",
+      "name": "KubePipe",
+      "category": "PipelineR",
+      "branch": "main",
+      "readme_path": "docs/README.md",
+      "docs_root": "docs"
+    }
+  ]
+}
