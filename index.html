@@ -1,41 +1,90 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
   <title>Datapact Tools Catalogue</title>
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    html, body { height:100%; font-family:sans-serif; }
-    body { display:flex; height:100%; overflow:hidden; }
-
-    .sidebar { width:250px; background:#2c3e50; color:white; padding:1rem; overflow-y:auto; flex-shrink:0; }
-    .sidebar h1 { margin-bottom:1rem; }
-    .category { margin-bottom:1rem; }
-    .category h3 { color:#3498db; margin-bottom:0.5rem; }
-    .tool a { display:block; padding:0.3rem 0.5rem; color:#bdc3c7; text-decoration:none; border-radius:4px; }
-    .tool a:hover, .tool a.active { background:#3498db; color:white; }
-
-    .main { flex:1; padding:1rem; background:#f5f5f5; height:100%; overflow-y:auto; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; }
+    .container { display: flex; min-height: 100vh; }
+    .sidebar { 
+      width: 300px; background: #2c3e50; color: white; padding: 2rem; 
+      position: fixed; height: 100vh; overflow-y: auto;
+    }
+    .sidebar h1 { margin-bottom: 2rem; }
+    .category { margin-bottom: 1.5rem; }
+    .category h3 { color: #3498db; margin-bottom: 0.5rem; }
+    .tool a { 
+      display: block; padding: 0.75rem 1rem 0.75rem 1.5rem; 
+      color: #bdc3c7; text-decoration: none; border-radius: 0 0 6px 6px;
+      transition: all 0.3s; position: relative;
+    }
+    .tool a:hover, .tool a.active { background: #3498db; color: white; }
+    .main { margin-left: 300px; padding: 2rem; background: #f5f5f5; min-height: 100vh; }
+    .content { background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .content iframe { width: 100%; height: 70vh; border: none; border-radius: 8px; }
+    .tool-title { font-size: 2rem; color: #2c3e50; margin-bottom: 2rem; }
   </style>
 </head>
 <body>
+  <div class="container">
+    <!-- FIXED LEFT SIDEBAR -->
+    <nav class="sidebar">
+      <h1>📋 Tools Catalogue</h1>
+      
+      <div class="category">
+        <h3>PipelineR</h3>
+        <div class="tool"><a href="#" data-repo="KubePipe">KubePipe</a></div>
+      </div>
+      
+      <div class="category">
+        <h3>PolicyR</h3>
+        <div class="tool"><a href="#" data-repo="Policy-Editor">Policy Editor</a></div>
+      </div>
+      
+      <div class="category">
+        <h3>TrustR</h3>
+        <!-- Add tools here later -->
+      </div>
+      
+      <div class="category">
+        <h3>AssessR</h3>
+        <div class="tool"><a href="#" data-repo="DPIA-Support">DPIA Support</a></div>
+      </div>
+      
+      <div class="category">
+        <h3>ApplyR</h3>
+        <!-- Add tools here later -->
+      </div>
+    </nav>
 
-  <div class="sidebar">
-    <h1>Catalogue</h1>
-    <div id="menu"></div>
+    <!-- MAIN CONTENT AREA -->
+    <main class="main">
+      <div class="content">
+        <h1 class="tool-title">Select a tool from the left menu</h1>
+        <p>Click any tool name to load its live documentation below.</p>
+      </div>
+    </main>
   </div>
 
-  <div class="main" id="main-content"></div>
-
-  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
   <script>
-    const menuDiv = document.getElementById("menu");
-    const mainDiv = document.getElementById("main-content");
-
-    fetch('./config/tools.yml')
-      .then(r => r.text())
-      .then(yamlText => {
-        const config = jsyaml.load(yamlText);
-        buildMenu(config);
-        loadHome();
-      })
+    // Load tool when clicked
+    document.querySelectorAll('.tool a').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const repo = this.getAttribute('data-repo');
+        
+        // Update active menu item
+        document.querySelectorAll('.tool a').forEach(a => a.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Load README
+        document.querySelector('.tool-title').textContent = this.textContent;
+        document.querySelector('.content').innerHTML = `
+          <h1 class="tool-title">${this.textContent}</h1>
+          <iframe src="output/${repo}/docs/README.md" style="width:100%; height:70vh; border:none; border-radius:8px;"></iframe>
+        `;
+      });
+    });
+  </script>
+</body>
+</html>
