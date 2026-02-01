@@ -75,13 +75,42 @@
       text-align: center;
     }
 
-    iframe {
-      width: 100%;
-      height: 70vh;
-      border: none;
-      border-radius: 8px;
-      display: block;
+    .markdown-content {
+      padding: 2rem;
+      line-height: 1.6;
+      font-size: 16px;
     }
+
+    .markdown-content h1, .markdown-content h2, .markdown-content h3 {
+      color: #2c3e50;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .markdown-content h1 { font-size: 2rem; }
+    .markdown-content h2 { font-size: 1.5rem; }
+    .markdown-content h3 { font-size: 1.25rem; }
+
+    .markdown-content p { margin-bottom: 1rem; }
+    .markdown-content code { 
+      background: #f4f4f4; 
+      padding: 0.2rem 0.4rem; 
+      border-radius: 4px; 
+      font-family: monospace;
+    }
+    .markdown-content pre { 
+      background: #2c3e50; 
+      color: white; 
+      padding: 1rem; 
+      border-radius: 8px; 
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+    .markdown-content ul, .markdown-content ol { 
+      padding-left: 2rem; 
+      margin-bottom: 1rem;
+    }
+    .markdown-content strong { font-weight: bold; }
   </style>
 </head>
 <body>
@@ -126,7 +155,33 @@
   </main>
 
   <script>
-    // Load home page first (same directory as index.html)
+    // Simple markdown parser
+    function parseMarkdown(md) {
+      // Headers
+      md = md.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+      md = md.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+      md = md.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+      
+      // Bold and italic
+      md = md.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      md = md.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      
+      // Code blocks
+      md = md.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+      md = md.replace(/`([^`]+)`/g, '<code>$1</code>');
+      
+      // Lists
+      md = md.replace(/^\s*[-*+] (.*$)/gim, '<li>$1</li>');
+      md = md.replace(/(<li>.*<\/li>)/gim, '<ul>$1</ul>');
+      
+      // Paragraphs
+      md = md.replace(/\n\s*\n/g, '</p><p>');
+      md = md.split('\n').join('<br>');
+      
+      return '<p>' + md + '</p>';
+    }
+
+    // Load home page first
     loadHome();
     
     function loadHome() {
@@ -142,18 +197,34 @@
     }
     
     function loadTool(repo, linkElement) {
-      // Clear active states
       document.querySelectorAll('.tool a').forEach(a => a.classList.remove('active'));
       linkElement.classList.add('active');
       
-      // Load README iframe (same structure)
-      const readmeUrl = `output/${repo}/readme.md`;
-      document.getElementById('main-content').innerHTML = `
-        <div class="content-card">
-          <h1 style="color: #2c3e50; margin-bottom: 2rem;">${linkElement.textContent}</h1>
-          <iframe src="${readmeUrl}"></iframe>
-        </div>
-      `;
+      const readmeUrl = `output/${repo}/README.md`; // Capital README.md
+      
+      fetch(readmeUrl)
+        .then(r => {
+          if (!r.ok) throw new Error('File not found');
+          return r.text();
+        })
+        .then(md => {
+          const htmlContent = `
+            <div class="content-card">
+              <h1 style="color: #2c3e50; margin-bottom: 2rem;">${linkElement.textContent}</h1>
+              <div class="markdown-content">${parseMarkdown(md)}</div>
+            </div>
+          `;
+          document.getElementById('main-content').innerHTML = htmlContent;
+        })
+        .catch(err => {
+          document.getElementById('main-content').innerHTML = `
+            <div class="content-card">
+              <h1 style="color: #2c3e50;">${linkElement.textContent}</h1>
+              <p><strong>Error:</strong> Could not load README.md from output/${repo}/</p>
+              <p>Expected file: <code>output/${repo}/README.md</code></p>
+            </div>
+          `;
+        });
     }
   </script>
 </body>
