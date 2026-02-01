@@ -79,6 +79,7 @@
       padding: 2rem;
       line-height: 1.6;
       font-size: 16px;
+      text-align: left;
     }
 
     .markdown-content h1, .markdown-content h2, .markdown-content h3 {
@@ -155,30 +156,31 @@
   </main>
 
   <script>
-    // Simple markdown parser
+    // Simple markdown parser (basic but functional)
     function parseMarkdown(md) {
+      let html = md;
+      
       // Headers
-      md = md.replace(/^### (.*$)/gim, '<h3>$1</h3>');
-      md = md.replace(/^## (.*$)/gim, '<h2>$1</h2>');
-      md = md.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+      html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+      html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+      html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
       
       // Bold and italic
-      md = md.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      md = md.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
       
       // Code blocks
-      md = md.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-      md = md.replace(/`([^`]+)`/g, '<code>$1</code>');
+      html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
       
-      // Lists
-      md = md.replace(/^\s*[-*+] (.*$)/gim, '<li>$1</li>');
-      md = md.replace(/(<li>.*<\/li>)/gim, '<ul>$1</ul>');
+      // Lists (basic)
+      html = html.replace(/^\s*[-*+] (.*$)/gim, '<li>$1</li>');
       
-      // Paragraphs
-      md = md.replace(/\n\s*\n/g, '</p><p>');
-      md = md.split('\n').join('<br>');
+      // Line breaks to paragraphs
+      html = html.replace(/\n\s*\n/g, '</p><p>');
+      html = html.split('\n').join('<br>');
       
-      return '<p>' + md + '</p>';
+      return '<div>' + html + '</div>';
     }
 
     // Load home page first
@@ -186,13 +188,16 @@
     
     function loadHome() {
       fetch('home.html')
-        .then(r => r.text())
+        .then(r => {
+          if (!r.ok) throw new Error('home.html not found');
+          return r.text();
+        })
         .then(html => {
           document.getElementById('main-content').innerHTML = html;
         })
         .catch(err => {
           document.getElementById('main-content').innerHTML = 
-            '<div class="content-card"><h1>Welcome to Datapact Tools Catalogue</h1><p>Browse tools in the sidebar.</p></div>';
+            '<div class="content-card"><h1>📋 Datapact Tools Catalogue</h1><p><strong>Welcome!</strong> Browse tools in the sidebar to get started.</p></div>';
         });
     }
     
@@ -200,31 +205,52 @@
       document.querySelectorAll('.tool a').forEach(a => a.classList.remove('active'));
       linkElement.classList.add('active');
       
-      const readmeUrl = `output/${repo}/README.md`; // Capital README.md
+      // Try multiple possible paths for README
+      const paths = [
+        `output/${repo}/README.md`,
+        `output/${repo}/readme.md`,
+        `output/${repo}/README.MD`,
+        `output/${repo}/docs/README.md`,
+        `output/${repo}/docs/readme.md`
+      ];
       
-      fetch(readmeUrl)
-        .then(r => {
-          if (!r.ok) throw new Error('File not found');
-          return r.text();
-        })
-        .then(md => {
-          const htmlContent = `
-            <div class="content-card">
-              <h1 style="color: #2c3e50; margin-bottom: 2rem;">${linkElement.textContent}</h1>
-              <div class="markdown-content">${parseMarkdown(md)}</div>
-            </div>
-          `;
-          document.getElementById('main-content').innerHTML = htmlContent;
-        })
-        .catch(err => {
+      function tryNextPath(index) {
+        if (index >= paths.length) {
+          // Show debug info
           document.getElementById('main-content').innerHTML = `
             <div class="content-card">
               <h1 style="color: #2c3e50;">${linkElement.textContent}</h1>
-              <p><strong>Error:</strong> Could not load README.md from output/${repo}/</p>
-              <p>Expected file: <code>output/${repo}/README.md</code></p>
+              <p><strong>❌ README not found</strong> in any expected location</p>
+              <p>Checked paths:</p>
+              <ul>
+                ${paths.map(p => `<li><code>${p}</code></li>`).join('')}
+              </ul>
+              <p>✅ Verify files exist at these exact paths relative to <strong>index.html</strong></p>
             </div>
           `;
-        });
+          return;
+        }
+        
+        fetch(paths[index])
+          .then(r => {
+            if (!r.ok) throw new Error(`404: ${paths[index]}`);
+            return r.text();
+          })
+          .then(md => {
+            document.getElementById('main-content').innerHTML = `
+              <div class="content-card">
+                <h1 style="color: #2c3e50; margin-bottom: 2rem;">${linkElement.textContent}</h1>
+                <div class="markdown-content">${parseMarkdown(md)}</div>
+              </div>
+            `;
+          })
+          .catch(err => {
+            console.log(`Failed ${paths[index]}:`, err);
+            tryNextPath(index + 1);
+          });
+      }
+      
+      tryNextPath(0);
     }
   </script>
 </body>
