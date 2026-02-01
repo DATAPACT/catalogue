@@ -2,73 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Datapact Tools Catalogue V5 </title>
+  <title>Datapact Tools Catalogue</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; overflow-x: hidden; }
-    
+    html, body { height: 100%; font-family: Arial, sans-serif; overflow-x: hidden; }
     body { display: flex; background: #f5f5f5; }
-
-    .sidebar { 
-      width: 300px; background: #2c3e50; color: white; padding: 2rem; 
-      height: 100vh; overflow-y: auto; flex-shrink: 0; position: fixed; 
-      left: 0; top: 0; z-index: 1000;
-    }
-
+    .sidebar { width: 300px; background: #2c3e50; color: white; padding: 2rem; height: 100vh; overflow-y: auto; flex-shrink: 0; position: fixed; left: 0; top: 0; z-index: 1000; }
     .sidebar h1 { margin-bottom: 2rem; }
-    .home-btn { 
-      display: block; padding: 0.75rem 1rem 0.75rem 1.5rem; color: #3498db; 
-      background: #34495e; text-decoration: none; border-radius: 6px; margin-bottom: 1.5rem;
-    }
+    .home-btn { display: block; padding: 0.75rem 1rem 0.75rem 1.5rem; color: #3498db; background: #34495e; text-decoration: none; border-radius: 6px; margin-bottom: 1.5rem; }
     .home-btn:hover { background: #3498db; color: white; }
-
     .category { margin-bottom: 1.5rem; }
     .category h3 { color: #3498db; margin-bottom: 0.5rem; }
-    .tool a { 
-      display: block; padding: 0.75rem 1rem 0.75rem 1.5rem; color: #bdc3c7; 
-      text-decoration: none; border-radius: 6px; transition: all 0.3s; 
-    }
+    .tool a { display: block; padding: 0.75rem 1rem 0.75rem 1.5rem; color: #bdc3c7; text-decoration: none; border-radius: 6px; transition: all 0.3s; }
     .tool a:hover, .tool a.active { background: #3498db; color: white; }
-
-    .main { 
-      margin-left: 300px; flex: 1; padding: 2rem; min-height: 100vh; 
-      max-width: calc(100vw - 300px); overflow-x: hidden;
-    }
-
+    .main { margin-left: 300px; flex: 1; padding: 2rem; min-height: 100vh; max-width: calc(100vw - 300px); overflow-x: hidden; }
     #main-content { min-height: 70vh; }
-
     .content-card { background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    
-    .markdown-content { line-height: 1.6; font-size: 16px; }
-    .markdown-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-    .markdown-content th, .markdown-content td { border: 1px solid #ddd; padding: 0.75rem; text-align: left; }
-    .markdown-content th { background: #f8f9fa; font-weight: 600; }
-    .markdown-content img { max-width: 100%; height: auto; border-radius: 8px; margin: 1rem 0; }
-    .markdown-content a { color: #3498db; text-decoration: none; }
-    .markdown-content a:hover { text-decoration: underline; }
-    .markdown-content h1, .markdown-content h2, .markdown-content h3 { color: #2c3e50; margin: 1.5rem 0 1rem 0; }
+    .raw-markdown { background: #f8f9fa; padding: 2rem; border-radius: 8px; font-family: monospace; white-space: pre-wrap; overflow-x: auto; height: 70vh; }
   </style>
 </head>
 <body>
   <nav class="sidebar">
     <h1>📋 Tools Catalogue</h1>
     <a href="#" class="home-btn" onclick="loadHome(); return false;">🏠 Home</a>
-    
-    <div class="category">
-      <h3>PipelineR</h3>
-      <div class="tool"><a href="#" data-repo="KubePipe" onclick="loadTool('KubePipe', this); return false;">KubePipe</a></div>
-    </div>
-    
-    <div class="category">
-      <h3>PolicyR</h3>
-      <div class="tool"><a href="#" data-repo="Policy-Editor" onclick="loadTool('Policy-Editor', this); return false;">Policy Editor</a></div>
-    </div>
-    
+    <div class="category"><h3>PipelineR</h3><div class="tool"><a href="#" data-repo="KubePipe" onclick="loadTool('KubePipe', this); return false;">KubePipe</a></div></div>
+    <div class="category"><h3>PolicyR</h3><div class="tool"><a href="#" data-repo="Policy-Editor" onclick="loadTool('Policy-Editor', this); return false;">Policy Editor</a></div></div>
     <div class="category"><h3>TrustR</h3></div>
-    <div class="category">
-      <h3>AssessR</h3>
-      <div class="tool"><a href="#" data-repo="DPIA-Support" onclick="loadTool('DPIA-Support', this); return false;">DPIA Support</a></div>
-    </div>
+    <div class="category"><h3>AssessR</h3><div class="tool"><a href="#" data-repo="DPIA-Support" onclick="loadTool('DPIA-Support', this); return false;">DPIA Support</a></div></div>
     <div class="category"><h3>ApplyR</h3></div>
   </nav>
 
@@ -79,56 +39,6 @@
   </main>
 
   <script>
-    // Advanced markdown parser that fixes image paths
-    function renderMarkdown(md, repoPath) {
-      let html = md;
-      
-      // Fix image paths (./images/ -> output/repo/images/)
-      html = html.replace(/(!\[[^\]]*\]\()([^)]*)\)/g, (match, prefix, url) => {
-        if (url.startsWith('./') || url.startsWith('images/')) {
-          return prefix + repoPath + '/' + url.replace('./', '') + ')';
-        }
-        return match;
-      });
-      
-      // Headers
-      html = html.replace(/^###### (.*$)/gmi, '<h6>$1</h6>');
-      html = html.replace(/^##### (.*$)/gmi, '<h5>$1</h5>');
-      html = html.replace(/^#### (.*$)/gmi, '<h4>$1</h4>');
-      html = html.replace(/^### (.*$)/gmi, '<h3>$1</h3>');
-      html = html.replace(/^## (.*$)/gmi, '<h2>$1</h2>');
-      html = html.replace(/^# (.*$)/gmi, '<h1>$1</h1>');
-      
-      // Tables
-      html = html.replace(/^\|(.+)\|$/gmi, (match, row) => {
-        const cells = row.split('|').map(c => c.trim()).filter(c => c);
-        if (cells[0].match(/^-+$/)) return '<tr><td colspan="' + cells.length + '"></td></tr>';
-        if (row.match(/^ *-+: *\| *:-+: *\|/)) return '<tr>' + cells.map(c => '<th>' + c + '</th>').join('') + '</tr>';
-        return '<tr>' + cells.map(c => '<td>' + c + '</td>').join('') + '</tr>';
-      });
-      html = html.replace(/(\n\s*\|.*\|)+\n?/g, '<table>$&\n</table>');
-      
-      // Bold/italic
-      html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-      
-      // Links
-      html = html.replace(/\[([^\]]*)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
-      
-      // Code blocks
-      html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-      
-      // Lists
-      html = html.replace(/^(\s*)([-*+] )(.*$)/gmi, '$1<ul><li>$3</li></ul>');
-      
-      // Paragraphs and breaks
-      html = html.replace(/\n\s*\n/g, '</p><p>');
-      html = html.split('\n').join('<br>');
-      
-      return '<div class="markdown-content"><p>' + html + '</p></div>';
-    }
-
     loadHome();
     
     function loadHome() {
@@ -142,27 +52,27 @@
       document.querySelectorAll('.tool a').forEach(a => a.classList.remove('active'));
       linkElement.classList.add('active');
       
-      const paths = [`output/${repo}/README.md`, `output/${repo}/readme.md`];
-      const repoPath = `output/${repo}`;
-      
-      function tryPath(index) {
-        if (index >= paths.length) {
-          document.getElementById('main-content').innerHTML = 
-            `<div class="content-card"><h1 style="color:#2c3e50;">${linkElement.textContent}</h1><p>README.md not found in ${repoPath}</p></div>`;
-          return;
-        }
-        
-        fetch(paths[index]).then(r => r.ok ? r.text() : Promise.reject()).then(md => {
+      fetch(`output/${repo}/README.md`)
+        .then(r => {
+          if (!r.ok) throw new Error('File not found');
+          return r.text();
+        })
+        .then(md => {
           document.getElementById('main-content').innerHTML = `
             <div class="content-card">
               <h1 style="color: #2c3e50; margin-bottom: 2rem;">${linkElement.textContent}</h1>
-              ${renderMarkdown(md, repoPath)}
+              <div class="raw-markdown">${md}</div>
             </div>
           `;
-        }).catch(() => tryPath(index + 1));
-      }
-      
-      tryPath(0);
+        })
+        .catch(err => {
+          document.getElementById('main-content').innerHTML = `
+            <div class="content-card">
+              <h1 style="color: #2c3e50;">${linkElement.textContent}</h1>
+              <p>Could not load output/${repo}/README.md</p>
+            </div>
+          `;
+        });
     }
   </script>
 </body>
