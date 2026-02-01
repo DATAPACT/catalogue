@@ -19,9 +19,9 @@ tools:
     category: "PolicyR"
     branch: "main"
     readme_path: "docs/README.md"
-    docs_root: "doc
+    docs_root: "docs"
   - repo: "KubePipe"
     category: "PipelineR"      # Display name defaults to repo name if not set
     branch: "main"
     readme_path: "docs/README.md"
-    docs_root: "doc
+    docs_root: "docs"
