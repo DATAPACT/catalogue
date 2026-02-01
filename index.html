@@ -7,7 +7,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { height: 100%; font-family: Arial, sans-serif; overflow-x: hidden; }
     body { display: flex; background: #f5f5f5; }
-    
+
     .sidebar { 
       width: 300px; background: #2c3e50; color: white; padding: 2rem; 
       height: 100vh; overflow-y: auto; flex-shrink: 0; position: fixed; left: 0; top: 0; z-index: 1000;
@@ -23,7 +23,7 @@
     .main { margin-left: 300px; flex: 1; padding: 2rem; min-height: 100vh; max-width: calc(100vw - 300px); overflow-x: hidden; }
     #main-content { min-height: 70vh; }
     .content-card { background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; }
-    
+
     .markdown-content { padding: 2rem; line-height: 1.6; font-size: 16px; text-align: left; }
     .markdown-content h1, .markdown-content h2, .markdown-content h3 { color: #2c3e50; margin-top: 2rem; margin-bottom: 1rem; }
     .markdown-content h1 { font-size: 2rem; }
@@ -38,15 +38,12 @@
   </style>
 </head>
 <body>
-  <!-- FIXED LEFT SIDEBAR -->
   <nav class="sidebar">
     <h1>📋 Tools Catalogue</h1>
     <a href="#" class="home-btn" onclick="loadHome(); return false;">🏠 Home</a>
-    
     <div id="sidebar-categories"></div>
   </nav>
 
-  <!-- MAIN CONTENT -->
   <main class="main">
     <div id="main-content">
       <div class="content-card">
@@ -56,16 +53,67 @@
   </main>
 
   <script>
-    // ----------- MARKDOWN PARSER -----------
-    function parseMarkdown(md, basePath) {
+    // ----------- LIST ALL TOOLS AUTOMATICALLY -----------
+    async function fetchTools() {
+      // fetch JSON file listing folders, or dynamically generate in server-side
+      // Here we assume all folders in 'output' are tools
+      // Since GitHub Pages does not allow folder listing, you can manually maintain tools.json
+      // Example format:
+      // [
+      //   {"name":"KubePipe","repo":"KubePipe","category":"PipelineR"},
+      //   {"name":"Policy Editor","repo":"Policy-Editor","category":"PolicyR"}
+      // ]
+      try {
+        const res = await fetch('tools.json');
+        if(!res.ok) throw new Error();
+        const tools = await res.json();
+        return tools;
+      } catch {
+        // fallback for testing
+        return [
+          { name: "KubePipe", repo: "KubePipe", category: "PipelineR" },
+          { name: "Policy Editor", repo: "Policy-Editor", category: "PolicyR" },
+          { name: "DPIA Support", repo: "DPIA-Support", category: "AssessR" }
+        ];
+      }
+    }
+
+    async function buildSidebar() {
+      const tools = await fetchTools();
+      const container = document.getElementById('sidebar-categories');
+      const categories = [...new Set(tools.map(t=>t.category))];
+
+      container.innerHTML = '';
+      categories.forEach(cat => {
+        const catDiv = document.createElement('div');
+        catDiv.className = 'category';
+        catDiv.innerHTML = `<h3>${cat}</h3>`;
+        tools.filter(t=>t.category===cat).forEach(tool=>{
+          const toolDiv = document.createElement('div');
+          toolDiv.className = 'tool';
+          toolDiv.innerHTML = `<a href="#" data-repo="${tool.repo}" onclick="loadTool('${tool.repo}', this); return false;">${tool.name}</a>`;
+          catDiv.appendChild(toolDiv);
+        });
+        container.appendChild(catDiv);
+      });
+    }
+
+    // ----------- MARKDOWN PARSER WITH IMAGE FIX -----------
+    function parseMarkdown(md, repo, folderPath) {
       let html = md;
+
+      // Fix Markdown images to raw.githubusercontent URLs
+      html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g,(m,alt,src)=>{
+        if (/^(https?:)?\/\//.test(src)) return `<img src="${src}" alt="${alt}">`;
+        return `<img src="https://raw.githubusercontent.com/<username>/<repo>/main/${folderPath}${src}" alt="${alt}">`;
+      });
 
       // Headers
       html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
       html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
       html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
 
-      // Bold and italic
+      // Bold/italic
       html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
       html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
 
@@ -73,55 +121,19 @@
       html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
       html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
 
-      // Lists (basic)
+      // Lists
       html = html.replace(/^\s*[-*+] (.*$)/gim, '<li>$1</li>');
 
       // Paragraphs
       html = html.replace(/\n\s*\n/g, '</p><p>');
       html = html.split('\n').join('<br>');
 
-      // Fix relative image paths
-      html = html.replace(/<img src="(?!https?:\/\/|\/)([^"]+)"/g, `<img src="${basePath}$1"`);
-
-      // Fix relative links
-      html = html.replace(/<a href="(?!https?:\/\/|\/)([^"]+)"/g, `<a href="${basePath}$1"`);
-
       return '<div>' + html + '</div>';
     }
 
-    // ----------- DYNAMIC TOOL LOADING -----------
-    const toolsData = [
-      { category: "PipelineR", name: "KubePipe", repo: "KubePipe" },
-      { category: "PolicyR", name: "Policy Editor", repo: "Policy-Editor" },
-      { category: "AssessR", name: "DPIA Support", repo: "DPIA-Support" }
-      // You can add more tools dynamically
-    ];
-
-    // Build sidebar dynamically
-    function buildSidebar() {
-      const container = document.getElementById('sidebar-categories');
-      const categories = [...new Set(toolsData.map(t => t.category))];
-      container.innerHTML = '';
-
-      categories.forEach(cat => {
-        const catDiv = document.createElement('div');
-        catDiv.className = 'category';
-        catDiv.innerHTML = `<h3>${cat}</h3>`;
-        
-        toolsData.filter(t => t.category === cat).forEach(tool => {
-          const toolDiv = document.createElement('div');
-          toolDiv.className = 'tool';
-          toolDiv.innerHTML = `<a href="#" data-repo="${tool.repo}" onclick="loadTool('${tool.repo}', this); return false;">${tool.name}</a>`;
-          catDiv.appendChild(toolDiv);
-        });
-
-        container.appendChild(catDiv);
-      });
-    }
-
-    // ----------- HOME PAGE -----------
+    // ----------- LOAD HOME -----------
     function loadHome() {
-      document.querySelectorAll('.tool a').forEach(a => a.classList.remove('active'));
+      document.querySelectorAll('.tool a').forEach(a=>a.classList.remove('active'));
       document.getElementById('main-content').innerHTML = `
         <div class="content-card">
           <h1>📋 Datapact Tools Catalogue</h1>
@@ -130,12 +142,12 @@
       `;
     }
 
-    // ----------- TOOL PAGE -----------
-    function loadTool(repo, linkElement) {
-      document.querySelectorAll('.tool a').forEach(a => a.classList.remove('active'));
+    // ----------- LOAD TOOL -----------
+    async function loadTool(repo, linkElement) {
+      document.querySelectorAll('.tool a').forEach(a=>a.classList.remove('active'));
       linkElement.classList.add('active');
 
-      const possiblePaths = [
+      const paths = [
         `output/${repo}/README.md`,
         `output/${repo}/readme.md`,
         `output/${repo}/README.MD`,
@@ -143,34 +155,31 @@
         `output/${repo}/docs/readme.md`
       ];
 
-      function tryPath(index) {
-        if (index >= possiblePaths.length) {
+      for(let i=0;i<paths.length;i++){
+        try {
+          const res = await fetch(paths[i]);
+          if(!res.ok) throw new Error();
+          const md = await res.text();
+          const folderPath = paths[i].replace(/README\.md$/i,'');
           document.getElementById('main-content').innerHTML = `
             <div class="content-card">
-              <h1>${linkElement.textContent}</h1>
-              <p><strong>❌ README not found</strong> in any expected location</p>
-            </div>`;
+              <h1 style="color:#2c3e50; margin-bottom:2rem;">${linkElement.textContent}</h1>
+              <div class="markdown-content">${parseMarkdown(md, repo, folderPath)}</div>
+            </div>
+          `;
           return;
-        }
-
-        fetch(possiblePaths[index])
-          .then(r => { if(!r.ok) throw new Error(); return r.text(); })
-          .then(md => {
-            const basePath = possiblePaths[index].replace(/README\.md$/i,'');
-            document.getElementById('main-content').innerHTML = `
-              <div class="content-card">
-                <h1 style="color:#2c3e50; margin-bottom:2rem;">${linkElement.textContent}</h1>
-                <div class="markdown-content">${parseMarkdown(md, basePath)}</div>
-              </div>
-            `;
-          })
-          .catch(() => tryPath(index + 1));
+        } catch {}
       }
 
-      tryPath(0);
+      document.getElementById('main-content').innerHTML = `
+        <div class="content-card">
+          <h1>${linkElement.textContent}</h1>
+          <p><strong>❌ README not found</strong></p>
+        </div>
+      `;
     }
 
-    // ----------- INITIALIZATION -----------
+    // ----------- INIT -----------
     buildSidebar();
     loadHome();
   </script>
