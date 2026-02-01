@@ -79,42 +79,51 @@
           '<div class="content-card"><h1>📋 Datapact Tools Catalogue</h1><p><strong>Welcome!</strong> Browse tools in the sidebar.</p></div>'
         );
     }
-    
-    async function loadTool(repo, link) {
-      document.querySelectorAll('.tool a').forEach(a => a.classList.remove('active'));
-      link.classList.add('active');
-      
-      const content = document.getElementById('main-content');
-      content.innerHTML = '<div class="content-card"><h2>Loading...</h2></div>';
-      
-      const paths = [`output/${repo}/README.md`, `output/${repo}/readme.md`];
-      
-      for (const path of paths) {
-        try {
-          const res = await fetch(path);
-          if (res.ok) {
-            const md = await res.text();
-            const html = marked.parse(md);
-            
-            // FIX IMAGE PATHS
-            const finalHtml = html.replace(/src="([^"]+)"/g, (m, src) => {
-              if (src.startsWith('images/')) return `src="output/${repo}/${src}"`;
-              return m;
-            });
-            
-            content.innerHTML = `
-              <div class="content-card">
-                <h1 style="color: #2c3e50;">${link.textContent}</h1>
-                <div class="markdown-content">${DOMPurify.sanitize(finalHtml)}</div>
-              </div>
-            `;
-            return;
+
+  async function loadTool(repo, link) {
+  document.querySelectorAll('.tool a').forEach(a => a.classList.remove('active'));
+  link.classList.add('active');
+  
+  const content = document.getElementById('main-content');
+  content.innerHTML = '<div class="content-card"><h2>Loading...</h2></div>';
+  
+  const paths = [`output/${repo}/README.md`, `output/${repo}/readme.md`];
+  
+  for (const path of paths) {
+    try {
+      const res = await fetch(path);
+      if (res.ok) {
+        const md = await res.text();
+        let html = marked.parse(md);
+        
+        // FIXED IMAGE PATHS
+        html = html.replace(/src=["']([^"']+)["']/g, (match, src) => {
+          if (src.startsWith('images/')) {
+            return `src="output/${repo}/images/${src.substring(7)}"`;
           }
-        } catch(e) {}
+          if (src.startsWith('./images/')) {
+            return `src="output/${repo}/images/${src.substring(10)}"`;
+          }
+          return match;
+        });
+        
+        content.innerHTML = `
+          <div class="content-card">
+            <h1 style="color: #2c3e50;">${link.textContent}</h1>
+            <div class="markdown-content">${DOMPurify.sanitize(html)}</div>
+          </div>
+        `;
+        return;
       }
-      
-      content.innerHTML = `<div class="content-card"><h1>${repo}</h1><p>README not found at ${paths.join(', ')}</p></div>`;
+    } catch(e) {
+      console.log('Failed:', path);
     }
+  }
+  
+  content.innerHTML = `<div class="content-card"><h1>${repo}</h1><p>README not found</p></div>`;
+}
+
+    
     
     // START
     loadHome();
