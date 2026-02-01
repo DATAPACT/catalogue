@@ -5,77 +5,252 @@
   <title>Datapact Tools Catalogue</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; font-family: Arial, sans-serif; overflow-x: hidden; }
-    body { display: flex; background: #f5f5f5; }
-    .sidebar { width: 300px; background: #2c3e50; color: white; padding: 2rem; height: 100vh; overflow-y: auto; flex-shrink: 0; position: fixed; left: 0; top: 0; z-index: 1000; }
+    html, body { 
+      height: 100%; 
+      font-family: Arial, sans-serif; 
+      overflow-x: hidden;
+    }
+    
+    body { 
+      display: flex; 
+      background: #f5f5f5;
+    }
+
+    .sidebar { 
+      width: 300px; 
+      background: #2c3e50; 
+      color: white; 
+      padding: 2rem; 
+      height: 100vh; 
+      overflow-y: auto;
+      flex-shrink: 0;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 1000;
+    }
+
     .sidebar h1 { margin-bottom: 2rem; }
-    .home-btn { display: block; padding: 0.75rem 1rem 0.75rem 1.5rem; color: #3498db; background: #34495e; text-decoration: none; border-radius: 6px; margin-bottom: 1.5rem; }
+
+    .home-btn { 
+      display: block; 
+      padding: 0.75rem 1rem 0.75rem 1.5rem; 
+      color: #3498db; 
+      background: #34495e; 
+      text-decoration: none; 
+      border-radius: 6px; 
+      margin-bottom: 1.5rem;
+    }
     .home-btn:hover { background: #3498db; color: white; }
+
     .category { margin-bottom: 1.5rem; }
     .category h3 { color: #3498db; margin-bottom: 0.5rem; }
-    .tool a { display: block; padding: 0.75rem 1rem 0.75rem 1.5rem; color: #bdc3c7; text-decoration: none; border-radius: 6px; transition: all 0.3s; }
+
+    .tool a { 
+      display: block; 
+      padding: 0.75rem 1rem 0.75rem 1.5rem; 
+      color: #bdc3c7; 
+      text-decoration: none; 
+      border-radius: 6px;
+      transition: all 0.3s; 
+    }
     .tool a:hover, .tool a.active { background: #3498db; color: white; }
-    .main { margin-left: 300px; flex: 1; padding: 2rem; min-height: 100vh; max-width: calc(100vw - 300px); overflow-x: hidden; }
-    .content-card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    .debug-info { background: #e8f4f8; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; font-family: monospace; font-size: 14px; }
+
+    .main { 
+      margin-left: 300px;
+      flex: 1;
+      padding: 2rem;
+      min-height: 100vh;
+      max-width: calc(100vw - 300px);
+      overflow-x: hidden;
+    }
+
+    #main-content { min-height: 70vh; }
+
+    .content-card {
+      background: white; 
+      padding: 3rem; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+      text-align: center;
+    }
+
+    .markdown-content {
+      padding: 2rem;
+      line-height: 1.6;
+      font-size: 16px;
+      text-align: left;
+    }
+
+    .markdown-content h1, .markdown-content h2, .markdown-content h3 {
+      color: #2c3e50;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .markdown-content h1 { font-size: 2rem; }
+    .markdown-content h2 { font-size: 1.5rem; }
+    .markdown-content h3 { font-size: 1.25rem; }
+
+    .markdown-content p { margin-bottom: 1rem; }
+    .markdown-content code { 
+      background: #f4f4f4; 
+      padding: 0.2rem 0.4rem; 
+      border-radius: 4px; 
+      font-family: monospace;
+    }
+    .markdown-content pre { 
+      background: #2c3e50; 
+      color: white; 
+      padding: 1rem; 
+      border-radius: 8px; 
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+    .markdown-content ul, .markdown-content ol { 
+      padding-left: 2rem; 
+      margin-bottom: 1rem;
+    }
+    .markdown-content strong { font-weight: bold; }
   </style>
 </head>
 <body>
+  <!-- FIXED LEFT SIDEBAR -->
   <nav class="sidebar">
     <h1>📋 Tools Catalogue</h1>
     <a href="#" class="home-btn" onclick="loadHome(); return false;">🏠 Home</a>
-    <div class="category"><h3>PipelineR</h3><div class="tool"><a href="#" data-repo="KubePipe" onclick="loadTool('KubePipe', this); return false;">KubePipe</a></div></div>
-    <div class="category"><h3>PolicyR</h3><div class="tool"><a href="#" data-repo="Policy-Editor" onclick="loadTool('Policy-Editor', this); return false;">Policy Editor</a></div></div>
-    <div class="category"><h3>TrustR</h3></div>
-    <div class="category"><h3>AssessR</h3><div class="tool"><a href="#" data-repo="DPIA-Support" onclick="loadTool('DPIA-Support', this); return false;">DPIA Support</a></div></div>
-    <div class="category"><h3>ApplyR</h3></div>
+    
+    <div class="category">
+      <h3>PipelineR</h3>
+      <div class="tool"><a href="#" data-repo="KubePipe" onclick="loadTool('KubePipe', this); return false;">KubePipe</a></div>
+    </div>
+    
+    <div class="category">
+      <h3>PolicyR</h3>
+      <div class="tool"><a href="#" data-repo="Policy-Editor" onclick="loadTool('Policy-Editor', this); return false;">Policy Editor</a></div>
+    </div>
+    
+    <div class="category">
+      <h3>TrustR</h3>
+      <!-- Future tools -->
+    </div>
+    
+    <div class="category">
+      <h3>AssessR</h3>
+      <div class="tool"><a href="#" data-repo="DPIA-Support" onclick="loadTool('DPIA-Support', this); return false;">DPIA Support</a></div>
+    </div>
+    
+    <div class="category">
+      <h3>ApplyR</h3>
+      <!-- Future tools -->
+    </div>
   </nav>
 
+  <!-- MAIN CONTENT -->
   <main class="main">
     <div id="main-content">
-      <div class="content-card"><h1>Click a tool to test</h1></div>
+      <div class="content-card">
+        <h1>Loading...</h1>
+      </div>
     </div>
   </main>
 
   <script>
+    // Simple markdown parser (basic but functional)
+    function parseMarkdown(md) {
+      let html = md;
+      
+      // Headers
+      html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+      html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+      html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+      
+      // Bold and italic
+      html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      
+      // Code blocks
+      html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+      
+      // Lists (basic)
+      html = html.replace(/^\s*[-*+] (.*$)/gim, '<li>$1</li>');
+      
+      // Line breaks to paragraphs
+      html = html.replace(/\n\s*\n/g, '</p><p>');
+      html = html.split('\n').join('<br>');
+      
+      return '<div>' + html + '</div>';
+    }
+
+    // Load home page first
+    loadHome();
+    
     function loadHome() {
-      document.getElementById('main-content').innerHTML = 
-        '<div class="content-card"><h1>📋 Datapact Tools Catalogue</h1><p>Click DPIA Support to test file loading</p></div>';
+      fetch('home.html')
+        .then(r => {
+          if (!r.ok) throw new Error('home.html not found');
+          return r.text();
+        })
+        .then(html => {
+          document.getElementById('main-content').innerHTML = html;
+        })
+        .catch(err => {
+          document.getElementById('main-content').innerHTML = 
+            '<div class="content-card"><h1>📋 Datapact Tools Catalogue</h1><p><strong>Welcome!</strong> Browse tools in the sidebar to get started.</p></div>';
+        });
     }
     
     function loadTool(repo, linkElement) {
       document.querySelectorAll('.tool a').forEach(a => a.classList.remove('active'));
       linkElement.classList.add('active');
       
-      const paths = [`output/${repo}/README.md`, `output/${repo}/readme.md`];
+      // Try multiple possible paths for README
+      const paths = [
+        `output/${repo}/README.md`,
+        `output/${repo}/readme.md`,
+        `output/${repo}/README.MD`,
+        `output/${repo}/docs/README.md`,
+        `output/${repo}/docs/readme.md`
+      ];
       
-      fetch(paths[0])
-        .then(r => {
-          if (!r.ok) throw new Error('404');
-          return r.text();
-        })
-        .then(md => {
-          const first100chars = md.substring(0, 100);
+      function tryNextPath(index) {
+        if (index >= paths.length) {
+          // Show debug info
           document.getElementById('main-content').innerHTML = `
             <div class="content-card">
               <h1 style="color: #2c3e50;">${linkElement.textContent}</h1>
-              <div class="debug-info">
-                ✅ LOADED: ${paths[0]}<br>
-                📏 Size: ${md.length} chars<br>
-                🔍 First 100 chars: ${first100chars}...
+              <p><strong>❌ README not found</strong> in any expected location</p>
+              <p>Checked paths:</p>
+              <ul>
+                ${paths.map(p => `<li><code>${p}</code></li>`).join('')}
+              </ul>
+              <p>✅ Verify files exist at these exact paths relative to <strong>index.html</strong></p>
+            </div>
+          `;
+          return;
+        }
+        
+        fetch(paths[index])
+          .then(r => {
+            if (!r.ok) throw new Error(`404: ${paths[index]}`);
+            return r.text();
+          })
+          .then(md => {
+            document.getElementById('main-content').innerHTML = `
+              <div class="content-card">
+                <h1 style="color: #2c3e50; margin-bottom: 2rem;">${linkElement.textContent}</h1>
+                <div class="markdown-content">${parseMarkdown(md)}</div>
               </div>
-              <div style="background: #f8f9fa; padding: 2rem; border-radius: 8px; font-family: monospace; white-space: pre-wrap; overflow-x: auto; height: 60vh; font-size: 14px;">${md}</div>
-            </div>
-          `;
-        })
-        .catch(err => {
-          document.getElementById('main-content').innerHTML = `
-            <div class="content-card">
-              <h1 style="color: #2c3e50;">${linkElement.textContent}</h1>
-              <div class="debug-info">❌ Failed to load ${paths[0]}</div>
-            </div>
-          `;
-        });
+            `;
+          })
+          .catch(err => {
+            console.log(`Failed ${paths[index]}:`, err);
+            tryNextPath(index + 1);
+          });
+      }
+      
+      tryNextPath(0);
     }
   </script>
 </body>
