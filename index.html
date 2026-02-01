@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Datapact Tools Catalogue</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { 
       height: 100%; 
-      font-family: Arial, sans-serif; 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
       overflow-x: hidden;
     }
     
@@ -72,46 +74,46 @@
       padding: 3rem; 
       border-radius: 12px; 
       box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-      text-align: center;
     }
 
     .markdown-content {
-      padding: 2rem;
       line-height: 1.6;
       font-size: 16px;
+    }
+
+    .markdown-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+
+    .markdown-content th,
+    .markdown-content td {
+      border: 1px solid #ddd;
+      padding: 0.75rem;
       text-align: left;
     }
 
-    .markdown-content h1, .markdown-content h2, .markdown-content h3 {
-      color: #2c3e50;
-      margin-top: 2rem;
-      margin-bottom: 1rem;
+    .markdown-content th {
+      background: #f8f9fa;
+      font-weight: 600;
     }
 
-    .markdown-content h1 { font-size: 2rem; }
-    .markdown-content h2 { font-size: 1.5rem; }
-    .markdown-content h3 { font-size: 1.25rem; }
-
-    .markdown-content p { margin-bottom: 1rem; }
-    .markdown-content code { 
-      background: #f4f4f4; 
-      padding: 0.2rem 0.4rem; 
-      border-radius: 4px; 
-      font-family: monospace;
-    }
-    .markdown-content pre { 
-      background: #2c3e50; 
-      color: white; 
-      padding: 1rem; 
-      border-radius: 8px; 
-      overflow-x: auto;
+    .markdown-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
       margin: 1rem 0;
     }
-    .markdown-content ul, .markdown-content ol { 
-      padding-left: 2rem; 
-      margin-bottom: 1rem;
+
+    .markdown-content a {
+      color: #3498db;
+      text-decoration: none;
     }
-    .markdown-content strong { font-weight: bold; }
+
+    .markdown-content a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -156,33 +158,6 @@
   </main>
 
   <script>
-    // Simple markdown parser (basic but functional)
-    function parseMarkdown(md) {
-      let html = md;
-      
-      // Headers
-      html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
-      html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
-      html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
-      
-      // Bold and italic
-      html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-      
-      // Code blocks
-      html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-      
-      // Lists (basic)
-      html = html.replace(/^\s*[-*+] (.*$)/gim, '<li>$1</li>');
-      
-      // Line breaks to paragraphs
-      html = html.replace(/\n\s*\n/g, '</p><p>');
-      html = html.split('\n').join('<br>');
-      
-      return '<div>' + html + '</div>';
-    }
-
     // Load home page first
     loadHome();
     
@@ -205,27 +180,18 @@
       document.querySelectorAll('.tool a').forEach(a => a.classList.remove('active'));
       linkElement.classList.add('active');
       
-      // Try multiple possible paths for README
       const paths = [
         `output/${repo}/README.md`,
         `output/${repo}/readme.md`,
-        `output/${repo}/README.MD`,
-        `output/${repo}/docs/README.md`,
-        `output/${repo}/docs/readme.md`
+        `output/${repo}/docs/README.md`
       ];
       
       function tryNextPath(index) {
         if (index >= paths.length) {
-          // Show debug info
           document.getElementById('main-content').innerHTML = `
             <div class="content-card">
               <h1 style="color: #2c3e50;">${linkElement.textContent}</h1>
-              <p><strong>❌ README not found</strong> in any expected location</p>
-              <p>Checked paths:</p>
-              <ul>
-                ${paths.map(p => `<li><code>${p}</code></li>`).join('')}
-              </ul>
-              <p>✅ Verify files exist at these exact paths relative to <strong>index.html</strong></p>
+              <p><strong>❌ README not found</strong></p>
             </div>
           `;
           return;
@@ -233,19 +199,22 @@
         
         fetch(paths[index])
           .then(r => {
-            if (!r.ok) throw new Error(`404: ${paths[index]}`);
+            if (!r.ok) throw new Error(`404`);
             return r.text();
           })
           .then(md => {
+            // Use marked.js to properly render markdown
+            const htmlContent = marked.parse(md);
+            const cleanHtml = DOMPurify.sanitize(htmlContent);
+            
             document.getElementById('main-content').innerHTML = `
               <div class="content-card">
                 <h1 style="color: #2c3e50; margin-bottom: 2rem;">${linkElement.textContent}</h1>
-                <div class="markdown-content">${parseMarkdown(md)}</div>
+                <div class="markdown-content">${cleanHtml}</div>
               </div>
             `;
           })
           .catch(err => {
-            console.log(`Failed ${paths[index]}:`, err);
             tryNextPath(index + 1);
           });
       }
