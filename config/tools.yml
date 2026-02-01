@@ -19,9 +19,32 @@ tools:
     category: "PolicyR"
     branch: "main"
     readme_path: "docs/README.md"
+  - repo: "PolicyEngine"
+    name: "PolicyEngine"
+    category: "PolicyR"
+    branch: "main"
+    readme_path: "docs/README.md"
     docs_root: "docs"
   - repo: "KubePipe"
+    name: "KubePipe"
     category: "PipelineR"      # Display name defaults to repo name if not set
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
+  - repo: "SIMPIPE"
+    name: "SIMPIPE"
+    category: "PipelineR"      # Display name defaults to repo name if not set
+    branch: "main"
+    readme_path: "docs/README.md"
+    docs_root: "docs"
+  - repo: "LexAlign"
+    category: "AssessR"      # Display name defaults to repo name if not set
+    branch: "main"
+    readme_path: "docs/README.md"
+    docs_root: "docs"
+  - repo: "toolbox-ui"
+    category: "APPlyR"      # Display name defaults to repo name if not set
+    branch: "main"
+    readme_path: "docs/README.md"
+    docs_root: "docs"
+
