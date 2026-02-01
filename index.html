@@ -31,25 +31,11 @@
   </style>
 </head>
 <body>
-  <nav class="sidebar">
-    <h1>📋 Tools Catalogue</h1>
-    <a href="#" class="home-btn" onclick="loadHome(); return false;">🏠 Home</a>
-    
-    <div class="category">
-      <h3>PipelineR</h3>
-      <div class="tool"><a href="#" data-repo="KubePipe" onclick="loadTool('KubePipe', this); return false;">KubePipe</a></div>
-    </div>
-    
-    <div class="category">
-      <h3>PolicyR</h3>
-      <div class="tool"><a href="#" data-repo="Policy-Editor" onclick="loadTool('Policy-Editor', this); return false;">Policy Editor</a></div>
-    </div>
-    
-    <div class="category">
-      <h3>AssessR</h3>
-      <div class="tool"><a href="#" data-repo="DPIA-Support" onclick="loadTool('DPIA-Support', this); return false;">DPIA Support</a></div>
-    </div>
-  </nav>
+<nav class="sidebar" id="sidebar">
+  <h1>📋 Tools Catalogue</h1>
+  <a href="#" class="home-btn" onclick="loadHome(); return false;">🏠 Home</a>
+  <div id="categories"></div>
+</nav>
 
   <main class="main">
     <div id="main-content">
@@ -62,6 +48,60 @@
   <script>
     // Configure marked
     marked.setOptions({ gfm: true, breaks: true });
+
+    async function loadCategories() {
+  try {
+    const response = await fetch('config/tools.yml');
+    const yamlText = await response.text();
+    
+    // Parse YAML manually (extract tools array)
+    const tools = [];
+    const categories = [];
+    
+    // Extract categories first
+    const catMatch = yamlText.match(/categories:\s*\[(.*?)\]/s);
+    if (catMatch) {
+      catMatch[1].split(',').forEach(cat => {
+        categories.push(cat.trim().replace(/["']/g, ''));
+      });
+    }
+    
+    // Extract tools with their category/name
+    const toolRegex = /- repo: "([^"]+)"[^}]+category: "([^"]+)"\s*(?:name: "([^"]+)")?/gm;
+    let match;
+    while ((match = toolRegex.exec(yamlText)) !== null) {
+      tools.push({
+        repo: match[1],
+        category: match[2],
+        name: match[3] || match[1].replace(/-/g, ' ')
+      });
+    }
+    
+    const sidebar = document.getElementById('categories');
+    sidebar.innerHTML = '';
+    
+    categories.forEach(category => {
+      const catTools = tools.filter(tool => tool.category === category);
+      if (catTools.length > 0) {
+        const catDiv = document.createElement('div');
+        catDiv.className = 'category';
+        catDiv.innerHTML = `<h3>${category}</h3>`;
+        
+        catTools.forEach(tool => {
+          const toolDiv = document.createElement('div');
+          toolDiv.className = 'tool';
+          toolDiv.innerHTML = `<a href="#" data-repo="${tool.repo}" onclick="loadTool('${tool.repo}', this); return false;">${tool.name}</a>`;
+          catDiv.appendChild(toolDiv);
+        });
+        
+        sidebar.appendChild(catDiv);
+      }
+    });
+  } catch (e) {
+    console.error('Failed to load categories:', e);
+  }
+}
+
     
     function loadHome() {
       fetch('home.html')
@@ -125,8 +165,8 @@
       `;
     }
     
-    // Initialize
-    loadHome();
+// Initialize
+loadCategories().then(() => loadHome());
   </script>
 </body>
 </html>
