@@ -48,6 +48,7 @@ def main():
     
     cfg = load_config()
     tools = cfg.get("tools", [])
+    print(f"[CRITICAL DEBUG] FULL TOOLS LIST ({len(tools)}): {[t['repo'] for t in tools]}")  # ← ADD THIS
     
     OUTPUT_DIR.mkdir(exist_ok=True)
     
