@@ -1,0 +1,21 @@
+# Fixed categories (order matters)
+categories:
+  - "PipelineR"
+  - "PolicyR"
+  - "TrustR"
+  - "AssessR"
+  - "ApplyR"
+
+# Tools
+tools:
+  - repo: "DPIA-Support"
+    name: "DPIA Support"       # Display name (optional if you want prettier)
+    category: "AssessR"
+    readme_path: "docs/README.md"
+  - repo: "Policy-Editor"
+    name: "Policy Editor"
+    category: "PolicyR"
+    readme_path: "docs/README.md"
+  - repo: "KubePipe"
+    category: "PipelineR"      # Display name defaults to repo name if not set
+    readme_path: "docs/README.md"
