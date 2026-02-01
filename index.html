@@ -31,13 +31,25 @@
   </style>
 </head>
 <body>
-<nav class="sidebar">
-  <h1>📋 Tools Catalogue</h1>
-  <a href="#" class="home-btn" onclick="loadHome(); return false;">🏠 Home</a>
-  <div id="categories">
-    <!-- DYNAMIC CATEGORIES LOAD HERE -->
-  </div>
-</nav>
+  <nav class="sidebar">
+    <h1>📋 Tools Catalogue</h1>
+    <a href="#" class="home-btn" onclick="loadHome(); return false;">🏠 Home</a>
+    
+    <div class="category">
+      <h3>PipelineR</h3>
+      <div class="tool"><a href="#" data-repo="KubePipe" onclick="loadTool('KubePipe', this); return false;">KubePipe</a></div>
+    </div>
+    
+    <div class="category">
+      <h3>PolicyR</h3>
+      <div class="tool"><a href="#" data-repo="Policy-Editor" onclick="loadTool('Policy-Editor', this); return false;">Policy Editor</a></div>
+    </div>
+    
+    <div class="category">
+      <h3>AssessR</h3>
+      <div class="tool"><a href="#" data-repo="DPIA-Support" onclick="loadTool('DPIA-Support', this); return false;">DPIA Support</a></div>
+    </div>
+  </nav>
 
   <main class="main">
     <div id="main-content">
@@ -50,55 +62,7 @@
   <script>
     // Configure marked
     marked.setOptions({ gfm: true, breaks: true });
-
-   async function loadCategories() {
-  try {
-    const res = await fetch('config/tools.yml');
-    const text = await res.text();
     
-    // Simple line-by-line parsing that matches your exact YAML
-    const lines = text.split('\n');
-    const toolsByCategory = {};
-    
-    lines.forEach(line => {
-      if (line.includes('category: ')) {
-        const category = line.match(/category: ["']([^"']+)["']/)?.[1];
-        const repoMatch = line.match(/repo: ["']([^"']+)["']/);
-        const nameMatch = line.match(/name: ["']([^"']+)["']/);
-        
-        if (category && repoMatch) {
-          const repo = repoMatch[1];
-          const name = nameMatch ? nameMatch[1] : repo.replace(/-/g, ' ');
-          
-          if (!toolsByCategory[category]) toolsByCategory[category] = [];
-          toolsByCategory[category].push({repo, name});
-        }
-      }
-    });
-    
-    const categoriesDiv = document.getElementById('categories');
-    categoriesDiv.innerHTML = '';
-    
-    Object.keys(toolsByCategory).forEach(category => {
-      const catDiv = document.createElement('div');
-      catDiv.className = 'category';
-      catDiv.innerHTML = `<h3>${category}</h3>`;
-      
-      toolsByCategory[category].forEach(tool => {
-        const toolDiv = document.createElement('div');
-        toolDiv.className = 'tool';
-        toolDiv.innerHTML = `<a href="#" data-repo="${tool.repo}" onclick="loadTool('${tool.repo}', this); return false;">${tool.name}</a>`;
-        catDiv.appendChild(toolDiv);
-      });
-      
-      categoriesDiv.appendChild(catDiv);
-    });
-  } catch(e) {
-    console.log('YAML load failed, using fallback');
-  }
-}
-
- 
     function loadHome() {
       fetch('home.html')
         .then(r => r.ok ? r.text() : Promise.reject())
@@ -161,8 +125,8 @@
       `;
     }
     
-// Initialize
-loadCategories().then(() => loadHome());
+    // Initialize
+    loadHome();
   </script>
 </body>
 </html>
