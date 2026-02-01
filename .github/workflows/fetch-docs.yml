@@ -1,6 +1,8 @@
 name: Fetch Docs Folders
 on:
-  workflow_dispatch:
+  workflow_dispatch:        # Manual button (keep this)
+  schedule:
+    - cron: "0 2 * * 1"    # 2AM UTC daily
 
 jobs:
   fetch:
