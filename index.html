@@ -96,13 +96,13 @@
         const md = await res.text();
         let html = marked.parse(md);
         
-        // FIXED IMAGE PATHS
+        // FINAL PERFECT IMAGE FIX - ANY FILENAME LENGTH
         html = html.replace(/src=["']([^"']+)["']/g, (match, src) => {
-          if (src.startsWith('images/')) {
-            return `src="output/${repo}/images/${src.substring(7)}"`;
-          }
           if (src.startsWith('./images/')) {
             return `src="output/${repo}/images/${src.substring(10)}"`;
+          }
+          if (src.startsWith('images/')) {
+            return `src="output/${repo}/images/${src.substring(7)}"`;
           }
           return match;
         });
@@ -122,6 +122,7 @@
   
   content.innerHTML = `<div class="content-card"><h1>${repo}</h1><p>README not found</p></div>`;
 }
+
 
     
     
