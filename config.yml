@@ -11,11 +11,17 @@ tools:
   - repo: "DPIA-Support"
     name: "DPIA Support"       # Display name (optional if you want prettier)
     category: "AssessR"
+    branch: "main"
     readme_path: "docs/README.md"
+    docs_root: "docs"
   - repo: "Policy-Editor"
     name: "Policy Editor"
     category: "PolicyR"
+    branch: "main"
     readme_path: "docs/README.md"
+    docs_root: "doc
   - repo: "KubePipe"
     category: "PipelineR"      # Display name defaults to repo name if not set
+    branch: "main"
     readme_path: "docs/README.md"
+    docs_root: "doc
