@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Datapact Tools Catalogue</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: #f5f5f5; }
+    .container { display: flex; min-height: 100vh; }
+    .sidebar { 
+      width: 280px; 
+      background: #2c3e50; 
+      color: white; 
+      padding: 2rem 1.5rem; 
+      position: fixed; 
+      height: 100vh; 
+      overflow-y: auto;
+    }
+    .sidebar h2 { margin-bottom: 2rem; color: #ecf0f1; }
+    .category { margin-bottom: 1rem; }
+    .category a { 
+      display: block; 
+      padding: 1rem; 
+      color: #bdc3c7; 
+      text-decoration: none; 
+      border-radius: 8px; 
+      transition: all 0.3s;
+    }
+    .category a:hover { background: #3498db; color: white; }
+    .main { margin-left: 280px; padding: 3rem; }
+    .hero { text-align: center; margin-bottom: 3rem; }
+    .hero h1 { font-size: 3rem; color: #2c3e50; margin-bottom: 1rem; }
+    .hero p { font-size: 1.3rem; color: #7f8c8d; }
+    .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 2rem; }
+    .tool-card { 
+      background: white; 
+      border-radius: 12px; 
+      padding: 2rem; 
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+      cursor: pointer; 
+      transition: all 0.3s;
+    }
+    .tool-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+    .tool-card h3 { color: #2c3e50; margin-bottom: 0.5rem; }
+    .tool-card .category { color: #3498db; font-weight: bold; margin-bottom: 1rem; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- LEFT SIDEBAR MENU -->
+    <nav class="sidebar">
+      <h2>📋 Categories</h2>
+      <div class="categories" id="categories"></div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <div class="hero">
+        <h1>Datapact Tools</h1>
+        <p>Comprehensive catalogue of data governance and compliance tools</p>
+      </div>
+      
+      <div class="tools-grid" id="tools"></div>
+    </main>
+  </div>
+
+  <script>
+    // HARDCODE YOUR CONFIG (from your YAML)
+    const config = {
+      categories: ['PipelineR', 'PolicyR', 'TrustR', 'AssessR', 'ApplyR'],
+      tools: [
+        { repo: 'DPIA-Support', name: 'DPIA Support', category: 'AssessR' },
+        { repo: 'Policy-Editor', name: 'Policy Editor', category: 'PolicyR' },
+        { repo: 'KubePipe', name: 'KubePipe', category: 'PipelineR' }
+      ]
+    };
+
+    // Render sidebar categories
+    config.categories.forEach(cat => {
+      document.getElementById('categories').innerHTML += 
+        `<div class="category"><a href="#" onclick="filterTools('${cat}')">${cat}</a></div>`;
+    });
+
+    // Render tool cards
+    config.tools.forEach(tool => {
+      document.getElementById('tools').innerHTML += `
+        <div class="tool-card" onclick="openTool('${tool.repo}')">
+          <h3>${tool.name}</h3>
+          <div class="category">${tool.category}</div>
+          <p>Live documentation from private repository</p>
+        </div>
+      `;
+    });
+
+    function filterTools(category) {
+      document.querySelectorAll('.tool-card').forEach(card => {
+        card.style.display = card.textContent.includes(category) ? 'block' : 'none';
+      });
+    }
+
+    function openTool(repo) {
+      window.open(`tool.html?repo=${repo}`, '_blank');
+    }
+  </script>
+</body>
+</html>
