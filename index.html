@@ -16,9 +16,8 @@
     .tool a { display: block; padding: 0.75rem 1rem 0.75rem 1.5rem; color: #bdc3c7; text-decoration: none; border-radius: 6px; transition: all 0.3s; }
     .tool a:hover, .tool a.active { background: #3498db; color: white; }
     .main { margin-left: 300px; flex: 1; padding: 2rem; min-height: 100vh; max-width: calc(100vw - 300px); overflow-x: hidden; }
-    #main-content { min-height: 70vh; }
-    .content-card { background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    .raw-markdown { background: #f8f9fa; padding: 2rem; border-radius: 8px; font-family: monospace; white-space: pre-wrap; overflow-x: auto; height: 70vh; }
+    .content-card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .debug-info { background: #e8f4f8; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; font-family: monospace; font-size: 14px; }
   </style>
 </head>
 <body>
@@ -34,34 +33,38 @@
 
   <main class="main">
     <div id="main-content">
-      <div class="content-card"><h1>Loading...</h1></div>
+      <div class="content-card"><h1>Click a tool to test</h1></div>
     </div>
   </main>
 
   <script>
-    loadHome();
-    
     function loadHome() {
-      fetch('home.html').then(r => r.ok ? r.text() : Promise.reject())
-        .then(html => document.getElementById('main-content').innerHTML = html)
-        .catch(() => document.getElementById('main-content').innerHTML = 
-          '<div class="content-card"><h1>📋 Datapact Tools Catalogue</h1><p>Browse tools in the sidebar.</p></div>');
+      document.getElementById('main-content').innerHTML = 
+        '<div class="content-card"><h1>📋 Datapact Tools Catalogue</h1><p>Click DPIA Support to test file loading</p></div>';
     }
     
     function loadTool(repo, linkElement) {
       document.querySelectorAll('.tool a').forEach(a => a.classList.remove('active'));
       linkElement.classList.add('active');
       
-      fetch(`output/${repo}/README.md`)
+      const paths = [`output/${repo}/README.md`, `output/${repo}/readme.md`];
+      
+      fetch(paths[0])
         .then(r => {
-          if (!r.ok) throw new Error('File not found');
+          if (!r.ok) throw new Error('404');
           return r.text();
         })
         .then(md => {
+          const first100chars = md.substring(0, 100);
           document.getElementById('main-content').innerHTML = `
             <div class="content-card">
-              <h1 style="color: #2c3e50; margin-bottom: 2rem;">${linkElement.textContent}</h1>
-              <div class="raw-markdown">${md}</div>
+              <h1 style="color: #2c3e50;">${linkElement.textContent}</h1>
+              <div class="debug-info">
+                ✅ LOADED: ${paths[0]}<br>
+                📏 Size: ${md.length} chars<br>
+                🔍 First 100 chars: ${first100chars}...
+              </div>
+              <div style="background: #f8f9fa; padding: 2rem; border-radius: 8px; font-family: monospace; white-space: pre-wrap; overflow-x: auto; height: 60vh; font-size: 14px;">${md}</div>
             </div>
           `;
         })
@@ -69,7 +72,7 @@
           document.getElementById('main-content').innerHTML = `
             <div class="content-card">
               <h1 style="color: #2c3e50;">${linkElement.textContent}</h1>
-              <p>Could not load output/${repo}/README.md</p>
+              <div class="debug-info">❌ Failed to load ${paths[0]}</div>
             </div>
           `;
         });
