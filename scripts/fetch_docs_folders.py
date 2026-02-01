@@ -61,10 +61,10 @@ def main():
             tree_items = github_get_tree(org, repo, docs_root, branch, token)
 
             # ← ADD DEBUG HERE
-    print(f"[DEBUG] {org}/{repo}/{docs_root}@{branch}: {len(tree_items)} items")
-    if not tree_items:
-        print(f"[DEBUG] EMPTY - check https://github.com/{org}/{repo}/tree/{branch}/{docs_root}")
-    # ← END DEBUG
+            print(f"[DEBUG] {org}/{repo}/{docs_root}@{branch}: {len(tree_items)} items")
+            if not tree_items:
+                print(f"[DEBUG] EMPTY - check https://github.com/{org}/{repo}/tree/{branch}/{docs_root}")
+            # ← END DEBUG
             
             for item in tree_items:
                 if item["type"] == "blob":
