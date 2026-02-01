@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tools Catalogue</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    ul { list-style: none; padding-left: 10px; }
+    .category > span { font-weight: bold; margin-top: 10px; display: block; }
+    .tool { margin-left: 15px; }
+  </style>
+</head>
+<body>
+
+<h1>Tools Catalogue</h1>
+<nav id="tools-menu"></nav>
+
+<!-- YAML parser -->
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
+
+<script>
+async function loadConfig() {
+  // relative path works for GitHub Pages project
+  const response = await fetch("config/tools.yml");
+  const yamlText = await response.text();
+  return jsyaml.load(yamlText);
+}
+
+function buildMenuData(config) {
+  const categories = config.categories || [];
+  const tools = config.tools || [];
+
+  // preserve category order
+  const catMap = new Map(categories.map(c => [c, []]));
+
+  tools.forEach(tool => {
+    if (catMap.has(tool.category)) {
+      catMap.get(tool.category).push({
+        name: tool.name || tool.repo,
+        repo: tool.repo
+      });
+    }
+  });
+
+  return Array.from(catMap.entries()).map(([category, tools]) => ({
+    category,
+    tools
+  }));
+}
+
+function renderMenu(menuData) {
+  const container = document.getElementById("tools-menu");
+  const ul = document.createElement("ul");
+
+  menuData.forEach(({ category, tools }) => {
+    const catLi = document.createElement("li");
+    catLi.className = "category";
+
+    const title = document.createElement("span");
+    title.textContent = category;
+    catLi.appendChild(title);
+
+    const subUl = document.createElement("ul");
+    tools.forEach(tool => {
+      const li = document.createElement("li");
+      li.className = "tool";
+      li.textContent = tool.name;
+      subUl.appendChild(li);
+    });
+
+    catLi.appendChild(subUl);
+    ul.appendChild(catLi);
+  });
+
+  container.appendChild(ul);
+}
+
+(async function () {
+  const config = await loadConfig();
+  const menuData = buildMenuData(config);
+  renderMenu(menuData);
+})();
+</script>
+
+</body>
+</html>
