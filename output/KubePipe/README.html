@@ -1,0 +1,193 @@
+<div class="markdown-heading"><h1 class="heading-element">KubePipe</h1><a id="user-content-kubepipe" class="anchor" aria-label="Permalink: KubePipe" href="#kubepipe"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<p><strong>University of Innsbruck</strong></p>
+<p><a href="LICENSE"><img src="https://camo.githubusercontent.com/c9112cb313dd86605ef93526dddb03665e043d8bdc0811e78b96928acf21ca57/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d5442442d626c75652e737667" alt="License" data-canonical-src="https://img.shields.io/badge/license-TBD-blue.svg" style="max-width: 100%;"></a>
+<a href="https://www.python.org/downloads/" rel="nofollow"><img src="https://camo.githubusercontent.com/93a33cfc2339ec3fa9be792576576fbaafc42b0c7031285662b02f3aca1e1c59/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f707974686f6e2d332e31302b2d626c75652e737667" alt="Python" data-canonical-src="https://img.shields.io/badge/python-3.10+-blue.svg" style="max-width: 100%;"></a></p>
+<blockquote>
+<p>Pipeline orchestration platform bridging Kubeflow Pipelines and Argo Workflows with GDPR compliance and sustainability awareness.</p>
+</blockquote>
+<p><a target="_blank" rel="noopener noreferrer" href="docs/images/dashboard.png"><img src="docs/images/dashboard.png" alt="KubePipe Dashboard" style="max-width: 100%;"></a></p>
+<div class="markdown-heading"><h2 class="heading-element">Features</h2><a id="user-content-features" class="anchor" aria-label="Permalink: Features" href="#features"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Capabilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Orchestration</strong></td>
+<td>Kubeflow Pipelines, Argo Workflows, Automatic YAML↔Python conversion</td>
+</tr>
+<tr>
+<td><strong>Compliance</strong></td>
+<td>GDPR privacy assessment, PII anonymization, Data minimization</td>
+</tr>
+<tr>
+<td><strong>Sustainability</strong></td>
+<td>Carbon footprint tracking, Energy consumption monitoring, Carbon-aware scheduling</td>
+</tr>
+<tr>
+<td><strong>Runtime Adaptation</strong></td>
+<td>Time-shifting, Region-shifting, Dynamic resource scaling, GDPR injection</td>
+</tr>
+<tr>
+<td><strong>Interface</strong></td>
+<td>REST API, CLI, React Web UI, Real-time monitoring</td>
+</tr>
+</tbody>
+</table>
+<div class="markdown-heading"><h2 class="heading-element">Quick Start</h2><a id="user-content-quick-start" class="anchor" aria-label="Permalink: Quick Start" href="#quick-start"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<div class="markdown-heading"><h3 class="heading-element">Prerequisites</h3><a id="user-content-prerequisites" class="anchor" aria-label="Permalink: Prerequisites" href="#prerequisites"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<ul>
+<li>Python 3.10+ with <a href="https://github.com/astral-sh/uv">uv</a>
+</li>
+<li>Node.js 18+ (for Web UI)</li>
+<li>Docker &amp; Minikube (for Kubernetes)</li>
+</ul>
+<div class="markdown-heading"><h3 class="heading-element">Installation</h3><a id="user-content-installation" class="anchor" aria-label="Permalink: Installation" href="#installation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<div class="highlight highlight-source-shell"><pre>git clone https://github.com/DATAPACT/Kubepipe.git
+<span class="pl-c1">cd</span> Kubepipe <span class="pl-k">&amp;&amp;</span> uv sync</pre></div>
+<div class="markdown-heading"><h3 class="heading-element">Start All Services</h3><a id="user-content-start-all-services" class="anchor" aria-label="Permalink: Start All Services" href="#start-all-services"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<div class="highlight highlight-source-shell"><pre>bash scripts/start_all.sh</pre></div>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backend API</td>
+<td><a href="http://127.0.0.1:8001" rel="nofollow">http://127.0.0.1:8001</a></td>
+</tr>
+<tr>
+<td>Web UI</td>
+<td><a href="http://localhost:3000" rel="nofollow">http://localhost:3000</a></td>
+</tr>
+<tr>
+<td>Argo Server</td>
+<td><a href="https://localhost:2746" rel="nofollow">https://localhost:2746</a></td>
+</tr>
+<tr>
+<td>MinIO Console</td>
+<td><a href="http://localhost:9001" rel="nofollow">http://localhost:9001</a></td>
+</tr>
+</tbody>
+</table>
+<div class="markdown-heading"><h2 class="heading-element">Usage</h2><a id="user-content-usage" class="anchor" aria-label="Permalink: Usage" href="#usage"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<div class="markdown-heading"><h3 class="heading-element">Argo Workflows</h3><a id="user-content-argo-workflows" class="anchor" aria-label="Permalink: Argo Workflows" href="#argo-workflows"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<div class="highlight highlight-source-shell"><pre>kubepipe argo-deploy examples/argo/hello-world.yaml   <span class="pl-c"><span class="pl-c">#</span> Deploy</span>
+kubepipe argo-status <span class="pl-k">&lt;</span>workflow-name<span class="pl-k">&gt;</span>                   <span class="pl-c"><span class="pl-c">#</span> Status</span>
+kubepipe argo-list                                     <span class="pl-c"><span class="pl-c">#</span> List all</span>
+kubepipe argo-delete <span class="pl-k">&lt;</span>workflow-name<span class="pl-k">&gt;</span>                   <span class="pl-c"><span class="pl-c">#</span> Delete</span></pre></div>
+<div class="markdown-heading"><h3 class="heading-element">Kubeflow Pipelines</h3><a id="user-content-kubeflow-pipelines" class="anchor" aria-label="Permalink: Kubeflow Pipelines" href="#kubeflow-pipelines"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span> Port-forward KFP API</span>
+kubectl -n kubeflow port-forward svc/ml-pipeline 8888:8888
+
+<span class="pl-c"><span class="pl-c">#</span> Execute via API</span>
+curl -X POST http://127.0.0.1:8001/api/v1/execute \
+  -H <span class="pl-s"><span class="pl-pds">'</span>Content-Type: application/json<span class="pl-pds">'</span></span> \
+  -d <span class="pl-s"><span class="pl-pds">'</span>{"pipeline_id":"demo","environment":"dev","parameters":{}}<span class="pl-pds">'</span></span></pre></div>
+<div class="markdown-heading"><h3 class="heading-element">Argo → Kubeflow Conversion</h3><a id="user-content-argo--kubeflow-conversion" class="anchor" aria-label="Permalink: Argo → Kubeflow Conversion" href="#argo--kubeflow-conversion"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<div class="highlight highlight-source-shell"><pre>uv run python demo_converter.py</pre></div>
+<div class="markdown-heading"><h2 class="heading-element">API Endpoints</h2><a id="user-content-api-endpoints" class="anchor" aria-label="Permalink: API Endpoints" href="#api-endpoints"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/v1/execute</code></td>
+<td>POST</td>
+<td>Execute KFP pipeline</td>
+</tr>
+<tr>
+<td><code>/api/v1/runs/{id}</code></td>
+<td>GET</td>
+<td>Get run status</td>
+</tr>
+<tr>
+<td><code>/api/v1/argo/deploy</code></td>
+<td>POST</td>
+<td>Deploy Argo workflow</td>
+</tr>
+<tr>
+<td><code>/api/v1/argo/workflows</code></td>
+<td>GET</td>
+<td>List workflows</td>
+</tr>
+<tr>
+<td><code>/api/v1/workflows/validate</code></td>
+<td>POST</td>
+<td>Validate workflow YAML</td>
+</tr>
+<tr>
+<td><code>/api/v1/workflows/dry-run</code></td>
+<td>POST</td>
+<td>Dry-run with resource estimates</td>
+</tr>
+<tr>
+<td><code>/api/v1/workflows/compliance-check</code></td>
+<td>POST</td>
+<td>GDPR compliance analysis</td>
+</tr>
+<tr>
+<td><code>/api/v1/adaptation/carbon-forecast</code></td>
+<td>GET</td>
+<td>Carbon intensity forecast</td>
+</tr>
+<tr>
+<td><code>/api/v1/adaptation/analyze</code></td>
+<td>POST</td>
+<td>Analyze adaptation opportunities</td>
+</tr>
+<tr>
+<td><code>/api/v1/adaptation/apply</code></td>
+<td>POST</td>
+<td>Apply runtime adaptations</td>
+</tr>
+</tbody>
+</table>
+<div class="markdown-heading"><h2 class="heading-element">Configuration</h2><a id="user-content-configuration" class="anchor" aria-label="Permalink: Configuration" href="#configuration"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<div class="highlight highlight-source-yaml"><pre><span class="pl-c"><span class="pl-c">#</span> kubepipe.yaml</span>
+<span class="pl-ent">execution</span>:
+  <span class="pl-ent">mode</span>: <span class="pl-s"><span class="pl-pds">"</span>mock<span class="pl-pds">"</span></span>  <span class="pl-c"><span class="pl-c">#</span> mock | kfp</span>
+  <span class="pl-ent">kfp_host</span>: <span class="pl-s"><span class="pl-pds">"</span>http://127.0.0.1:8888<span class="pl-pds">"</span></span></pre></div>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span> Environment variables</span>
+<span class="pl-k">export</span> KUBEPIPE_EXECUTION_MODE=kfp
+<span class="pl-k">export</span> KUBEPIPE_KFP_HOST=http://127.0.0.1:8888</pre></div>
+<div class="markdown-heading"><h2 class="heading-element">Project Structure</h2><a id="user-content-project-structure" class="anchor" aria-label="Permalink: Project Structure" href="#project-structure"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<pre><code>kubepipe/
+├── api/           # FastAPI server
+├── core/          # Compiler, executors, converters
+└── config.py      # Configuration
+examples/          # Sample pipelines
+scripts/           # Helper scripts
+ui/                # React web interface
+</code></pre>
+<div class="markdown-heading"><h2 class="heading-element">Documentation</h2><a id="user-content-documentation" class="anchor" aria-label="Permalink: Documentation" href="#documentation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<ul>
+<li><a href="docs/UI_GUIDE.md">UI Guide</a></li>
+<li><a href="docs/RUNTIME_ADAPTATION.md">Runtime Adaptation</a></li>
+<li><a href="docs/SERVICE_MONITORING.md">Service Monitoring</a></li>
+<li><a href="docs/VALIDATION_AND_COMPLIANCE.md">Validation &amp; Compliance</a></li>
+<li><a href="docs/TROUBLESHOOTING.md">Troubleshooting</a></li>
+</ul>
+<div class="markdown-heading"><h2 class="heading-element">Contact</h2><a id="user-content-contact" class="anchor" aria-label="Permalink: Contact" href="#contact"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<p><strong>University of Innsbruck</strong></p>
+<ul>
+<li>📧 <a href="mailto:rajashekar.kolichala@uibk.ac.at">rajashekar.kolichala@uibk.ac.at</a>
+</li>
+<li>📧 <a href="mailto:radu.prodan@uibk.ac.at">radu.prodan@uibk.ac.at</a>
+</li>
+</ul>
+<div class="markdown-heading"><h2 class="heading-element">Acknowledgments</h2><a id="user-content-acknowledgments" class="anchor" aria-label="Permalink: Acknowledgments" href="#acknowledgments"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<p>Funded by Horizon Europe (grant 101189771, DataPACT)</p>
+<hr>
+<p><em>Last Updated: February 2026</em></p>
