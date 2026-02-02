@@ -86,7 +86,7 @@ function buildMenuData(config) {
     if (catMap.has(tool.category)) {
       catMap.get(tool.category).push({
         name: tool.name || tool.repo,             // display name
-        readmePath: `/output/${tool.repo}/README.html` // use repo exactly
+        readmePath: `/output/${tool.repo}/README.HTML` // use repo exactly
       });
     }
   });
