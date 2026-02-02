@@ -85,11 +85,18 @@ function buildMenuData(config) {
   tools.forEach(tool => {
     if (catMap.has(tool.category)) {
       catMap.get(tool.category).push({
-        name: tool.name || tool.repo,
-        readmePath: `/output/${tool.repo}/README.HTML`
+        name: tool.name || tool.repo,             // display name
+        readmePath: `/output/${tool.repo}/README.HTML` // use repo exactly
       });
     }
   });
+
+  return Array.from(catMap.entries()).map(([category, tools]) => ({
+    category,
+    tools
+  }));
+}
+
 
   return Array.from(catMap.entries()).map(([category, tools]) => ({
     category,
