@@ -70,8 +70,113 @@ function buildMenuData(config) {
   const tools = config.tools || [];
   const catMap = new Map();
   
-  // Initialize all categories from YAML
   categories.forEach(cat => catMap.set(cat, []));
   
-  // Add tools to their categories
-  tools.forEach(tool 
+  tools.forEach(tool => {
+    if (!tool.repo || !tool.mainfile) return;
+    const cat = tool.category || "Uncategorized";
+    if (!catMap.has(cat)) catMap.set(cat, []);
+    
+    catMap.get(cat).push({
+      name: tool.name || tool.repo,
+      repo: tool.repo,
+      readmePath: `output/${tool.repo}/${tool.mainfile}`
+    });
+  });
+
+  return categories.map(category => ({
+    category,
+    tools: catMap.get(category) || []
+  })).filter(({tools}) => tools.length > 0);
+}
+
+function renderMenu(menuData) {
+  const container = document.getElementById("tools-menu");
+  container.innerHTML = "";
+  
+  const ul = document.createElement("ul");
+
+  menuData.forEach(({ category, tools }) => {
+    if (tools.length === 0) return;
+    
+    const catLi = document.createElement("li");
+    catLi.className = "category";
+
+    const title = document.createElement("span");
+    title.textContent = category;
+    catLi.appendChild(title);
+
+    const subUl = document.createElement("ul");
+    
+    tools.forEach(tool => {
+      const toolLi = document.createElement("li");
+      toolLi.className = "tool";
+
+      const link = document.createElement("a");
+      link.href = "#";
+      link.textContent = tool.name;
+      link.dataset.repo = tool.repo;  // ✅ Store repo for image fix
+      
+      link.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const main = document.getElementById("main");
+        const repo = this.dataset.repo;  // ✅ FIXED: Use link's dataset
+        main.innerHTML = `<h2>Loading ${tool.name}...</h2>`;
+        
+        try {
+          const resp = await fetch(tool.readmePath);
+          if (resp.ok) {
+            let html = await resp.text();
+            
+            // 🎯 IMAGE PATH FIX from working page
+            html = html.replace(/src=["']([^"']+)["']/g, (match, src) => {
+              if (src.startsWith('./images/')) {
+                const filename = src.replace('./images/', '');
+                return `src="output/${repo}/images/${filename}"`;
+              }
+              if (src.startsWith('images/')) {
+                const filename = src.replace('images/', '');
+                return `src="output/${repo}/images/${filename}"`;
+              }
+              return match;
+            });
+            
+            main.innerHTML = html;
+          } else {
+            main.innerHTML = `
+              <h2>${tool.name}</h2>
+              <p>Tool not loaded. README not found: ${tool.readmePath}</p>
+            `;
+          }
+        } catch (err) {
+          main.innerHTML = `
+            <h2>${tool.name}</h2>
+            <p>Error loading tool: ${err.message}</p>
+          `;
+        }
+      });
+
+      toolLi.appendChild(link);
+      subUl.appendChild(toolLi);
+    });
+    
+    catLi.appendChild(subUl);
+    ul.appendChild(catLi);
+  });
+  
+  container.appendChild(ul);
+}
+
+// Initialize
+(async function() {
+  try {
+    const config = await loadConfig();
+    const menuData = buildMenuData(config);
+    renderMenu(menuData);
+  } catch (err) {
+    document.getElementById("main").innerHTML = `<p>Error: ${err.message}</p>`;
+  }
+})();
+</script>
+</body>
+</html>
