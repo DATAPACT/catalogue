@@ -23,10 +23,25 @@
     overflow-y: auto;
   }
   ul { list-style: none; padding-left: 0; }
-  .category > span { font-weight: bold; margin-top: 10px; display: block; }
-  .tool { margin-left: 15px; }
-  .tool a { text-decoration: none; color: #333; cursor: pointer; }
-  .tool a:hover { text-decoration: underline; color: #0070f3; }
+  .category > span { 
+    font-weight: bold; 
+    margin-top: 10px; 
+    display: block; 
+  }
+  .tool { 
+    margin-left: 15px; 
+  }
+  .tool a { 
+    text-decoration: none; 
+    color: #333; 
+    cursor: pointer; 
+    display: block;
+    padding: 5px 0;
+  }
+  .tool a:hover { 
+    text-decoration: underline; 
+    color: #0070f3; 
+  }
 </style>
 </head>
 <body>
@@ -54,8 +69,11 @@ function buildMenuData(config) {
   const categories = config.categories || [];
   const tools = config.tools || [];
   const catMap = new Map();
+  
+  // Initialize all categories from YAML
   categories.forEach(cat => catMap.set(cat, []));
-
+  
+  // Add tools to their categories
   tools.forEach(tool => {
     if (!tool.repo || !tool.mainfile) return;
     const cat = tool.category || "Uncategorized";
@@ -63,53 +81,100 @@ function buildMenuData(config) {
     
     catMap.get(cat).push({
       name: tool.name || tool.repo,
-      readmePath: `output/${tool.repo}/${tool.mainfile}`  // ✅ EXACTLY what you want
+      readmePath: `output/${tool.repo}/${tool.mainfile}`
     });
   });
 
-  return Array.from(catMap.entries()).map(([category, tools]) => ({ category, tools }));
+  // Return in fixed category order, filter empty ones
+  return categories.map(category => ({
+    category,
+    tools: catMap.get(category) || []
+  })).filter(({tools}) => tools.length > 0);
 }
 
 function renderMenu(menuData) {
   const container = document.getElementById("tools-menu");
+  container.innerHTML = ""; // Clear existing
+  
   const ul = document.createElement("ul");
 
   menuData.forEach(({ category, tools }) => {
     if (tools.length === 0) return;
+    
+    // Category container
     const catLi = document.createElement("li");
     catLi.className = "category";
-    catLi.innerHTML = `<span>${category}</span><ul></ul>`;
-    const subUl = catLi.querySelector("ul");
 
+    // Category title (matches CSS selector)
+    const title = document.createElement("span");
+    title.textContent = category;
+    catLi.appendChild(title);
+
+    // Tools list
+    const subUl = document.createElement("ul");
+    
     tools.forEach(tool => {
-      const li = document.createElement("li");
-      li.className = "tool";
-      li.innerHTML = `<a href="#">${tool.name}</a>`;
-      li.querySelector("a").addEventListener("click", async (e) => {
+      const toolLi = document.createElement("li");
+      toolLi.className = "tool";
+
+      const link = document.createElement("a");
+      link.href = "#";
+      link.textContent = tool.name;
+      
+      link.addEventListener("click", async (e) => {
         e.preventDefault();
         const main = document.getElementById("main");
+        main.innerHTML = `<h2>Loading ${tool.name}...</h2>`;
+        
         try {
           const resp = await fetch(tool.readmePath);
-          main.innerHTML = resp.ok ? await resp.text() : `<p>README not found: ${tool.readmePath}</p>`;
+          if (resp.ok) {
+            main.innerHTML = await resp.text();
+          } else {
+            main.innerHTML = `
+              <h2>${tool.name}</h2>
+              <p>Tool not loaded. README not found: ${tool.readmePath}</p>
+            `;
+          }
         } catch (err) {
-          main.innerHTML = `<p>Error loading ${tool.name}</p>`;
+          main.innerHTML = `
+            <h2>${tool.name}</h2>
+            <p>Error loading tool: ${err.message}</p>
+          `;
         }
       });
-      subUl.appendChild(li);
+
+      toolLi.appendChild(link);
+      subUl.appendChild(toolLi);
     });
+    
+    catLi.appendChild(subUl);
     ul.appendChild(catLi);
   });
+  
   container.appendChild(ul);
 }
 
-// ✅ COMPLETE EXECUTION:
+// Initialize when page loads
 (async function() {
   try {
+    console.log("Loading config...");
     const config = await loadConfig();
+    console.log("Config loaded:", config.categories?.length, "categories,", config.tools?.length, "tools");
+    
     const menuData = buildMenuData(config);
+    console.log("Menu data ready:", menuData.length, "categories with tools");
+    
     renderMenu(menuData);
+    console.log("Menu rendered!");
   } catch (err) {
-    document.getElementById("main").innerHTML = `<p>Error: ${err.message}</p>`;
+    console.error("Load error:", err);
+    document.getElementById("main").innerHTML = `
+      <h2>Error</h2>
+      <p>Failed to load tools: ${err.message}</p>
+    `;
   }
 })();
 </script>
+</body>
+</html>
