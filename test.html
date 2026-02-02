@@ -1,43 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Tools Menu</title>
-<style>
-  body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
-  #sidebar { width: 220px; background: #f5f5f5; padding: 15px; overflow-y: auto; border-right: 1px solid #ddd; }
-  #sidebar ul { list-style: none; padding-left: 0; }
-  .category > span { font-weight: bold; display: block; margin-top: 15px; }
-  .tool { margin-left: 15px; }
-</style>
+  <meta charset="UTF-8">
+  <title>Tools Menu</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    ul { list-style: none; padding-left: 20px; }
+    .category > span { font-weight: bold; cursor: default; }
+    .tool { margin-left: 20px; }
+  </style>
 </head>
 <body>
 
-<nav id="sidebar"></nav>
+<h1>Tools Menu</h1>
+<nav id="tools-menu"></nav>
 
+<!-- js-yaml library -->
 <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
+
 <script>
-(async function() {
-  const res = await fetch("./config/tools.yml");
-  const text = await res.text();
-  const config = jsyaml.load(text);
+async function loadConfig() {
+  const response = await fetch("/config/tools.yml");
+  const yamlText = await response.text();
+  return jsyaml.load(yamlText);
+}
 
-  const categories = config.categories || [];
-  const tools = config.tools || [];
-  const catMap = new Map(categories.map(c => [c, []]));
+function normalizeConfig(config) {
+  const { categories, tools } = config;
 
-  tools.forEach(t => {
-    if (catMap.has(t.category)) catMap.get(t.category).push(t.name || t.repo);
-  });
+  const categoryMap = new Map(categories.map(cat => [cat, []]));
 
-  const sidebar = document.getElementById("sidebar");
+  for (const tool of tools) {
+    const category = tool.category;
+    if (!categoryMap.has(category)) continue;
+
+    categoryMap.get(category).push({
+      id: tool.repo,
+      name: tool.name ?? tool.repo,
+      repo: tool.repo,
+      branch: tool.branch,
+      readmePath: tool.readme_path,
+      docsRoot: tool.docs_root
+    });
+  }
+
+  return Array.from(categoryMap, ([category, tools]) => ({ category, tools }));
+}
+
+function renderMenu(menuData) {
+  const nav = document.getElementById("tools-menu");
   const ul = document.createElement("ul");
 
-  catMap.forEach((toolNames, category) => {
+  for (const { category, tools } of menuData) {
     const catLi = document.createElement("li");
     catLi.className = "category";
-    const span = document.createElement("span");
-    span.textContent = category;
-    catLi.appendChild(span);
 
-    const subUl = document.createElement("ul");
+    const catTitle = document.createElement("span");
+    catTitle.textContent = category;
+    catLi.appendChild(catTitle);
+
+    const toolsUl = document.createElement("ul");
+    for (const tool of tools) {
+      const toolLi = document.createElement("li");
+      toolLi.className = "tool";
+      toolLi.textContent = tool.name;
+      toolsUl.appendChild(toolLi);
+    }
+
+    catLi.appendChild(toolsUl);
+    ul.appendChild(catLi);
+  }
+
+  nav.appendChild(ul);
+}
+
+(async function initMenu() {
+  const config = await loadConfig();
+  const menuData = normalizeConfig(config);
+  renderMenu(menuData);
+})();
+</script>
+
+</body>
+</html>
