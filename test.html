@@ -4,54 +4,14 @@
   <meta charset="UTF-8">
   <title>Tools Catalogue</title>
   <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      display: flex;
-    }
-
-    /* Sidebar styles */
-    #sidebar {
-      width: 250px;
-      background-color: #f5f5f5;
-      padding: 20px;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-      height: 100vh;
-      overflow-y: auto;
-    }
-
-    /* Main content */
-    #main {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-    }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    .category > span {
-      font-weight: bold;
-      margin-top: 10px;
-      display: block;
-    }
-
-    .tool {
-      margin-left: 15px;
-    }
-
-    .tool a {
-      text-decoration: none;
-      color: #333;
-      cursor: pointer;
-    }
-
-    .tool a:hover {
-      text-decoration: underline;
-      color: #0070f3;
-    }
+    body { font-family: sans-serif; margin: 0; display: flex; }
+    #sidebar { width: 250px; background: #f5f5f5; padding: 20px; box-shadow: 2px 0 5px rgba(0,0,0,0.1); height: 100vh; overflow-y: auto; }
+    #main { flex: 1; padding: 20px; overflow-y: auto; }
+    ul { list-style: none; padding-left: 0; }
+    .category > span { font-weight: bold; margin-top: 10px; display: block; }
+    .tool { margin-left: 15px; }
+    .tool a { text-decoration: none; color: #333; cursor: pointer; }
+    .tool a:hover { text-decoration: underline; color: #0070f3; }
   </style>
 </head>
 <body>
@@ -67,47 +27,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
-
 <script>
 async function loadConfig() {
-  const response = await fetch("config/tools.yml");
-  const yamlText = await response.text();
-  return jsyaml.load(yamlText);
-}
-
-function buildMenuData(config) {
-  const categories = config.categories || [];
-  const tools = config.tools || [];
-
-  const catMap = new Map(categories.map(c => [c, []]));
-
-  tools.forEach(tool => {
-    if (catMap.has(tool.category)) {
-      catMap.get(tool.category).push({
-        name: tool.name || tool.repo,
-        readmePath: `output/${tool.repo}/README.html` // <-- preserve exact capitalization
-      });
-    }
-  });
-
-  return Array.from(catMap.entries()).map(([category, tools]) => ({
-    category,
-    tools
-  }));
-}
-
-function renderMenu(menuData) {
-  const container = document.getElementById("tools-menu");
-  const ul = document.createElement("ul");
-
-  menuData.forEach(({ category, tools }) => {
-    const catLi = document.createElement("li");
-    catLi.className = "category";
-
-    const title = document.createElement("span");
-    title.textContent = category;
-    catLi.appendChild(title);
-
-    const subUl = document.createElement("ul");
-    tools.forEach(tool => {
-      const li
+  cons
