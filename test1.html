@@ -135,20 +135,22 @@
 
     // --- YAML-DRIVEN MENU ---
 
-    async function loadToolsYaml() {
-      try {
-        const res = await fetch('config/tools.yml');
-        if (!res.ok) return; // leave fallback menu
-
-        const yml = await res.text();
-        const config = parseSimpleYaml(yml);
-        if (!config || !Array.isArray(config.categories)) return;
-
-        renderMenu(config.categories);
-      } catch (e) {
-        console.log('Could not load tools.yml, using fallback menu.', e);
-      }
+async function loadToolsYaml() {
+  try {
+    const res = await fetch('config/tools.yml');
+    if (!res.ok) return; 
+    
+    const yml = await res.text();
+    const config = parseSimpleYaml(yml);
+    
+    // **CRITICAL FIX**: Only render if parsing succeeded
+    if (config && config.categories && config.categories.length > 0) {
+      renderMenu(config.categories);
     }
+  } catch (e) {
+    console.log('YAML failed, keeping fallback menu');
+  }
+}
 
     // Minimal YAML parser for the expected structure
     function parseSimpleYaml(text) {
@@ -206,26 +208,28 @@
   return result;
 }
 
-    function renderMenu(categories) {
-      const container = document.getElementById('menu-container');
-      let html = '';
-
-      categories.forEach(cat => {
-        html += `<div class="category"><h3>${cat.name}</h3>`;
-        (cat.tools || []).forEach(tool => {
-          html += `
-            <div class="tool">
-              <a href="#" data-repo="${tool.repo}"
-                 onclick="loadTool('${tool.repo}', this); return false;">
-                ${tool.name}
-              </a>
-            </div>`;
-        });
-        html += `</div>`;
-      });
-
-      container.innerHTML = html;
-    }
+function renderMenu(categories) {
+  const container = document.getElementById('menu-container');
+  let html = '';
+  
+  categories.forEach(cat => {
+    html += `<div class="category"><h3>${cat.name}</h3>`;
+    cat.tools.forEach(tool => {
+      html += `
+        <div class="tool">
+          <a href="#" data-repo="${tool.repo}" onclick="loadTool('${tool.repo}', this); return false;">
+            ${tool.name}
+          </a>
+        </div>`;
+    });
+    html += `</div>`;
+  });
+  
+  // **CRITICAL FIX**: Only replace if we have tools
+  if (html.trim()) {
+    container.innerHTML = html;
+  }
+}
 
     // Init
     loadHome();
