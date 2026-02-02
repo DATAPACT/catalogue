@@ -4,23 +4,71 @@
   <meta charset="UTF-8">
   <title>Tools Catalogue</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    ul { list-style: none; padding-left: 10px; }
-    .category > span { font-weight: bold; margin-top: 10px; display: block; }
-    .tool { margin-left: 15px; }
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      display: flex;
+    }
+
+    /* Sidebar styles */
+    #sidebar {
+      width: 250px;
+      background-color: #f5f5f5;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    /* Main content */
+    #main {
+      flex: 1;
+      padding: 20px;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .category > span {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+
+    .tool {
+      margin-left: 15px;
+    }
+
+    .tool a {
+      text-decoration: none;
+      color: #333;
+    }
+
+    .tool a:hover {
+      text-decoration: underline;
+      color: #0070f3;
+    }
   </style>
 </head>
 <body>
 
-<h1>Tools Catalogue</h1>
-<nav id="tools-menu"></nav>
+<div id="sidebar">
+  <h2>Tools</h2>
+  <nav id="tools-menu"></nav>
+</div>
+
+<div id="main">
+  <h1>Tools Catalogue</h1>
+  <p>Select a tool from the sidebar to visit its website.</p>
+</div>
 
 <!-- YAML parser -->
 <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
 
 <script>
 async function loadConfig() {
-  // relative path works for GitHub Pages project
   const response = await fetch("config/tools.yml");
   const yamlText = await response.text();
   return jsyaml.load(yamlText);
@@ -30,14 +78,13 @@ function buildMenuData(config) {
   const categories = config.categories || [];
   const tools = config.tools || [];
 
-  // preserve category order
   const catMap = new Map(categories.map(c => [c, []]));
 
   tools.forEach(tool => {
     if (catMap.has(tool.category)) {
       catMap.get(tool.category).push({
         name: tool.name || tool.repo,
-        repo: tool.repo
+        url: `https://${(tool.name || tool.repo).toLowerCase().replace(/\s+/g,'')}.com`
       });
     }
   });
@@ -64,7 +111,13 @@ function renderMenu(menuData) {
     tools.forEach(tool => {
       const li = document.createElement("li");
       li.className = "tool";
-      li.textContent = tool.name;
+
+      const link = document.createElement("a");
+      link.href = tool.url;
+      link.textContent = tool.name;
+      link.target = "_blank"; // opens in a new tab
+      li.appendChild(link);
+
       subUl.appendChild(li);
     });
 
