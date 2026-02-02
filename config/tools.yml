@@ -50,7 +50,7 @@ tools:
     readme_path: "docs/README.md"
     docs_root: "docs"
   - repo: "toolbox-ui"
-    category: "APPlyR"      # Display name defaults to repo name if not set
+    category: "ApplyR"      # Display name defaults to repo name if not set
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
