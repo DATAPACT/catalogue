@@ -4,25 +4,10 @@
 <meta charset="UTF-8">
 <title>Tools Menu</title>
 <style>
-  body {
-    margin: 0;
-    font-family: sans-serif;
-    display: flex;
-    height: 100vh;
-  }
-  #sidebar {
-    width: 220px;
-    background: #f5f5f5;
-    padding: 15px;
-    overflow-y: auto;
-    border-right: 1px solid #ddd;
-  }
+  body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
+  #sidebar { width: 220px; background: #f5f5f5; padding: 15px; overflow-y: auto; border-right: 1px solid #ddd; }
   #sidebar ul { list-style: none; padding-left: 0; }
-  .category > span {
-    font-weight: bold;
-    display: block;
-    margin-top: 15px;
-  }
+  .category > span { font-weight: bold; display: block; margin-top: 15px; }
   .tool { margin-left: 15px; }
 </style>
 </head>
@@ -32,27 +17,27 @@
 
 <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
 <script>
-async function loadConfig() {
-  const response = await fetch("./config/tools.yml");
-  const yamlText = await response.text();
-  return jsyaml.load(yamlText);
-}
+(async function() {
+  const res = await fetch("./config/tools.yml");
+  const text = await res.text();
+  const config = jsyaml.load(text);
 
-function buildMenuData(config) {
   const categories = config.categories || [];
   const tools = config.tools || [];
-
   const catMap = new Map(categories.map(c => [c, []]));
 
-  tools.forEach(tool => {
-    if (catMap.has(tool.category)) {
-      catMap.get(tool.category).push({
-        name: tool.name || tool.repo
-      });
-    }
+  tools.forEach(t => {
+    if (catMap.has(t.category)) catMap.get(t.category).push(t.name || t.repo);
   });
 
-  return Array.from(catMap.entries()).map(([category, tools]) => ({ category, tools }));
-}
+  const sidebar = document.getElementById("sidebar");
+  const ul = document.createElement("ul");
 
-function renderMenu(
+  catMap.forEach((toolNames, category) => {
+    const catLi = document.createElement("li");
+    catLi.className = "category";
+    const span = document.createElement("span");
+    span.textContent = category;
+    catLi.appendChild(span);
+
+    const subUl = document.createElement("ul");
