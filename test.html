@@ -54,22 +54,19 @@ function buildMenuData(config) {
   const categories = config.categories || [];
   const tools = config.tools || [];
   const catMap = new Map();
-
-  // Initialize category map with fixed order
   categories.forEach(cat => catMap.set(cat, []));
 
-  // Assign tools to their categories
   tools.forEach(tool => {
     if (!tool.repo || !tool.mainfile) return;
     const cat = tool.category || "Uncategorized";
     if (!catMap.has(cat)) catMap.set(cat, []);
+    
     catMap.get(cat).push({
       name: tool.name || tool.repo,
-      readmePath: `output/${tool.repo}/${tool.mainfile}`
+      readmePath: `output/${tool.repo}/${tool.mainfile}`  // ✅ EXACTLY what you want
     });
   });
 
-  // Convert Map to array preserving category order
   return Array.from(catMap.entries()).map(([category, tools]) => ({ category, tools }));
 }
 
@@ -78,58 +75,41 @@ function renderMenu(menuData) {
   const ul = document.createElement("ul");
 
   menuData.forEach(({ category, tools }) => {
-    if (tools.length === 0) return; // skip empty categories
+    if (tools.length === 0) return;
     const catLi = document.createElement("li");
     catLi.className = "category";
-
-    const title = document.createElement("span");
-    title.textContent = category;
-    catLi.appendChild(title);
-
-    const subUl = document.createElement("ul");
+    catLi.innerHTML = `<span>${category}</span><ul></ul>`;
+    const subUl = catLi.querySelector("ul");
 
     tools.forEach(tool => {
       const li = document.createElement("li");
       li.className = "tool";
-
-      const link = document.createElement("a");
-      link.textContent = tool.name;
-
-      link.addEventListener("click", async (e) => {
+      li.innerHTML = `<a href="#">${tool.name}</a>`;
+      li.querySelector("a").addEventListener("click", async (e) => {
         e.preventDefault();
         const main = document.getElementById("main");
         try {
           const resp = await fetch(tool.readmePath);
-          if (resp.ok) {
-            main.innerHTML = await resp.text();
-          } else {
-            main.innerHTML = `<h2>${tool.name}</h2><p>README not found.</p>`;
-          }
+          main.innerHTML = resp.ok ? await resp.text() : `<p>README not found: ${tool.readmePath}</p>`;
         } catch (err) {
-          main.innerHTML = `<h2>${tool.name}</h2><p>Error loading README.</p>`;
-          console.error(err);
+          main.innerHTML = `<p>Error loading ${tool.name}</p>`;
         }
       });
-
-      li.appendChild(link);
       subUl.appendChild(li);
     });
-
-    catLi.appendChild(subUl);
     ul.appendChild(catLi);
   });
-
   container.appendChild(ul);
 }
 
+// ✅ COMPLETE EXECUTION:
 (async function() {
   try {
     const config = await loadConfig();
     const menuData = buildMenuData(config);
     renderMenu(menuData);
   } catch (err) {
-    console.error("Failed to load:", err);
-    document.getElementById("main").innerHTML = 
-      `<h2>Error</h2><p>Failed to load tools: ${err.message}</p>`;
+    document.getElementById("main").innerHTML = `<p>Error: ${err.message}</p>`;
   }
 })();
+</script>
