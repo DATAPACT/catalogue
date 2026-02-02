@@ -24,6 +24,7 @@
     #main {
       flex: 1;
       padding: 20px;
+      overflow-y: auto;
     }
 
     ul {
@@ -44,6 +45,7 @@
     .tool a {
       text-decoration: none;
       color: #333;
+      cursor: pointer;
     }
 
     .tool a:hover {
@@ -61,23 +63,7 @@
 
 <div id="main">
   <h1>Tools Catalogue</h1>
-  <p>Select a tool from the sidebar to visit its website.</p>
-
-  <h2>Example Content</h2>
-  <p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-    Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-  </p>
-
-  <p>
-    Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. 
-    Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. 
-    Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula. 
-    Donec lobortis risus a elit. Etiam tempor. Ut ullamcorper, ligula eu tempor congue, eros est euismod turpis, id tincidunt sapien risus a quam.
-  </p>
+  <p>Select a tool from the sidebar to see its README.</p>
 </div>
 
 <!-- YAML parser -->
@@ -100,7 +86,7 @@ function buildMenuData(config) {
     if (catMap.has(tool.category)) {
       catMap.get(tool.category).push({
         name: tool.name || tool.repo,
-        url: `https://${(tool.name || tool.repo).toLowerCase().replace(/\s+/g,'')}.com`
+        readmePath: `/output/${(tool.name || tool.repo).toLowerCase().replace(/\s+/g,'')}/README.html`
       });
     }
   });
@@ -129,11 +115,26 @@ function renderMenu(menuData) {
       li.className = "tool";
 
       const link = document.createElement("a");
-      link.href = tool.url;
       link.textContent = tool.name;
-      link.target = "_blank";
-      li.appendChild(link);
 
+      // When clicked, try to fetch the README
+      link.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const main = document.getElementById("main");
+        try {
+          const resp = await fetch(tool.readmePath);
+          if (resp.ok) {
+            const html = await resp.text();
+            main.innerHTML = html;
+          } else {
+            main.innerHTML = `<h2>${tool.name}</h2><p>README not found.</p>`;
+          }
+        } catch (err) {
+          main.innerHTML = `<h2>${tool.name}</h2><p>Error loading README.</p>`;
+        }
+      });
+
+      li.appendChild(link);
       subUl.appendChild(li);
     });
 
