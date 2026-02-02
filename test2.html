@@ -115,20 +115,24 @@ function renderMenu(menuData) {
       const link = document.createElement("a");
       link.href = "#";
       link.textContent = tool.name;
-      link.dataset.repo = tool.repo;  // ✅ Store repo for image fix
+      link.dataset.repo = tool.repo;
       
+      // ✅ FIXED: Capture variables in closure - NO 'this' context issues
       link.addEventListener("click", async (e) => {
         e.preventDefault();
         const main = document.getElementById("main");
-        const repo = this.dataset.repo;  // ✅ FIXED: Use link's dataset
-        main.innerHTML = `<h2>Loading ${tool.name}...</h2>`;
+        const repo = tool.repo;  // ✅ Use captured tool.repo directly
+        const readmePath = tool.readmePath;
+        const toolName = tool.name;
+        
+        main.innerHTML = `<h2>Loading ${toolName}...</h2>`;
         
         try {
-          const resp = await fetch(tool.readmePath);
+          const resp = await fetch(readmePath);
           if (resp.ok) {
             let html = await resp.text();
             
-            // 🎯 IMAGE PATH FIX from working page
+            // 🎯 IMAGE PATH FIX - Direct repo access
             html = html.replace(/src=["']([^"']+)["']/g, (match, src) => {
               if (src.startsWith('./images/')) {
                 const filename = src.replace('./images/', '');
@@ -144,13 +148,13 @@ function renderMenu(menuData) {
             main.innerHTML = html;
           } else {
             main.innerHTML = `
-              <h2>${tool.name}</h2>
-              <p>Tool not loaded. README not found: ${tool.readmePath}</p>
+              <h2>${toolName}</h2>
+              <p>Tool not loaded. README not found: ${readmePath}</p>
             `;
           }
         } catch (err) {
           main.innerHTML = `
-            <h2>${tool.name}</h2>
+            <h2>${toolName}</h2>
             <p>Error loading tool: ${err.message}</p>
           `;
         }
