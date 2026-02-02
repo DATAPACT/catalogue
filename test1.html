@@ -152,60 +152,59 @@
 
     // Minimal YAML parser for the expected structure
     function parseSimpleYaml(text) {
-      const lines = text.split('\n');
-      const result = { categories: [] };
-      let currentCategory = null;
-      let inToolsList = false;
+  const lines = text.split('\n');
+  const result = { categories: [] };
+  let currentCategory = null;
+  let inToolsList = false;
 
-      for (let raw of lines) {
-        const line = raw.trim();
-        if (!line || line.startsWith('#')) continue;
+  for (let raw of lines) {
+    const line = raw.trim();
+    if (!line || line.startsWith('#')) continue;
 
-        if (line.startsWith('categories:')) {
-          continue;
-        }
+    if (line.startsWith('categories:')) continue;
 
-        // New category: - name: "PipelineR"
-        const catMatch = line.match(/^-+\s*name:\s*"?([^"]+)"?/);
-        if (catMatch && !line.includes('tools:')) {
-          currentCategory = { name: catMatch[1], tools: [] };
-          result.categories.push(currentCategory);
-          inToolsList = false;
-          continue;
-        }
-
-        if (line.startsWith('tools:')) {
-          inToolsList = true;
-          continue;
-        }
-
-        // Tool inside current category
-        if (inToolsList && currentCategory) {
-          const toolMatch = line.match(/^-+\s*name:\s*"?([^"]+)"?/);
-          if (toolMatch) {
-            const toolName = toolMatch[1];
-            // Optional repo field on next lines: repo: "KubePipe"
-            currentCategory.tools.push({ name: toolName, repo: null });
-            continue;
-          }
-          const repoMatch = line.match(/^repo:\s*"?([^"]+)"?/);
-          if (repoMatch && currentCategory.tools.length > 0) {
-            currentCategory.tools[currentCategory.tools.length - 1].repo = repoMatch[1];
-          }
-        }
-      }
-
-      // Default repo = name with spaces → hyphen if not set
-      result.categories.forEach(cat => {
-        cat.tools.forEach(t => {
-          if (!t.repo) {
-            t.repo = t.name.replace(/\s+/g, '-');
-          }
-        });
-      });
-
-      return result;
+    // New category: - name: "PipelineR"
+    const catMatch = line.match(/^-+\s*name:\s*"?([^"]+)"?/);
+    if (catMatch && !line.includes('tools:')) {
+      currentCategory = { name: catMatch[1], tools: [] };
+      result.categories.push(currentCategory);
+      inToolsList = false;
+      continue;
     }
+
+    if (line.startsWith('tools:')) {
+      inToolsList = true;
+      continue;
+    }
+
+    // Tool inside current category
+    if (inToolsList && currentCategory) {
+      const toolMatch = line.match(/^-+\s*name:\s*"?([^"]+)"?/);
+      if (toolMatch) {
+        const toolName = toolMatch[1];
+        currentCategory.tools.push({ name: toolName, repo: null });
+        continue;
+      }
+      const repoMatch = line.match(/^repo:\s*"?([^"]+)"?/);
+      if (repoMatch && currentCategory.tools.length > 0) {
+        // **CRITICAL**: Use EXACT repo name from YAML - NO changes
+        currentCategory.tools[currentCategory.tools.length - 1].repo = repoMatch[1];
+      }
+    }
+  }
+
+  // **ONLY fallback if repo missing** - preserve exact case when provided
+  result.categories.forEach(cat => {
+    cat.tools.forEach(t => {
+      if (!t.repo) {
+        t.repo = t.name.replace(/\s+/g, '-');
+      }
+      // **repo stays EXACTLY as written in YAML**
+    });
+  });
+
+  return result;
+}
 
     function renderMenu(categories) {
       const container = document.getElementById('menu-container');
