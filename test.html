@@ -97,13 +97,6 @@ function buildMenuData(config) {
   }));
 }
 
-
-  return Array.from(catMap.entries()).map(([category, tools]) => ({
-    category,
-    tools
-  }));
-}
-
 function renderMenu(menuData) {
   const container = document.getElementById("tools-menu");
   const ul = document.createElement("ul");
