@@ -28,4 +28,59 @@
     }
 
     ul {
-      list-style:
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .category > span {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+
+    .tool {
+      margin-left: 15px;
+    }
+
+    .tool a {
+      text-decoration: none;
+      color: #333;
+      cursor: pointer;
+    }
+
+    .tool a:hover {
+      text-decoration: underline;
+      color: #0070f3;
+    }
+  </style>
+</head>
+<body>
+
+<div id="sidebar">
+  <h2>Tools</h2>
+  <nav id="tools-menu"></nav>
+</div>
+
+<div id="main">
+  <h1>Tools Catalogue</h1>
+  <p>Select a tool from the sidebar to see its README.</p>
+</div>
+
+<!-- YAML parser -->
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
+
+<script>
+async function loadConfig() {
+  const response = await fetch("config/tools.yml");
+  const yamlText = await response.text();
+  return jsyaml.load(yamlText);
+}
+
+// Build menu data dynamically from tools
+function buildMenuData(config) {
+  const tools = config.tools || [];
+  const catMap = new Map();
+
+  tools.forEach(tool => {
+    if (!tool.repo || !tool.mainfile) return; // skip invalid entries
+    if (!catMap.has(tool.category)) {
