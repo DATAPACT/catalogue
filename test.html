@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Tools Catalogue</title>
-  <style>
-    body { font-family: sans-serif; margin: 0; display: flex; }
-    #sidebar { width: 250px; background: #f5f5f5; padding: 20px; box-shadow: 2px 0 5px rgba(0,0,0,0.1); height: 100vh; overflow-y: auto; }
-    #main { flex: 1; padding: 20px; overflow-y: auto; }
-    ul { list-style: none; padding-left: 0; }
-    .category > span { font-weight: bold; margin-top: 10px; display: block; }
-    .tool { margin-left: 15px; }
-    .tool a { text-decoration: none; color: #333; cursor: pointer; }
-    .tool a:hover { text-decoration: underline; color: #0070f3; }
-  </style>
+<meta charset="UTF-8">
+<title>Tools Catalogue</title>
+<style>
+  body { font-family: sans-serif; margin: 0; display: flex; }
+  #sidebar { width: 250px; background: #f5f5f5; padding: 20px; box-shadow: 2px 0 5px rgba(0,0,0,0.1); height: 100vh; overflow-y: auto; }
+  #main { flex: 1; padding: 20px; overflow-y: auto; }
+  ul { list-style: none; padding-left: 0; }
+  .category > span { font-weight: bold; margin-top: 10px; display: block; }
+  .tool { margin-left: 15px; }
+  .tool a { text-decoration: none; color: #333; cursor: pointer; }
+  .tool a:hover { text-decoration: underline; color: #0070f3; }
+</style>
 </head>
 <body>
 
@@ -29,4 +29,85 @@
 <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
 <script>
 async function loadConfig() {
-  cons
+  const response = await fetch("config/tools.yml");
+  const yamlText = await response.text();
+  return jsyaml.load(yamlText);
+}
+
+function buildMenuData(config) {
+  const categories = config.categories || [];
+  const tools = config.tools || [];
+  const catMap = new Map(categories.map(c => [c, []]));
+
+  tools.forEach(tool => {
+    // ensure category exists in categories
+    if (catMap.has(tool.category)) {
+      catMap.get(tool.category).push({
+        name: tool.name,               // display name
+        repo: tool.repo,               // repo name exactly as in YAML
+        readmePath: `output/${tool.repo}/README.html` // exact path
+      });
+    }
+  });
+
+  return Array.from(catMap.entries()).map(([category, tools]) => ({ category, tools }));
+}
+
+function renderMenu(menuData) {
+  const container = document.getElementById("tools-menu");
+  container.innerHTML = ''; // clear in case of re-render
+
+  const ul = document.createElement("ul");
+
+  menuData.forEach(({ category, tools }) => {
+    const catLi = document.createElement("li");
+    catLi.className = "category";
+
+    const title = document.createElement("span");
+    title.textContent = category;
+    catLi.appendChild(title);
+
+    const subUl = document.createElement("ul");
+
+    tools.forEach(tool => {
+      const li = document.createElement("li");
+      li.className = "tool";
+
+      const link = document.createElement("a");
+      link.textContent = tool.name;
+
+      link.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const main = document.getElementById("main");
+        try {
+          const resp = await fetch(tool.readmePath);
+          if (resp.ok) {
+            main.innerHTML = await resp.text();
+          } else {
+            main.innerHTML = `<h2>${tool.name}</h2><p>README not found at <code>${tool.readmePath}</code>.</p>`;
+          }
+        } catch (err) {
+          main.innerHTML = `<h2>${tool.name}</h2><p>Error loading README at <code>${tool.readmePath}</code>.</p>`;
+        }
+      });
+
+      li.appendChild(link);
+      subUl.appendChild(li);
+    });
+
+    catLi.appendChild(subUl);
+    ul.appendChild(catLi);
+  });
+
+  container.appendChild(ul);
+}
+
+(async function () {
+  const config = await loadConfig();
+  const menuData = buildMenuData(config);
+  renderMenu(menuData);
+})();
+</script>
+
+</body>
+</html>
