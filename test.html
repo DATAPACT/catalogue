@@ -2,81 +2,82 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Tools Menu</title>
+  <title>Tools Catalogue</title>
   <style>
     body { font-family: sans-serif; padding: 20px; }
-    ul { list-style: none; padding-left: 20px; }
-    .category > span { font-weight: bold; cursor: default; }
-    .tool { margin-left: 20px; }
+    ul { list-style: none; padding-left: 10px; }
+    .category > span { font-weight: bold; margin-top: 10px; display: block; }
+    .tool { margin-left: 15px; }
   </style>
 </head>
 <body>
 
-<h1>Tools Menu</h1>
+<h1>Tools Catalogue</h1>
 <nav id="tools-menu"></nav>
 
-<!-- js-yaml library -->
+<!-- YAML parser -->
 <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
 
 <script>
 async function loadConfig() {
-  const response = await fetch("/config/tools.yml");
+  // relative path works for GitHub Pages project
+  const response = await fetch("config/tools.yml");
   const yamlText = await response.text();
   return jsyaml.load(yamlText);
 }
 
-function normalizeConfig(config) {
-  const { categories, tools } = config;
+function buildMenuData(config) {
+  const categories = config.categories || [];
+  const tools = config.tools || [];
 
-  const categoryMap = new Map(categories.map(cat => [cat, []]));
+  // preserve category order
+  const catMap = new Map(categories.map(c => [c, []]));
 
-  for (const tool of tools) {
-    const category = tool.category;
-    if (!categoryMap.has(category)) continue;
+  tools.forEach(tool => {
+    if (catMap.has(tool.category)) {
+      catMap.get(tool.category).push({
+        name: tool.name || tool.repo,
+        repo: tool.repo
+      });
+    }
+  });
 
-    categoryMap.get(category).push({
-      id: tool.repo,
-      name: tool.name ?? tool.repo,
-      repo: tool.repo,
-      branch: tool.branch,
-      readmePath: tool.readme_path,
-      docsRoot: tool.docs_root
-    });
-  }
-
-  return Array.from(categoryMap, ([category, tools]) => ({ category, tools }));
+  return Array.from(catMap.entries()).map(([category, tools]) => ({
+    category,
+    tools
+  }));
 }
 
 function renderMenu(menuData) {
-  const nav = document.getElementById("tools-menu");
+  const container = document.getElementById("tools-menu");
   const ul = document.createElement("ul");
 
-  for (const { category, tools } of menuData) {
+  menuData.forEach(({ category, tools }) => {
     const catLi = document.createElement("li");
     catLi.className = "category";
 
-    const catTitle = document.createElement("span");
-    catTitle.textContent = category;
-    catLi.appendChild(catTitle);
+    const title = document.createElement("span");
+    title.textContent = category;
+    catLi.appendChild(title);
 
-    const toolsUl = document.createElement("ul");
-    for (const tool of tools) {
-      const toolLi = document.createElement("li");
-      toolLi.className = "tool";
-      toolLi.textContent = tool.name;
-      toolsUl.appendChild(toolLi);
-    }
+    const subUl = document.createElement("ul");
+    tools.forEach(tool => {
+      const li = document.createElement("li");
+      li.className = "tool";
+      li.textContent = tool.name;
+      subUl.appendChild(li);
+    });
 
-    catLi.appendChild(toolsUl);
+    catLi.appendChild(subUl);
     ul.appendChild(catLi);
-  }
+  });
 
-  nav.appendChild(ul);
+  container.appendChild(ul);
 }
 
-(async function initMenu() {
+(async function () {
   const config = await loadConfig();
-  const menuData = normalizeConfig(config);
+  const menuData = buildMenuData(config);
   renderMenu(menuData);
 })();
 </script>
