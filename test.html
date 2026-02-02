@@ -1,58 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Tools Catalogue</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      display: flex;
-    }
-
-    /* Sidebar styles */
-    #sidebar {
-      width: 250px;
-      background-color: #f5f5f5;
-      padding: 20px;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-      height: 100vh;
-      overflow-y: auto;
-    }
-
-    /* Main content */
-    #main {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-    }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    .category > span {
-      font-weight: bold;
-      margin-top: 10px;
-      display: block;
-    }
-
-    .tool {
-      margin-left: 15px;
-    }
-
-    .tool a {
-      text-decoration: none;
-      color: #333;
-      cursor: pointer;
-    }
-
-    .tool a:hover {
-      text-decoration: underline;
-      color: #0070f3;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Tools Catalogue</title>
+<style>
+  body {
+    font-family: sans-serif;
+    margin: 0;
+    display: flex;
+  }
+  #sidebar {
+    width: 250px;
+    background-color: #f5f5f5;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    height: 100vh;
+    overflow-y: auto;
+  }
+  #main {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  ul { list-style: none; padding-left: 0; }
+  .category > span { font-weight: bold; margin-top: 10px; display: block; }
+  .tool { margin-left: 15px; }
+  .tool a { text-decoration: none; color: #333; cursor: pointer; }
+  .tool a:hover { text-decoration: underline; color: #0070f3; }
+</style>
 </head>
 <body>
 
@@ -66,21 +41,91 @@
   <p>Select a tool from the sidebar to see its README.</p>
 </div>
 
-<!-- YAML parser -->
 <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
-
 <script>
 async function loadConfig() {
   const response = await fetch("config/tools.yml");
+  if (!response.ok) throw new Error("Could not fetch tools.yml");
   const yamlText = await response.text();
   return jsyaml.load(yamlText);
 }
 
-// Build menu data dynamically from tools
 function buildMenuData(config) {
+  const categories = config.categories || [];
   const tools = config.tools || [];
   const catMap = new Map();
 
+  // Initialize category map with fixed order
+  categories.forEach(cat => catMap.set(cat, []));
+
+  // Assign tools to their categories
   tools.forEach(tool => {
-    if (!tool.repo || !tool.mainfile) return; // skip invalid entries
-    if (!catMap.has(tool.category)) {
+    if (!tool.repo || !tool.mainfile) return;
+    const cat = tool.category || "Uncategorized";
+    if (!catMap.has(cat)) catMap.set(cat, []);
+    catMap.get(cat).push({
+      name: tool.name || tool.repo,
+      readmePath: `output/${tool.repo}/${tool.mainfile}`
+    });
+  });
+
+  // Convert Map to array preserving category order
+  return Array.from(catMap.entries()).map(([category, tools]) => ({ category, tools }));
+}
+
+function renderMenu(menuData) {
+  const container = document.getElementById("tools-menu");
+  const ul = document.createElement("ul");
+
+  menuData.forEach(({ category, tools }) => {
+    if (tools.length === 0) return; // skip empty categories
+    const catLi = document.createElement("li");
+    catLi.className = "category";
+
+    const title = document.createElement("span");
+    title.textContent = category;
+    catLi.appendChild(title);
+
+    const subUl = document.createElement("ul");
+
+    tools.forEach(tool => {
+      const li = document.createElement("li");
+      li.className = "tool";
+
+      const link = document.createElement("a");
+      link.textContent = tool.name;
+
+      link.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const main = document.getElementById("main");
+        try {
+          const resp = await fetch(tool.readmePath);
+          if (resp.ok) {
+            main.innerHTML = await resp.text();
+          } else {
+            main.innerHTML = `<h2>${tool.name}</h2><p>README not found.</p>`;
+          }
+        } catch (err) {
+          main.innerHTML = `<h2>${tool.name}</h2><p>Error loading README.</p>`;
+          console.error(err);
+        }
+      });
+
+      li.appendChild(link);
+      subUl.appendChild(li);
+    });
+
+    catLi.appendChild(subUl);
+    ul.appendChild(catLi);
+  });
+
+  container.appendChild(ul);
+}
+
+(async function() {
+  let config;
+  try {
+    config = await loadConfig();
+  } catch (err) {
+    console.error(err);
+    document.getElementById("main").innerHTML = "<p>Error loading tools.yml</p>";
