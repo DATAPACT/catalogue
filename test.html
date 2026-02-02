@@ -123,9 +123,13 @@ function renderMenu(menuData) {
 }
 
 (async function() {
-  let config;
   try {
-    config = await loadConfig();
+    const config = await loadConfig();
+    const menuData = buildMenuData(config);
+    renderMenu(menuData);
   } catch (err) {
-    console.error(err);
-    document.getElementById("main").innerHTML = "<p>Error loading tools.yml</p>";
+    console.error("Failed to load:", err);
+    document.getElementById("main").innerHTML = 
+      `<h2>Error</h2><p>Failed to load tools: ${err.message}</p>`;
+  }
+})();
