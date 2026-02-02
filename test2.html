@@ -108,22 +108,27 @@ function renderMenu(menuData) {
 
     const subUl = document.createElement("ul");
     
-    tools.forEach(tool => {
+    tools.forEach(toolData => {
       const toolLi = document.createElement("li");
       toolLi.className = "tool";
 
       const link = document.createElement("a");
       link.href = "#";
-      link.textContent = tool.name;
-      link.dataset.repo = tool.repo;
+      link.textContent = toolData.name;
       
-      // ✅ FIXED: Capture variables in closure - NO 'this' context issues
-      link.addEventListener("click", async (e) => {
+      // ✅ STORE ALL DATA ON LINK - Bulletproof
+      link.dataset.repo = toolData.repo;
+      link.dataset.readmePath = toolData.readmePath;
+      link.dataset.toolName = toolData.name;
+      
+      link.addEventListener("click", async function(e) {
         e.preventDefault();
         const main = document.getElementById("main");
-        const repo = tool.repo;  // ✅ Use captured tool.repo directly
-        const readmePath = tool.readmePath;
-        const toolName = tool.name;
+        
+        // ✅ READ FROM DATASET - Always works
+        const repo = this.dataset.repo;
+        const readmePath = this.dataset.readmePath;
+        const toolName = this.dataset.toolName;
         
         main.innerHTML = `<h2>Loading ${toolName}...</h2>`;
         
@@ -132,7 +137,7 @@ function renderMenu(menuData) {
           if (resp.ok) {
             let html = await resp.text();
             
-            // 🎯 IMAGE PATH FIX - Direct repo access
+            // 🎯 IMAGE PATH FIX
             html = html.replace(/src=["']([^"']+)["']/g, (match, src) => {
               if (src.startsWith('./images/')) {
                 const filename = src.replace('./images/', '');
