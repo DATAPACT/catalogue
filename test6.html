@@ -73,6 +73,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
 <script>
+// Load Home dynamically
 async function loadHome() {
   const main = document.getElementById('main');
   try {
@@ -80,4 +81,137 @@ async function loadHome() {
     if (!resp.ok) throw new Error("Could not load home.html");
     const html = await resp.text();
     main.innerHTML = html;
+  } catch (err) {
+    main.innerHTML = `<p>Error loading home: ${err.message}</p>`;
   }
+}
+
+// Load tools.yml configuration
+async function loadConfig() {
+  const response = await fetch("config/tools.yml");
+  if (!response.ok) throw new Error("Could not fetch tools.yml");
+  const yamlText = await response.text();
+  return jsyaml.load(yamlText);
+}
+
+// Build menu data from config
+function buildMenuData(config) {
+  const categories = config.categories || [];
+  const tools = config.tools || [];
+  const catMap = new Map();
+  
+  categories.forEach(cat => catMap.set(cat, []));
+  
+  tools.forEach(tool => {
+    if (!tool.repo || !tool.mainfile) return;
+    const cat = tool.category || "Uncategorized";
+    if (!catMap.has(cat)) catMap.set(cat, []);
+    
+    catMap.get(cat).push({
+      name: tool.name || tool.repo,
+      repo: tool.repo,
+      readmePath: `output/${tool.repo}/${tool.mainfile}`
+    });
+  });
+
+  return categories.map(category => ({
+    category,
+    tools: catMap.get(category) || []
+  })).filter(({tools}) => tools.length > 0);
+}
+
+// Render the sidebar menu
+function renderMenu(menuData) {
+  const container = document.getElementById("tools-menu");
+  container.innerHTML = "";
+  
+  const ul = document.createElement("ul");
+
+  menuData.forEach(({ category, tools }) => {
+    if (tools.length === 0) return;
+    
+    const catLi = document.createElement("li");
+    catLi.className = "category";
+
+    const title = document.createElement("span");
+    title.textContent = category;
+    catLi.appendChild(title);
+
+    const subUl = document.createElement("ul");
+    
+    tools.forEach(toolData => {
+      const toolLi = document.createElement("li");
+      toolLi.className = "tool";
+
+      const link = document.createElement("a");
+      link.href = "#";
+      link.textContent = toolData.name;
+      
+      link.dataset.repo = toolData.repo;
+      link.dataset.readmePath = toolData.readmePath;
+      link.dataset.toolName = toolData.name;
+      
+      link.addEventListener("click", async function(e) {
+        e.preventDefault();
+        const main = document.getElementById("main");
+        
+        const repo = this.dataset.repo;
+        const readmePath = this.dataset.readmePath;
+        const toolName = this.dataset.toolName;
+        
+        main.innerHTML = `<h2>Loading ${toolName}...</h2>`;
+        
+        try {
+          const resp = await fetch(readmePath);
+          if (resp.ok) {
+            let html = await resp.text();
+            
+            // Fix image paths
+            html = html.replace(/src=["']([^"']+)["']/g, (match, src) => {
+              if (src.startsWith('./images/')) {
+                const filename = src.replace('./images/', '');
+                return `src="output/${repo}/images/${filename}"`;
+              }
+              if (src.startsWith('images/')) {
+                const filename = src.replace('images/', '');
+                return `src="output/${repo}/images/${filename}"`;
+              }
+              return match;
+            });
+            
+            main.innerHTML = html;
+          } else {
+            main.innerHTML = `<h2>${toolName}</h2><p>Tool not loaded. README not found: ${readmePath}</p>`;
+          }
+        } catch (err) {
+          main.innerHTML = `<h2>${toolName}</h2><p>Error loading tool: ${err.message}</p>`;
+        }
+      });
+
+      toolLi.appendChild(link);
+      subUl.appendChild(toolLi);
+    });
+    
+    catLi.appendChild(subUl);
+    ul.appendChild(catLi);
+  });
+  
+  container.appendChild(ul);
+}
+
+// Initialize page
+(async function() {
+  try {
+    const config = await loadConfig();
+    const menuData = buildMenuData(config);
+    renderMenu(menuData);
+
+    // Load Home on page load
+    await loadHome();
+  } catch (err) {
+    document.getElementById("main").innerHTML = `<p>Error: ${err.message}</p>`;
+  }
+})();
+</script>
+</body>
+</html>
