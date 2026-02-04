@@ -38,40 +38,33 @@ def save_file(base_dir, repo, file_path, content_bytes):
     rel_path = Path(file_path)
     out_path = base_dir / repo / rel_path
     out_path.parent.mkdir(parents=True, exist_ok=True)
+
     with out_path.open("wb") as f:
         f.write(content_bytes)
+
     print(f"[OK] Saved {out_path}")
 
-    # Generate README.html using the CURRENT README.md content from private repo
+    # Generate README.html using local Markdown rendering
     if rel_path.name.lower() == "readme.md":
         print(f"[INFO] Rendering {repo}/{file_path} -> README.html...")
-        token = os.environ["GITHUB_PAT"]
-        org = os.environ["GITHUB_ORG"]
-        
         try:
+            import markdown
+
             md_text = content_bytes.decode("utf-8")
-            url = "https://api.github.com/markdown"
-            headers = {
-                "Authorization": f"Bearer {token}",
-                "Accept": "application/vnd.github+json"
-            }
-            data = {
-                "text": md_text,
-                "mode": "gfm",
-                "context": f"{org}/{repo}"
-            }
-            
-            resp = requests.post(url, headers=headers, json=data)
-            if resp.status_code == 200:
-                html_content = resp.content
-                html_path = out_path.with_suffix(".html")
-                with html_path.open("wb") as f:
-                    f.write(html_content)
-                print(f"[OK] Saved {html_path}")
-            else:
-                print(f"[WARN] HTML render failed: {resp.status_code} - {resp.text}")
+
+            # Convert Markdown to embeddable HTML fragment
+            md_html = markdown.markdown(
+                md_text,
+                extensions=["tables", "fenced_code", "attr_list"]
+            )
+
+            html_path = out_path.with_suffix(".html")
+            with html_path.open("w", encoding="utf-8") as f:
+                f.write(md_html)
+
+            print(f"[OK] Saved {html_path}")
+
         except Exception as e:
-            print(f"[WARN] HTML render error: {e}")
 
 def main():
     token = os.environ["GITHUB_PAT"]
