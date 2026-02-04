@@ -1,10 +1,11 @@
 <div style="display:flex; align-items:center; gap:20px;">
-  <h1 style="margin:0;">DPIA Support Module</h1>
+  <h1 style="margin:0; flex:0 0 auto;">DPIA Support Module</h1>
   <a href="https://www.it-innovation.soton.ac.uk/">
-    <img src="./images/UniSouthampton.png" alt="UoSLOGO" height="150">
+    <img src="./images/UniSouthampton.png"
+         alt="UoSLOGO"
+         style="height:80px; flex:0 0 auto;">
   </a>
 </div>
-
 
 | Project Links |
 | ------------- | 	
