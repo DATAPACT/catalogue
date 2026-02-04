@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tools Catalogue</title>
+<style>
+  body {
+    font-family: sans-serif;
+    margin: 0;
+    display: flex;
+  }
+  #sidebar {
+    width: 250px;
+    background-color: #f5f5f5;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    height: 100vh;
+    overflow-y: auto;
+  }
+  #sidebar h2 { margin-top: 0; }
+  .home-btn {
+    display: block;
+    background: #0070f3;
+    color: white;
+    text-decoration: none;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: bold;
+  }
+  .home-btn:hover {
+    background: #005bb5;
+  }
+  #main {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  ul { list-style: none; padding-left: 0; }
+  .category > span { 
+    font-weight: bold; 
+    margin-top: 10px; 
+    display: block; 
+  }
+  .tool { 
+    margin-left: 15px; 
+  }
+  .tool a { 
+    text-decoration: none; 
+    color: #333; 
+    cursor: pointer; 
+    display: block;
+    padding: 5px 0;
+  }
+  .tool a:hover { 
+    text-decoration: underline; 
+    color: #0070f3; 
+  }
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <h2>Tools</h2>
+  <a href="#" class="home-btn" onclick="loadHome(); return false;">🏠 Home</a>
+  <nav id="tools-menu"></nav>
+</div>
+
+<div id="main">
+  <!-- Home content will load dynamically -->
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
+<script>
+async function loadHome() {
+  const main = document.getElementById('main');
+  try {
+    const resp = await fetch('home.html');
+    if (!resp.ok) throw new Error("Could not load home.html");
+    const html = await resp.text();
+    main.innerHTML = html;
+  }
