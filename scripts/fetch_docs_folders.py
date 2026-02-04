@@ -65,6 +65,7 @@ def save_file(base_dir, repo, file_path, content_bytes):
             print(f"[OK] Saved {html_path}")
 
         except Exception as e:
+            print(f"[WARN] HTML render error: {e}")
 
 def main():
     token = os.environ["GITHUB_PAT"]
