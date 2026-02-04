@@ -80,10 +80,18 @@
 <script>
 let homeContent = document.querySelector('#main').innerHTML;
 
-function loadHome() {
-  document.getElementById('main').innerHTML = homeContent;
+async function loadHome() {
+  const main = document.getElementById('main');
+  try {
+    // Add a timestamp to bypass cache
+    const resp = await fetch('home.html?t=' + new Date().getTime());
+    if (!resp.ok) throw new Error("Could not load home.html");
+    const html = await resp.text();
+    main.innerHTML = html;
+  } catch (err) {
+    main.innerHTML = `<p>Error loading home: ${err.message}</p>`;
+  }
 }
-
 async function loadConfig() {
   const response = await fetch("config/tools.yml");
   if (!response.ok) throw new Error("Could not fetch tools.yml");
