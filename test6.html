@@ -191,7 +191,7 @@ function renderMenu(menuData) {
               return match;
             });
             
-            main.innerHTML = html;
+            main.innerHTML = `<div class="readme-wrapper">${html}</div>`;
           } else {
             main.innerHTML = `<h2>${toolName}</h2><p>Tool not loaded. README not found: ${readmePath}</p>`;
           }
