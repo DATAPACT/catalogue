@@ -1,5 +1,6 @@
 # Fixed categories (order matters)
 categories:
+  - "Architecture"
   - "PipelineR"
   - "PolicyR"
   - "TrustR"
@@ -8,6 +9,13 @@ categories:
 
 # Tools
 tools:
+  - repo: "GeneralArchitecture"
+    mainfile: "README.html"
+    name: "General Architecture"       # Display name (optional if you want prettier)
+    category: "Architecture"
+    branch: "main"
+    readme_path: "docs/README.md"
+    docs_root: "docs"
   - repo: "DPIA-Support"
     mainfile: "README.html"
     name: "DPIA Support"       # Display name (optional if you want prettier)
