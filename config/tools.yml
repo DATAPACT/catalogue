@@ -128,6 +128,13 @@ tools:
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
+  - repo: "CarbonTracker"
+    mainfile: "README.html"
+    name: "CarbonTracker"
+    category: "GreenR"      # Display name defaults to repo name if not set
+    branch: "main"
+    readme_path: "docs/README.md"
+    docs_root: "docs"  
   - repo: "Wikifier"
     mainfile: "README.html"
     name: "Wikifier"
