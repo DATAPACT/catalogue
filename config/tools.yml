@@ -12,7 +12,7 @@ tools:
   - repo: "Minimal-Finite-Covering"
     mainfile: "README.html"
     name: "Minimal-Finite-Covering" # Display name (optional if you want prettier)
-    category: "GreenR"
+    category: "TrustR"
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
