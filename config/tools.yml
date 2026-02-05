@@ -93,6 +93,13 @@ tools:
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
+  - repo: "DAVE"
+    mainfile: "README.html"
+    name: "DAVE"
+    category: "PipelineR"      # Display name defaults to repo name if not set
+    branch: "main"
+    readme_path: "docs/README.md"
+    docs_root: "docs"
   - repo: "KubePipe"
     mainfile: "README.html"
     name: "KubePipe"
