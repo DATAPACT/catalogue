@@ -9,9 +9,9 @@ categories:
 
 # Tools
 tools:
-- repo: "Minimal-Finite-Covering"
+  - repo: "Minimal-Finite-Covering"
     mainfile: "README.html"
-    name: "Minimal-Finite-Covering # Display name (optional if you want prettier)
+    name: "Minimal-Finite-Covering" # Display name (optional if you want prettier)
     category: "GreenR"
     branch: "main"
     readme_path: "docs/README.md"
