@@ -16,6 +16,13 @@ tools:
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
+  - repo: "FEL"
+    mainfile: "README.html"
+    name: "FEL"       # Display name (optional if you want prettier)
+    category: "TrustR"
+    branch: "main"
+    readme_path: "docs/README.md"
+    docs_root: "docs"
   - repo: "LLAC"
     mainfile: "README.html"
     name: "LLAC"       # Display name (optional if you want prettier)
