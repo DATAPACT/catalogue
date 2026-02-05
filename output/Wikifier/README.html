@@ -1,0 +1,163 @@
+<h1 dir="auto">JSI Wikifier</h1>
+<p dir="auto">Powered by</p>
+<p align="left" dir="auto">
+  <a href="https://www.ijs.si/" rel="nofollow"><img src="https://camo.githubusercontent.com/51764b7be92b17d3bb8210b66d2aaacad04032890f0709d50ec5c0aa3d3f18b7/68747470733a2f2f7777772e696a732e73692f696a73772f52756272696b653f616374696f6e3d41747461636846696c6526646f3d676574267461726765743d3030302d6d6f6472612e6a7067" alt="Jožef Stefan Institute (JSI) logo" width="220" data-canonical-src="https://www.ijs.si/ijsw/Rubrike?action=AttachFile&amp;do=get&amp;target=000-modra.jpg" style="max-width: 100%;"></a>
+</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Public Service</strong> → <a href="https://wikifier.org" rel="nofollow">https://wikifier.org</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2 dir="auto"><strong>General Description</strong></h2>
+<p dir="auto">JSI Wikifier is a semantic annotation and entity linking tool that identifies concepts in text and links them to knowledge bases (e.g., Wikipedia / Wikidata / DBpedia). It supports <strong>~100 languages</strong>, performs context-aware disambiguation, and returns rich metadata (titles, KB identifiers, offsets, confidence, and support scores). Typical use cases include content enrichment, information extraction, search/indexing, and analytics.</p>
+<blockquote>
+<p dir="auto">🔎 Quick view: Input free text → <strong>Wikifier</strong> → Output JSON with entities and links.</p>
+</blockquote>
+<hr>
+<h2 dir="auto"><strong>Architecture</strong></h2>
+<p dir="auto">High-level data flow:</p>
+<ol dir="auto">
+<li>
+<p dir="auto"><strong>Client</strong> (browser, script, or backend) sends text and language params</p>
+</li>
+<li>
+<p dir="auto"><strong>API Layer</strong> validates requests and rate limits</p>
+</li>
+<li>
+<p dir="auto"><strong>Annotation Engine</strong></p>
+<ul dir="auto">
+<li>Text preprocessing &amp; language detection (if enabled)</li>
+<li>Mention detection / candidate generation</li>
+<li><strong>Disambiguation &amp; scoring</strong> using context signals</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong>Linking</strong> to target KBs (Wikipedia / Wikidata / DBpedia)</p>
+</li>
+<li>
+<p dir="auto"><strong>Response Formatter</strong> → JSON / HTML preview</p>
+</li>
+<li>
+<p dir="auto">(Optional) <strong>Caching &amp; Storage</strong> for performance and auditing</p>
+</li>
+</ol>
+<hr>
+<h2 dir="auto"><strong>Component Definition</strong></h2>
+<ul dir="auto">
+<li><strong>REST API</strong> — HTTP endpoints for annotation and configuration (rate‑limited; <strong>requires <code class="notranslate">userKey</code></strong> on the public service).</li>
+<li><strong>Annotator</strong> — mention detection + multilingual disambiguation engine</li>
+<li><strong>KB Connector</strong> — access to Wikipedia/Wikidata/DBpedia indices</li>
+<li><strong>Language Module</strong> — tokenization, normalization, and locale-specific rules</li>
+<li><strong>Cache/Store (optional)</strong> — Redis/SQLite/PostgreSQL depending on deployment</li>
+<li><strong>Admin/Monitoring (optional)</strong> — metrics, usage stats, health checks</li>
+</ul>
+<hr>
+<h2 dir="auto"><strong>Screenshots</strong> (TBD)</h2>
+<ul dir="auto">
+<li>Annotation preview (web UI): <code class="notranslate">![Preview](./images/preview.png)</code></li>
+<li>JSON response sample: <code class="notranslate">![JSON](./images/json.png)</code></li>
+</ul>
+<hr>
+<h2 dir="auto"><strong>Commercial Information</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Organisation (s)</th>
+<th>License Nature</th>
+<th>License / Terms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jožef Stefan Institute (JSI)</td>
+<td>Public web service (fair use); source code for service infra not publicly distributed</td>
+<td>Usage requires <code class="notranslate">userKey</code>; see <a href="https://wikifier.org/register.html" rel="nofollow">https://wikifier.org/register.html</a> and service docs <a href="https://wikifier.org/info.html" rel="nofollow">https://wikifier.org/info.html</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<blockquote>
+<p dir="auto">For commercial or on‑premise options, contact the maintainers.</p>
+</blockquote>
+<hr>
+<h2 dir="auto"><strong>Top Features</strong></h2>
+<ul dir="auto">
+<li><strong>Multilingual</strong> annotation (≈100 languages)</li>
+<li><strong>Entity linking</strong> to Wikipedia / Wikidata / DBpedia</li>
+<li><strong>Context-aware disambiguation</strong> with confidence/support scores</li>
+<li><strong>Offsets &amp; spans</strong> for mentions (begin/end character positions)</li>
+<li><strong>Flexible output</strong> (JSON for machines; HTML for quick inspection)</li>
+<li><strong>Batch &amp; streaming</strong> friendly requests</li>
+<li><strong>Configurable thresholds</strong> (e.g., minimum confidence/support)</li>
+</ul>
+<hr>
+<h2 dir="auto"><strong>How To Use</strong></h2>
+<h3 dir="auto">Call the public service (GET or POST)</h3>
+<p dir="auto">According to the official documentation, call:<br>
+<code class="notranslate">https://www.wikifier.org/annotate-article?text=...&amp;lang=...&amp;...</code> (GET) or send the same parameters as <code class="notranslate">application/x-www-form-urlencoded</code> in the POST body. <strong><code class="notranslate">userKey</code> is required.</strong></p>
+<p dir="auto"><strong>Minimal example (GET):</strong></p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">curl -G \
+  --data-urlencode <span class="pl-s"><span class="pl-pds">"</span>userKey=&lt;YOUR_USER_KEY&gt;<span class="pl-pds">"</span></span> \
+  --data-urlencode <span class="pl-s"><span class="pl-pds">"</span>text=Barack Obama was the 44th President of the United States.<span class="pl-pds">"</span></span> \
+  --data-urlencode <span class="pl-s"><span class="pl-pds">"</span>lang=en<span class="pl-pds">"</span></span> \
+  <span class="pl-s"><span class="pl-pds">"</span>https://www.wikifier.org/annotate-article<span class="pl-pds">"</span></span></pre></div>
+<p dir="auto"><strong>Typical example (POST):</strong></p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">curl -X POST <span class="pl-s"><span class="pl-pds">"</span>https://www.wikifier.org/annotate-article<span class="pl-pds">"</span></span> \
+  -H <span class="pl-s"><span class="pl-pds">'</span>Content-Type: application/x-www-form-urlencoded<span class="pl-pds">'</span></span> \
+  --data-urlencode <span class="pl-s"><span class="pl-pds">"</span>userKey=&lt;YOUR_USER_KEY&gt;<span class="pl-pds">"</span></span> \
+  --data-urlencode <span class="pl-s"><span class="pl-pds">"</span>text=Ljubljana is the capital of Slovenia.<span class="pl-pds">"</span></span> \
+  --data-urlencode <span class="pl-s"><span class="pl-pds">"</span>lang=auto<span class="pl-pds">"</span></span> \
+  --data-urlencode <span class="pl-s"><span class="pl-pds">"</span>secondaryAnnotLanguage=en<span class="pl-pds">"</span></span> \
+  --data-urlencode <span class="pl-s"><span class="pl-pds">"</span>wikiDataClasses=true<span class="pl-pds">"</span></span> \
+  --data-urlencode <span class="pl-s"><span class="pl-pds">"</span>wikiDataClassIds=true<span class="pl-pds">"</span></span> \
+  --data-urlencode <span class="pl-s"><span class="pl-pds">"</span>support=true<span class="pl-pds">"</span></span> \
+  --data-urlencode <span class="pl-s"><span class="pl-pds">"</span>ranges=false<span class="pl-pds">"</span></span> \
+  --data-urlencode <span class="pl-s"><span class="pl-pds">"</span>includeCosines=false<span class="pl-pds">"</span></span> \
+  --data-urlencode <span class="pl-s"><span class="pl-pds">"</span>nTopDfValuesToIgnore=200<span class="pl-pds">"</span></span> \
+  --data-urlencode <span class="pl-s"><span class="pl-pds">"</span>maxMentionEntropy=3<span class="pl-pds">"</span></span></pre></div>
+<p dir="auto"><strong>Key parameters (selection):</strong></p>
+<ul dir="auto">
+<li><code class="notranslate">userKey</code> (required) — register at <code class="notranslate">/register.html</code>.</li>
+<li><code class="notranslate">text</code> — UTF‑8 encoded text (URL‑encode non‑ASCII when using GET).</li>
+<li><code class="notranslate">lang</code> — ISO‑639 code (e.g., <code class="notranslate">en</code>, <code class="notranslate">sl</code>) or <code class="notranslate">auto</code> for autodetect.</li>
+<li><code class="notranslate">secondaryAnnotLanguage</code> — add names/links from another Wikipedia (default <code class="notranslate">en</code>).</li>
+<li><code class="notranslate">wikiDataClasses</code>, <code class="notranslate">wikiDataClassIds</code> — include Wikidata classes / IDs.</li>
+<li><code class="notranslate">support</code> — include supporting subranges for each annotation.</li>
+<li><code class="notranslate">ranges</code> — include all candidate annotations for each span (large output).</li>
+<li><code class="notranslate">includeCosines</code> — include page/document cosine similarities.</li>
+<li><code class="notranslate">pageRankSqThreshold</code> (+ <code class="notranslate">applyPageRankSqThreshold</code>) — pagerank‑based pruning.</li>
+<li><code class="notranslate">nTopDfValuesToIgnore</code>, <code class="notranslate">nWordsToIgnoreFromList</code> — ignore very frequent words.</li>
+<li><code class="notranslate">partsOfSpeech</code> / <code class="notranslate">verbs</code> (English only) — include PoS and WordNet synsets.</li>
+</ul>
+<p dir="auto"><strong>Output shape (abridged):</strong></p>
+<div class="highlight highlight-source-json" dir="auto"><pre class="notranslate">{
+  <span class="pl-ent">"annotations"</span>: [ { <span class="pl-ent">"title"</span>: <span class="pl-s"><span class="pl-pds">"</span>New York City<span class="pl-pds">"</span></span>, <span class="pl-ent">"url"</span>: <span class="pl-s"><span class="pl-pds">"</span>…<span class="pl-pds">"</span></span>, <span class="pl-ent">"lang"</span>: <span class="pl-s"><span class="pl-pds">"</span>en<span class="pl-pds">"</span></span>, <span class="pl-ent">"wikiDataClassIds"</span>: [<span class="pl-s"><span class="pl-pds">"</span>Q515<span class="pl-pds">"</span></span>, <span class="pl-ii">…</span>], <span class="pl-ent">"dbPediaIri"</span>: <span class="pl-s"><span class="pl-pds">"</span>…<span class="pl-pds">"</span></span>, <span class="pl-ent">"support"</span>: [ {<span class="pl-ent">"wFrom"</span>: <span class="pl-c1">0</span>, <span class="pl-ent">"wTo"</span>: <span class="pl-c1">1</span>, <span class="pl-ii">…</span>} ] } ],
+  <span class="pl-ent">"words"</span>: [<span class="pl-s"><span class="pl-pds">"</span>New<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>York<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>City<span class="pl-pds">"</span></span>],
+  <span class="pl-ent">"spaces"</span>: [<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>.<span class="pl-pds">"</span></span>],
+  <span class="pl-ent">"ranges"</span>: [ { <span class="pl-ent">"wFrom"</span>: <span class="pl-c1">0</span>, <span class="pl-ent">"wTo"</span>: <span class="pl-c1">1</span>, <span class="pl-ent">"candidates"</span>: [ {<span class="pl-ent">"title"</span>: <span class="pl-s"><span class="pl-pds">"</span>New York<span class="pl-pds">"</span></span>, <span class="pl-ii">…</span>} ] } ]
+}</pre></div>
+<blockquote>
+<p dir="auto">Also available: <code class="notranslate">get-cosine-similarity</code> for page–page cosine and functions for extracting subgraphs of the Wikipedia link graph.</p>
+</blockquote>
+<hr>
+<h2 dir="auto"><strong>Other Information</strong></h2>
+<ul dir="auto">
+<li>Data sources: Wikipedia / Wikidata / DBpedia (versions depend on your indices)</li>
+<li>Privacy: avoid sending sensitive text to external endpoints; prefer self‑hosting if needed</li>
+<li>Internationalization: pass <code class="notranslate">lang</code> or enable auto-detection</li>
+</ul>
+<hr>
+<h2 dir="auto"><strong>Additional Links</strong></h2>
+<ul dir="auto">
+<li>Official documentation: <a href="https://www.wikifier.org/info.html" rel="nofollow">https://www.wikifier.org/info.html</a></li>
+<li>Supported languages: <a href="https://wikifier.net/languages.html" rel="nofollow">https://wikifier.net/languages.html</a></li>
+<li>About the service: <a href="https://www.wikifier.org/about.html" rel="nofollow">https://www.wikifier.org/about.html</a></li>
+<li>API (OpenAPI) spec page (project site): <a href="https://jsi-eubusinessgraph.github.io/jsi-wikifier-api/" rel="nofollow">https://jsi-eubusinessgraph.github.io/jsi-wikifier-api/</a></li>
+</ul>

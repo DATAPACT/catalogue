@@ -1,0 +1,104 @@
+<h1 dir="auto">SemT-X framework</h1>
+<p dir="auto">Powered by</p>
+<p dir="auto"><a href="https://www.unimib.it/" rel="nofollow"><img src="./images/UNIMIB-logo.png" alt="UniMiB Logo" width="100" style="max-width: 100%;"></a></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Software GitHub Repository --&gt; SemT-X software &lt;<a href="https://github.com/I2Tunimib">https://github.com/I2Tunimib</a>&gt;</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>General Description</strong></h2>
+<p dir="auto">SemT-X is a modular framework designed to support the semantic description, enrichment, alignment, and interoperability of tabular data. It also enables users to invoke compliance services to verify and validate data, and to receive guidance on enforcing any prescriptions required to ensure compliance.</p>
+<p dir="auto">SemT-X guides users in the design of enrichment pipelines and in verifying their compliance by supporting the discovery of available enrichment and compliance services, the testing of their capabilities, and their use within the specific domain of the data to be enriched. Once the design is completed, the resulting pipeline can be exported as Python scripts to ensure the replicability of the intended workflow. These Python scripts can be executed interactively as notebooks, run as batch tools, or used as a basis for generating cloud-based pipelines. The most suitable execution mode depends on user needs and on the volume of data to be processed; cloud-based pipelines are typically appropriate only when handling very large datasets</p>
+<p dir="auto">Comprehensive documentation is available at:<br>
+<a href="https://i2tunimib.github.io/I2T-docs/" rel="nofollow">https://i2tunimib.github.io/I2T-docs/</a></p>
+<h2 dir="auto"><strong>Architecture</strong></h2>
+<p align="center" dir="auto">
+  <a target="_blank" rel="noopener noreferrer" href="./images/SemT-X architecture.png"><img src="./images/SemT-X architecture.png" alt="SemT-X architecture" width="600" style="max-width: 100%;"></a>
+  <br>
+  <em>SemT-X Architecture</em>
+</p>
+<h2 dir="auto"><strong>Component Definition</strong></h2>
+<p dir="auto">The framework adopts a service-based architecture, making it easily extensible to address specific technical and business requirements.</p>
+<p dir="auto">A central component of the <strong>SemT-X</strong> architecture is the <strong>back-end (SemTX-backend)</strong>, which serves both as an advanced gateway to data enrichment services (modification, reconciliation, and extension) and as a manager of the datasets and tables involved (including model definition and storage of enriched data).</p>
+<p dir="auto">Access to the backend is provided through a <strong>Web API</strong>, which is used by a graphical front-end (<strong>SemT-UI</strong>) implemented as a web application, and by a <strong>Python library (SemT-Py)</strong> that enables programmatic access — for example, from a Jupyter Notebook.</p>
+<p dir="auto"><strong>SemT-X</strong> is designed so that new external services can be easily integrated by developers, following the framework’s structure and conventions.</p>
+<h3 dir="auto">Service Structure</h3>
+<p dir="auto">Each service within the framework is organized into three main components:</p>
+<div class="highlight highlight-source-js" dir="auto"><pre class="notranslate"><span class="pl-s1">📦serviceId</span>
+ <span class="pl-s1">┣</span> <span class="pl-s1">📜index</span><span class="pl-kos">.</span><span class="pl-c1">js</span>
+ <span class="pl-s1">┣</span><span class="pl-kos"></span> <span class="pl-s1">📜requestTransformer</span><span class="pl-kos">.</span><span class="pl-c1">js</span>
+ <span class="pl-s1">┗</span><span class="pl-kos"></span> <span class="pl-s1">📜responseTransformer</span><span class="pl-kos">.</span><span class="pl-c1">js</span></pre></div>
+<p dir="auto">The <em>index.js</em> file defines the main properties and configuration parameters of the service to be integrated.<br>
+The <em>requestTransformer.js</em> component is responsible for adapting the data received from the front-end to the format required by the target service API.<br>
+Conversely, the <em>responseTransformer.js</em> component performs the reverse operation, ensuring that the data returned by the external service is converted into the structure expected by the front-end.</p>
+<p dir="auto">Comprehensive documentation describing the implementation details and integration procedures is available at:<br>
+<a href="https://i2tunimib.github.io/I2T-docs/%EF%BF%BC" rel="nofollow">https://i2tunimib.github.io/I2T-docs/￼</a></p>
+<h2 dir="auto"><strong>Screenshots</strong></h2>
+<p dir="auto">SemT-X features are accessible interactively via a graphical user interface (SemT-UI) running in the browser, and programmatically via a Python library (SemT-Py).</p>
+<p align="center" dir="auto">
+  <a target="_blank" rel="noopener noreferrer" href="images/SemT-UI.png"><img src="images/SemT-UI.png" alt="Graphical User Interface — SemT-UI" width="600" style="max-width: 100%;"></a>
+  <br>
+  <em>Graphical User Interface — SemT-UI</em>
+</p>
+<p align="center" dir="auto">
+  <a target="_blank" rel="noopener noreferrer" href="images/SemT-Py.png"><img src="images/SemT-Py.png" alt="Jupyter Notebook using the Python library — SemT-Py" width="400" style="max-width: 100%;"></a>
+  <br>
+  <em>Jupyter Notebook using the Python library — SemT-Py</em>
+</p>
+<h2 dir="auto"><strong>Commercial Information</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Organisation (s)</th>
+<th>License Nature</th>
+<th>License</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>University of Milan-Bicocca</td>
+<td>Open Source</td>
+<td>Apache 2.0</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Top Features</strong></h2>
+<p dir="auto">SemT-X delivers a comprehensive tool for the semantic enrichment of tabular data, combining automated processes with human expertise.</p>
+<p dir="auto">The main interface of the framework is the SemT-UI front-end, which provides:</p>
+<ul dir="auto">
+<li><strong>Interactive Data Visualization</strong>: Explore and visualize tabular data in an intuitive interface</li>
+<li><strong>Compliance Verification</strong>: Access to compliance verification services</li>
+<li><strong>Data Manipulation</strong>: Access to modification services to make data compliant</li>
+<li><strong>Semantic Annotation</strong>: Manually and automatically annotate data with semantic information</li>
+<li><strong>Human-in-the-Loop Workflows</strong>: Guide users through refinement and validation processes</li>
+<li><strong>Real-time Collaboration</strong>: Support for multiple users working on the same dataset</li>
+<li><strong>Integration Capabilities</strong>: Seamless integration with knowledge bases and ontologies</li>
+<li><strong>Pipeline Design</strong>: Discover, test, and validate enrichment processes</li>
+<li><strong>Pipeline Generation</strong>: Export designed enrichment pipelines as Python scripts or Jupyter Notebook scripts</li>
+</ul>
+<h2 dir="auto"><strong>How To Install</strong></h2>
+<p dir="auto">SemT-X installation requires the installation of SemT-UI and SemT-backend. Optional componentes are SemT-Py, the Python library, and SemT-parser, the pipeline compiler.<br>
+Updated installation instructions are available at the respective repositories.</p>
+<h3 dir="auto">Main Components</h3>
+<ul dir="auto">
+<li><a href="https://github.com/I2Tunimib/I2T-frontend">SemT-UI</a> - A web user interface for interactively accessing backend features</li>
+<li><a href="https://github.com/I2Tunimib/I2T-backend">SemT-backend</a> - The core component, accessible via a REST API, manages and stores table descriptions and provides enrichment features through seamless, programmable access to external services</li>
+<li><a href="https://github.com/I2Tunimib/I2T-library">SemT-Py</a> - A Python library for programmatically accessing backend features</li>
+<li><a href="https://github.com/I2Tunimib/semTParser">SemT-parser</a> - A Rust-based SemT-log parser to generate enrichment pipelines in Python</li>
+</ul>
+
+<h2 dir="auto"><strong>How To Use</strong></h2>
+<p dir="auto">Refer to SemT-X online documentation: <a href="https://i2tunimib.github.io/I2T-docs/resources" rel="nofollow">https://i2tunimib.github.io/I2T-docs/resources</a></p>
+<h2 dir="auto"><strong>Other Information</strong></h2>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>OpenAPI Specification</strong></h2>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>Additional Links</strong></h2>
+<p dir="auto">n/a</p>

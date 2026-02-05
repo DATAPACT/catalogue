@@ -1,0 +1,105 @@
+<h1 dir="auto">Fairness Encoding in Logic Tensor Networks (FEL)</h1>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/be427dbbbc0351f087a0de2cab7de6f4552cea7232545b3227aad91085bacf2d/68747470733a2f2f7777772e756e696d69622e69742f73697465732f64656661756c742f66696c65732f7374796c65732f666f746f5f70617261677261666f5f746573746f5f363430783336302f7075626c69632f6c6f676f6973745f332e6a70673f69746f6b3d426967664f675266"><img src="https://camo.githubusercontent.com/be427dbbbc0351f087a0de2cab7de6f4552cea7232545b3227aad91085bacf2d/68747470733a2f2f7777772e756e696d69622e69742f73697465732f64656661756c742f66696c65732f7374796c65732f666f746f5f70617261677261666f5f746573746f5f363430783336302f7075626c69632f6c6f676f6973745f332e6a70673f69746f6b3d426967664f675266" alt="UniMiB logo" width="80" data-canonical-src="https://www.unimib.it/sites/default/files/styles/foto_paragrafo_testo_640x360/public/logoist_3.jpg?itok=BigfOgRf" style="max-width: 100%;"></a></p>
+<p dir="auto">Software GitHub Repository: <a href="https://github.com/unimib-datAI/FEL">github.com/unimib-datAI/FEL</a></p>
+<h2 dir="auto"><strong>General Description</strong></h2>
+<p dir="auto">FEL is a debiasing framework for feature-based binary classification tasks.</p>
+<ul dir="auto">
+<li>FEL integrates fairness and accuracy objectives within the Logic Tensor Networks (LTN) framework, where learning is guided by logical axioms rather than direct loss modifications.</li>
+<li>Through classification axioms, the model learns to correctly represent the relationship between features and target labels, ensuring predictive accuracy.</li>
+<li>Fairness axioms introduce constraints that promote statistical parity between sensitive groups, embedding fairness directly into the training process.</li>
+<li>Evaluation combines both perspectives:
+<ul dir="auto">
+<li>Fairness is assessed using Statistical Parity Distance (SPD) and Disparate Impact (DI).</li>
+<li>Performance is measured through overall classification accuracy.</li>
+</ul>
+</li>
+</ul>
+<h2 dir="auto"><strong>Top Features</strong></h2>
+<ul dir="auto">
+<li>Declarative representation of constraints: no need to modify the loss function</li>
+<li>Compositionality: can be generalised to different fairness definitions</li>
+<li>Actively control the level of fairness</li>
+<li>No need to transpose the definition into a metric</li>
+</ul>
+<h2 dir="auto"><strong>Setup Instructions</strong></h2>
+<p dir="auto"><strong>1. Prerequisites</strong></p>
+<ol dir="auto">
+<li>Install Docker</li>
+<li>Create a YAML config file (example: <code class="notranslate">./config.yaml</code>)</li>
+<li>Prepare a CSV dataset with headers</li>
+</ol>
+<p dir="auto"><strong>2. Build the Docker image</strong></p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">$ docker build -t my_env <span class="pl-c1">.</span></pre></div>
+<p dir="auto"><strong>3. Run the container</strong></p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">$ docker run --gpus all -it -v <span class="pl-s"><span class="pl-pds">$(</span>pwd<span class="pl-pds">)</span></span>:/home/developer/ -w /home/developer my_env bash</pre></div>
+<p dir="auto"><strong>4. Inside the container</strong></p>
+<p dir="auto"><strong>Train a fair model</strong>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">$ python src/training.py --config ./config.yaml --dataset ./datasets/compas.csv</pre></div>
+<p dir="auto"><strong>Run inference</strong>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">$ python src/inference.py --config ./config.yaml --dataset ./datasets/compas.csv --model ./models/kb.npz</pre></div>
+<h2 dir="auto"><strong>Configuration Guide</strong></h2>
+<p dir="auto">The required YAML file need to specify the following parameters:</p>
+<h3 dir="auto">Data Configuration</h3>
+<ul dir="auto">
+<li><strong>target_variable</strong>: Column name containing binary outcomes</li>
+<li><strong>sensitive_feature</strong>: Column name of the protected attribute</li>
+<li><strong>labels</strong>:
+<ul dir="auto">
+<li><strong>positive</strong>: The outcome value to balance fairly across groups</li>
+<li><strong>negative</strong>: The other possible outcome value</li>
+</ul>
+</li>
+<li><strong>protected_values</strong>:
+<ul dir="auto">
+<li><strong>privileged</strong>: Value(s) marking the privileged group</li>
+<li><strong>unprivileged</strong>: Value(s) marking the unprivileged group</li>
+</ul>
+</li>
+</ul>
+<h3 dir="auto">Model Configuration</h3>
+<ul dir="auto">
+<li><strong>hidden_layer_sizes</strong>: Neural network architecture [list of integers]</li>
+<li><strong>implies</strong>: LTN fuzzy implication operator:
+<ul dir="auto">
+<li>Options: KleeneDienes, Godel, Reichenbach, Goguen, Luk</li>
+</ul>
+</li>
+<li><strong>p_mean</strong>: Aggregation parameter</li>
+<li><strong>aggregator_deviation</strong>: Deviation control in aggregator</li>
+</ul>
+<h3 dir="auto">Training Configuration</h3>
+<ul dir="auto">
+<li><strong>epochs</strong>: Number of training iterations</li>
+</ul>
+<h2 dir="auto">Understanding "Positive" and "Negative" Labels</h2>
+<p dir="auto">The choice of positive/negative labels is crucial:</p>
+<ul dir="auto">
+<li><strong>Positive</strong>: The outcome you want to balance fairly across groups
+<ul dir="auto">
+<li>Example: loan_approved=1 means "approved"</li>
+<li>Fairness metrics measure this outcome's distribution</li>
+</ul>
+</li>
+<li><strong>Negative</strong>: The alternative outcome
+<ul dir="auto">
+<li>Not directly balanced by fairness constraints</li>
+</ul>
+</li>
+</ul>
+<p dir="auto">Examples:</p>
+<ul dir="auto">
+<li>
+<p dir="auto">Loan approval: positive = 1 (approved), negative = 0 (denied) → approval rates should be similar across groups.</p>
+</li>
+<li>
+<p dir="auto">Disease detection: positive = “has_disease”, negative = “no_disease” → detection rates should be comparable across groups.</p>
+</li>
+</ul>
+<h2 dir="auto"><strong>License</strong></h2>
+<p dir="auto">FEL is open-source and released under the <a href="./LICENSE">Apache-2.0</a> License.</p>
+<h2 dir="auto"><strong>Cite this Work</strong></h2>
+<p dir="auto">Greco, G., Alberici, F., Palmonari, M., &amp; Cosentini, A. (2023).<br>
+Declarative Encoding of Fairness in Logic Tensor Networks.<br>
+Frontiers in Artificial Intelligence and Applications, 372, 908–915.<br>
+IOS Press BV.<br>
+<a href="https://boa.unimib.it/bitstream/10281/462523/1/Greco-2023-ECAI-VoR.pdf" rel="nofollow">https://boa.unimib.it/bitstream/10281/462523/1/Greco-2023-ECAI-VoR.pdf</a></p>

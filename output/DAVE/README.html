@@ -1,0 +1,211 @@
+<h1 dir="auto">DAVE: Document Assistant for Validation and Exploration</h1>
+<p dir="auto">Powered by</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/be427dbbbc0351f087a0de2cab7de6f4552cea7232545b3227aad91085bacf2d/68747470733a2f2f7777772e756e696d69622e69742f73697465732f64656661756c742f66696c65732f7374796c65732f666f746f5f70617261677261666f5f746573746f5f363430783336302f7075626c69632f6c6f676f6973745f332e6a70673f69746f6b3d426967664f675266"><img src="https://camo.githubusercontent.com/be427dbbbc0351f087a0de2cab7de6f4552cea7232545b3227aad91085bacf2d/68747470733a2f2f7777772e756e696d69622e69742f73697465732f64656661756c742f66696c65732f7374796c65732f666f746f5f70617261677261666f5f746573746f5f363430783336302f7075626c69632f6c6f676f6973745f332e6a70673f69746f6b3d426967664f675266" alt="UniMiB logo" width="80" data-canonical-src="https://www.unimib.it/sites/default/files/styles/foto_paragrafo_testo_640x360/public/logoist_3.jpg?itok=BigfOgRf" style="max-width: 100%;"></a></p>
+<p dir="auto">Software GitHub Repository: <a href="https://github.com/unimib-datAI/DAVE">github.com/unimib-datAI/DAVE</a></p>
+<h2 dir="auto"><strong>General Description</strong></h2>
+<p dir="auto">DAVE is an AI-powered framework designed for assisted analysis of document collections in knowledge-intensive domains. It enables domain experts to efficiently explore and analyze large text corpora through a combination of:</p>
+<ul dir="auto">
+<li><strong>Entity-driven faceted search</strong> for structured information retrieval</li>
+<li><strong>Conversational AI interface</strong> for natural language queries</li>
+<li><strong>Interactive entity annotation and correction</strong> for improved knowledge management</li>
+</ul>
+<p dir="auto">DAVE is particularly useful in domains such as <strong>law, healthcare, finance, and real estate</strong>, where factual data is closely tied to entities and their relationships.</p>
+<h2 dir="auto"><strong>Top Features</strong></h2>
+<ul dir="auto">
+<li><strong>Search &amp; Filter:</strong> Retrieve documents using keyword-based and entity-driven faceted search.</li>
+<li><strong>Explore:</strong> Navigate documents based on extracted entities and metadata.</li>
+<li><strong>Conversational AI:</strong> Ask natural language questions and receive relevant document-based answers.</li>
+<li><strong>Knowledge Consolidation:</strong> Review and refine extracted annotations with user corrections.</li>
+<li><strong>Human-in-the-loop (HITL) Approach:</strong> Users can continuously refine system-generated annotations.</li>
+</ul>
+<h2 dir="auto"><strong>Architecture</strong></h2>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="./images/architecture.png"><img src="./images/architecture.png" alt="DAVE" style="max-width: 100%;"></a></p>
+<h2 dir="auto">Prerequisites</h2>
+<p dir="auto">Before you begin, ensure you have the following installed on your system:</p>
+<ul dir="auto">
+<li><strong>Docker</strong> (version 20.10 or higher)</li>
+<li><strong>Docker Compose</strong> (version 1.29 or higher)</li>
+<li><strong>Python</strong> (version 3.8 or higher)</li>
+<li><strong>NVIDIA GPU</strong> (optional, but recommended for text generation and vectorization services)</li>
+</ul>
+<h3 dir="auto">Installing Docker and Docker Compose</h3>
+<h4 dir="auto">On Linux:</h4>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker <span class="pl-smi">$USER</span></pre></div>
+<h4 dir="auto">On macOS:</h4>
+<p dir="auto">Download and install <a href="https://docs.docker.com/desktop/mac/install/" rel="nofollow">Docker Desktop for Mac</a></p>
+<h4 dir="auto">On Windows:</h4>
+<p dir="auto">Download and install <a href="https://docs.docker.com/desktop/windows/install/" rel="nofollow">Docker Desktop for Windows</a></p>
+<p dir="auto">Verify installation:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker --version
+docker compose version</pre></div>
+<h2 dir="auto">Project Structure</h2>
+<pre class="notranslate"><code class="notranslate">DAVE/
+├── backend/
+│   ├── documents/          # Document service
+│   ├── qavectorizer/       # Question-answering vectorizer service
+│   └── text-generation/    # Text generation service
+├── frontend/               # Next.js UI application
+├── scripts/
+│   ├── input_data/         # Place your GateNLP format documents here
+│   ├── upload_mongo.py     # Script to upload documents to MongoDB
+│   └── insert_elastic.py   # Script to index documents in Elasticsearch
+├── mongo/                  # MongoDB data and initialization scripts
+├── elasticsearch/          # Elasticsearch data
+├── models/                 # ML models directory
+├── docker-compose.yml      # Docker Compose configuration
+├── requirements.txt        # Python dependencies
+└── .env                    # Environment variables (create from .env.sample)
+</code></pre>
+<h2 dir="auto">Setup Instructions</h2>
+<h3 dir="auto">1. Configure Environment Variables</h3>
+<p dir="auto">Copy the sample environment file and configure it:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">cp .env.sample .env</pre></div>
+<p dir="auto">Edit the <code class="notranslate">.env</code> file and populate the following variables:</p>
+<h4 dir="auto">UI Configuration</h4>
+<ul dir="auto">
+<li><strong><code class="notranslate">UI_ACCESS_USERNAME</code></strong> - Username for UI authentication (default: <code class="notranslate">admin</code>)</li>
+<li><strong><code class="notranslate">UI_ACCESS_PASSWORD</code></strong> - Password for UI authentication (default: <code class="notranslate">password</code>)</li>
+<li><strong><code class="notranslate">UI_NEXTAUTH_SECRET</code></strong> - Secret key for NextAuth.js session encryption (generate a random string)</li>
+<li><strong><code class="notranslate">UI_NEXTAUTH_URL</code></strong> - NextAuth callback URL (default: <code class="notranslate">http://127.0.0.1:3000/dave/api/auth</code>)</li>
+<li><strong><code class="notranslate">UI_NEXT_PUBLIC_BASE_PATH</code></strong> - Base path for the UI (default: <code class="notranslate">/dave</code>)</li>
+<li><strong><code class="notranslate">UI_NEXT_PUBLIC_FULL_PATH</code></strong> - Full path URL for the UI (default: <code class="notranslate">http://127.0.0.1:3000/dave</code>)</li>
+<li><strong><code class="notranslate">UI_API_LLM</code></strong> - Internal URL for text generation service</li>
+<li><strong><code class="notranslate">UI_API_INDEXER</code></strong> - Internal URL for indexer service</li>
+<li><strong><code class="notranslate">UI_VARIANT</code></strong> - UI variant configuration (default: <code class="notranslate">default</code>)</li>
+<li><strong><code class="notranslate">LISTEN_UI</code></strong> - Port for UI service (default: <code class="notranslate">3000</code>)</li>
+</ul>
+<h4 dir="auto">MongoDB Configuration</h4>
+<ul dir="auto">
+<li><strong><code class="notranslate">MONGO_ROOT_PASSWORD</code></strong> - Root password for MongoDB (change this!)</li>
+<li><strong><code class="notranslate">MONGO_PASSWORD</code></strong> - Application user password for MongoDB (change this!)</li>
+<li><strong><code class="notranslate">MONGO</code></strong> - MongoDB connection string (uses variables above)</li>
+</ul>
+<h4 dir="auto">Elasticsearch Configuration</h4>
+<ul dir="auto">
+<li><strong><code class="notranslate">ELASTIC_INDEX</code></strong> - Name of the Elasticsearch index (default: <code class="notranslate">dave</code>)</li>
+</ul>
+<h4 dir="auto">Text Generation Configuration</h4>
+<ul dir="auto">
+<li><strong><code class="notranslate">TEXT_GENERATION_ADDR</code></strong> - Internal URL for text generation service</li>
+<li><strong><code class="notranslate">TEXT_GENERATION_GPU_LAYERS</code></strong> - Number of GPU layers to use (default: <code class="notranslate">35</code>)</li>
+</ul>
+<h4 dir="auto">QA Vectorizer Configuration</h4>
+<ul dir="auto">
+<li><strong><code class="notranslate">HOST_BASE_URL</code></strong> - Base URL for the host (default: <code class="notranslate">http://0.0.0.0</code>)</li>
+<li><strong><code class="notranslate">QAVECTORIZER_ADDR</code></strong> - Port for QA vectorizer service (default: <code class="notranslate">7863</code>)</li>
+<li><strong><code class="notranslate">SENTENCE_TRANSFORMER_EMBEDDING_MODEL</code></strong> - Hugging Face model for embeddings</li>
+<li><strong><code class="notranslate">SENTENCE_TRANSFORMER_DEVICE</code></strong> - Device for inference (<code class="notranslate">cuda</code> for GPU, <code class="notranslate">cpu</code> for CPU)</li>
+<li><strong><code class="notranslate">OGG2NAME_INDEX</code></strong> - Index name for object-to-name mapping</li>
+</ul>
+<h4 dir="auto">General Configuration</h4>
+<ul dir="auto">
+<li><strong><code class="notranslate">RESTART_POLICY</code></strong> - Docker restart policy (default: <code class="notranslate">unless-stopped</code>)</li>
+</ul>
+<h3 dir="auto">2. Install Python Dependencies</h3>
+<p dir="auto">From the <strong>root folder</strong> of the project, install the required Python packages:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">pip install -r requirements.txt</pre></div>
+<p dir="auto">Or using a virtual environment (recommended):</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python -m venv venv
+<span class="pl-c1">source</span> venv/bin/activate  <span class="pl-c"><span class="pl-c">#</span> On Windows: venv\Scripts\activate</span>
+pip install -r requirements.txt</pre></div>
+<h3 dir="auto">3. Start Docker Services</h3>
+<p dir="auto">Launch all services using Docker Compose:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose up -d</pre></div>
+<p dir="auto">This command will:</p>
+<ul dir="auto">
+<li>Build and start MongoDB</li>
+<li>Build and start Elasticsearch</li>
+<li>Build and start the document service</li>
+<li>Build and start the QA vectorizer service</li>
+<li>Build and start the text generation service</li>
+<li>Build and start the UI service</li>
+</ul>
+<p dir="auto">Check that all services are running:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose ps</pre></div>
+<p dir="auto">Wait for all services to be healthy (especially Elasticsearch, which may take a minute to initialize).</p>
+<h2 dir="auto">Data Ingestion</h2>
+<h3 dir="auto">4. Prepare Your Documents</h3>
+<p dir="auto">Place your <strong>GateNLP format documents</strong> in the following directory:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">scripts/input_data/</pre></div>
+<h3 dir="auto">5. Upload Documents to MongoDB</h3>
+<p dir="auto">From the <strong>root folder</strong>, run the MongoDB upload script:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python scripts/upload_mongo.py</pre></div>
+<p dir="auto">This script will:</p>
+<ul dir="auto">
+<li>Read GateNLP documents from <code class="notranslate">scripts/input_data/</code></li>
+<li>Parse and validate the document format</li>
+<li>Upload documents to MongoDB</li>
+</ul>
+<h3 dir="auto">6. Index Documents in Elasticsearch</h3>
+<p dir="auto">From the <strong>root folder</strong>, run the Elasticsearch indexing script:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python scripts/insert_elastic.py</pre></div>
+<p dir="auto">This script will:</p>
+<ul dir="auto">
+<li>Retrieve documents from MongoDB</li>
+<li>Process and vectorize the documents</li>
+<li>Index documents in Elasticsearch for fast searching</li>
+</ul>
+<h2 dir="auto">Accessing the Application</h2>
+<p dir="auto">Once all services are running and data is ingested, you can access the UI at:</p>
+<pre class="notranslate"><code class="notranslate">http://127.0.0.1:3000/dave
+</code></pre>
+<h3 dir="auto">Important Note on Localhost</h3>
+<p dir="auto"><strong>Note:</strong> If you experience connection issues, use <code class="notranslate">127.0.0.1</code> instead of <code class="notranslate">localhost</code>. Some systems have DNS resolution issues with <code class="notranslate">localhost</code> that can prevent proper connectivity.</p>
+<h2 dir="auto">Service Ports</h2>
+<p dir="auto">The following services are exposed on these ports:</p>
+<ul dir="auto">
+<li><strong>UI</strong>: <code class="notranslate">3000</code> (<a href="http://127.0.0.1:3000/dave" rel="nofollow">http://127.0.0.1:3000/dave</a>)</li>
+<li><strong>MongoDB</strong>: <code class="notranslate">27018</code> (internal: 27017)</li>
+<li><strong>Document Service</strong>: <code class="notranslate">3001</code></li>
+<li><strong>Elasticsearch</strong>: <code class="notranslate">9200</code></li>
+<li><strong>QA Vectorizer</strong>: <code class="notranslate">7863</code></li>
+<li><strong>Text Generation</strong>: <code class="notranslate">7862</code>, <code class="notranslate">8000</code></li>
+</ul>
+<h2 dir="auto">Troubleshooting</h2>
+<h3 dir="auto">Services Not Starting</h3>
+<p dir="auto">Check logs for a specific service:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose logs -f <span class="pl-k">&lt;</span>service_name<span class="pl-k">&gt;</span></pre></div>
+<p dir="auto">Example:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose logs -f ui
+docker compose logs -f es
+docker compose logs -f mongo</pre></div>
+<h3 dir="auto">Elasticsearch Memory Issues</h3>
+<p dir="auto">If Elasticsearch fails to start, you may need to increase Docker's memory allocation:</p>
+<ul dir="auto">
+<li>Docker Desktop: Go to Settings → Resources → Memory (set to at least 8GB)</li>
+</ul>
+<h3 dir="auto">MongoDB Connection Issues</h3>
+<p dir="auto">Verify MongoDB is running and accepting connections:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose <span class="pl-c1">exec</span> mongo mongosh -u root -p <span class="pl-k">&lt;</span>MONGO_ROOT_PASSWORD<span class="pl-k">&gt;</span></pre></div>
+<h3 dir="auto">Python Script Errors</h3>
+<p dir="auto">Ensure you're running scripts from the root folder:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> ✓ Correct</span>
+python scripts/upload_mongo.py
+
+<span class="pl-c"><span class="pl-c">#</span> ✗ Incorrect</span>
+<span class="pl-c1">cd</span> scripts <span class="pl-k">&amp;&amp;</span> python upload_mongo.py</pre></div>
+<h3 dir="auto">GPU Not Detected</h3>
+<p dir="auto">If you have an NVIDIA GPU but it's not being used:</p>
+<ul dir="auto">
+<li>Install <a href="https://github.com/NVIDIA/nvidia-docker">NVIDIA Docker runtime</a></li>
+<li>Verify with: <code class="notranslate">docker run --rm --gpus all nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi</code></li>
+</ul>
+<h2 dir="auto">Stopping Services</h2>
+<p dir="auto">To stop all services:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose down</pre></div>
+<p dir="auto">To stop and remove all data (volumes):</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose down -v</pre></div>
+<h2 dir="auto">Updating</h2>
+<p dir="auto">To update the services after code changes:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose down
+docker compose build --no-cache
+docker compose up -d</pre></div>
+<h2 dir="auto">Support</h2>
+<p dir="auto">For issues or questions, please refer to the project documentation or contact the development team.</p>
+<h2 dir="auto"><strong>License</strong></h2>
+<p dir="auto">DAVE is open-source and released under the <a href="./LICENSE">Apache-2.0</a> License.</p>
+<h2 dir="auto"><strong>Additional Links</strong></h2>
+<p dir="auto">Check out our demonstration video:<br>
+<a href="https://www.youtube.com/watch?v=XG7RsI3t-2Q" rel="nofollow"><img src="https://camo.githubusercontent.com/ce23637c2fd01404d3269394ad965d5dda43e934726041ab91485bacd426d675/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f57617463682d44656d6f2d7265643f7374796c653d666f722d7468652d6261646765266c6f676f3d796f7574756265" alt="Watch the Demo" data-canonical-src="https://img.shields.io/badge/Watch-Demo-red?style=for-the-badge&amp;logo=youtube" style="max-width: 100%;"></a></p>
