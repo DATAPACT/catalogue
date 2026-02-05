@@ -9,6 +9,13 @@ categories:
 
 # Tools
 tools:
+- repo: "Minimal-Finite-Covering"
+    mainfile: "README.html"
+    name: "Minimal-Finite-Covering # Display name (optional if you want prettier)
+    category: "GreenR"
+    branch: "main"
+    readme_path: "docs/README.md"
+    docs_root: "docs"
   - repo: "GeneralArchitecture"
     mainfile: "README.html"
     name: "General Architecture"       # Display name (optional if you want prettier)
@@ -121,6 +128,13 @@ tools:
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
+  - repo: "Wikifier"
+    mainfile: "README.html"
+    name: "Wikifier"
+    category: "PipelineR"      # Display name defaults to repo name if not set
+    branch: "main"
+    readme_path: "docs/README.md"
+    docs_root: "docs"    
   - repo: "LexAlign"
     mainfile: "README.html"
     category: "AssessR"      # Display name defaults to repo name if not set
