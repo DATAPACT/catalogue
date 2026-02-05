@@ -16,6 +16,14 @@ tools:
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
+    tools:
+  - repo: "RepuLink"
+    mainfile: "README.html"
+    name: "RepuLink"       # Display name (optional if you want prettier)
+    category: "TrustR"
+    branch: "main"
+    readme_path: "docs/README.md"
+    docs_root: "docs"
   - repo: "AILegalAssistant"
     mainfile: "README.html"
     name: "AILegalAssistant"       # Display name (optional if you want prettier)
