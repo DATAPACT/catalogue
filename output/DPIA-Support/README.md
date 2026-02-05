@@ -5,10 +5,6 @@
   </a>
 </div>
 
-| Project Links |
-| ------------- | 	
-| Software GitHub Repository --> Spyderisk software <https://github.com/Spyderisk> | //use to refer to external repositories
-
 ## **General Description**
 DPIA Support is a streamlined tool designed to assist users in creating comprehensive Data Protection Impact Assessment (DPIA) documents. 
 Leveraging the capabilities of the existing Spyderisk platform, it enables users to perform detailed system model risk assessments, generating the insights needed for inclusion in a DPIA. The tool features a graphical user interface that simplifies navigation and interaction, while providing intuitive risk and data-flow reporting to help stakeholders clearly understand potential privacy risks and data movement within the system.
@@ -42,10 +38,15 @@ At a more technical level, DPIA Support allows users to perform detailed system 
 
 ## **Expected KPIs**
 
-
 |What (types)|How(Process)|Values|
 |------------|------------|------|
 |Effectiveness for DPIA|	User Satisfaction|>90%|
+
+## **Related Project Links**
+| Project Links |
+| ------------- | 	
+| Software GitHub Repository --> Spyderisk software <https://github.com/Spyderisk> | //use to refer to external repositories
+
 
 ## **How To Install**
 Tool is provided as a service.
