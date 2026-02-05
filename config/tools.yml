@@ -4,6 +4,7 @@ categories:
   - "PipelineR"
   - "PolicyR"
   - "TrustR"
+  - "GreenR"
   - "AssessR"
   - "ApplyR"
 
@@ -11,7 +12,7 @@ categories:
 tools:
   - repo: "Minimal-Finite-Covering"
     mainfile: "README.html"
-    name: "Minimal-Finite-Covering" # Display name (optional if you want prettier)
+    name: "Compresso" # Display name (optional if you want prettier)
     category: "TrustR"
     branch: "main"
     readme_path: "docs/README.md"
@@ -131,20 +132,21 @@ tools:
   - repo: "CarbonTracker"
     mainfile: "README.html"
     name: "CarbonTracker"
-    category: "GreenR"      # Display name defaults to repo name if not set
+    category: "GreenR"     
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"  
   - repo: "Wikifier"
     mainfile: "README.html"
-    name: "Wikifier"
-    category: "PipelineR"      # Display name defaults to repo name if not set
+    name: "Wikifier"     # Display name defaults to repo name if not set
+    category: "PipelineR"      
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"    
   - repo: "LexAlign"
     mainfile: "README.html"
-    category: "AssessR"      # Display name defaults to repo name if not set
+    name: "Wikifier"  # Display name defaults to repo name if not set
+    category: "AssessR"     
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
