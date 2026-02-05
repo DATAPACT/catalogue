@@ -100,6 +100,13 @@ tools:
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
+  - repo: "SEMT-X"
+    mainfile: "README.html"
+    name: "SEMT-X"
+    category: "PipelineR"      # Display name defaults to repo name if not set
+    branch: "main"
+    readme_path: "docs/README.md"
+    docs_root: "docs"
   - repo: "LexAlign"
     mainfile: "README.html"
     category: "AssessR"      # Display name defaults to repo name if not set
