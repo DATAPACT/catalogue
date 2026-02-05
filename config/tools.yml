@@ -16,6 +16,20 @@ tools:
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
+  - repo: "AILegalAssistant"
+    mainfile: "README.html"
+    name: "AILegalAssistant"       # Display name (optional if you want prettier)
+    category: "AssessR"
+    branch: "main"
+    readme_path: "docs/README.md"
+    docs_root: "docs"
+  - repo: "inLUMEN"
+    mainfile: "README.html"
+    name: "inLumen"       # Display name (optional if you want prettier)
+    category: "PipelineR"
+    branch: "main"
+    readme_path: "docs/README.md"
+    docs_root: "docs"
   - repo: "DPIA-Support"
     mainfile: "README.html"
     name: "DPIA Support"       # Display name (optional if you want prettier)
