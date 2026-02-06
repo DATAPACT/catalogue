@@ -1,0 +1,75 @@
+<h1 dir="auto">inLUMEN: AI-assisted Pipeline Design Editor Tool</h1>
+<p dir="auto">Powered by</p>
+<p dir="auto"><a href="https://www.sintef.no/" rel="nofollow"><img src="./images/download.png" alt="SINTEF" style="max-width: 100%;"></a></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Software GitHub Repository <a href="https://github.com/DATAPACT/inLUMEN">https://github.com/DATAPACT/inLUMEN</a></td>
+</tr>
+<tr>
+<td>Progress GitHub Project <a href="https://github.com/DATAPACT/">https://github.com/DATAPACT/</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>General Description</strong></h2>
+<p dir="auto"><strong>inLUMEN</strong> is a DATAPACT tool that evolves traditional AI/ML/data pipeline design tools into AI agent-driven co-design environments. The story begins with simple visions (or intents) and context provided by the user.</p>
+<p dir="auto">In DATAPACT, the <strong>intent</strong> translates to the pipeline goal: both in terms of structure, use and compliance goals. The <strong>context</strong> is the input data, code snippets, artifacts, constraints/rules/requirements, and resources.</p>
+<p dir="auto">The user remains in control of the design, however supported by dedidated agents whose role is to make these visions come to life. inLUMEN materializes their intents by generating the pipeline steps as a directed graph, and gives recommandations on compliance-strengthening design choices.</p>
+<p dir="auto">Additionally, it generates deployment artifacts such as containers and workflow blueprints needed to simulate/run the pipeline. Provenance is given via tracking reports on decisions taken by the user and agents during the design process.</p>
+<h2 dir="auto"><strong>Architecture</strong></h2>
+<p dir="auto">[<a target="_blank" rel="noopener noreferrer" href="./images/conceptual_diagram_datapact_lumen.png"><img src="./images/conceptual_diagram_datapact_lumen.png" alt="inLUMEN Architecture" style="max-width: 100%;"></a>]</p>
+<h2 dir="auto"><strong>Component Definition</strong></h2>
+<p dir="auto">[<a target="_blank" rel="noopener noreferrer" href="./images/component-image.png"><img src="./images/component-image.png" alt="Component Diagram" style="max-width: 100%;"></a>]</p>
+<h2 dir="auto"><strong>Screenshots</strong></h2>
+<p dir="auto">[<a target="_blank" rel="noopener noreferrer" href="./images/dashboard.png"><img src="./images/dashboard.png" alt="Dashboard" style="max-width: 100%;"></a>]</p>
+<h2 dir="auto"><strong>Commercial Information</strong></h2>
+<p dir="auto">| Organisation (s) | License Nature | License |<br>
+| TODO  | TODO | TODO |</p>
+<h2 dir="auto"><strong>Top Features</strong></h2>
+<ul dir="auto">
+<li><strong>Agentic AI</strong>: LLM agents can serve as helpful assistants in pipeline design, translating high-level business-level intents to pure AI/data pipeline design choices. inLUMEN agents reason on user intents and context, draw pipeline steps, and give recommandations according to compliance insights provided by the user or via tool integrations. They can also support deployment artitfact generation, making pipelines deployable.  NOTE:  UNDER DEVELOPMENT</li>
+<li><strong>Human in the Loop</strong>: Chat function to enable co-design approach to generating pipeline designs. Lab tab allows manual modifications of nodes and provides common pipeline steps.  NOTE:  UNDER DEVELOPMENT</li>
+<li><strong>Visual Aesthetics</strong>: User-friendly graphic interface. Dark/light modes.</li>
+<li><strong>Integrated and Configurable</strong>: Integrates with DATAPACT tools such as SIM-PIPE and LexAlign. LLM configuration enabled. NOTE:  UNDER DEVELOPMENT</li>
+</ul>
+<h2 dir="auto"><strong>How To Install</strong></h2>
+<p dir="auto">Step 1: Clone this repository on your computer.</p>
+<p dir="auto">Step 2: Navigate to the cloned project directory.</p>
+<p dir="auto">Step 3: Run the following command to build the docker containers:</p>
+<pre class="notranslate"><code class="notranslate">docker compose up --build
+</code></pre>
+<p dir="auto">Step 5: Open localhost:9099 and generate an access/secret key called minio-datapact.</p>
+<p dir="auto">Step 6: In a separate terminal/shell, navigate to the inLUMEN/connection directory. Run the commands found in inLUMEN/connection/command.txt, in the given order:</p>
+<p dir="auto">First:</p>
+<pre class="notranslate"><code class="notranslate">docker build -t inlumenapi -f Dockerfile .
+</code></pre>
+<p dir="auto">Then:</p>
+<pre class="notranslate"><code class="notranslate">docker run -p 5000:5000 -p 5001:5001 -p 5002:5002 -v ${PWD}/downloads:/usr/inlumen/downloads --network=datapact_network -it inlumenapi
+</code></pre>
+<p dir="auto">Step 7: Install different models into your Llama service. NOTE: TO BE UPDATED</p>
+<h3 dir="auto">Requirements</h3>
+<p dir="auto">Requirement: <a href="https://www.docker.com/%20products/docker-desktop/" rel="nofollow">Docker Desktop</a> installed.<br>
+Requirement: Node.js &amp; npm installed - <a href="https://github.com/nvm-sh/nvm#installing-and-updating">install with nvm</a></p>
+<h3 dir="auto">Software</h3>
+<p dir="auto">n/a</p>
+<h3 dir="auto">Summary of installation steps</h3>
+<p dir="auto">Follow the steps under <em>How to install</em> to complete installation. Note: building the containers may take around 5 minutes, please wait until Neo4J is fully started.</p>
+<p dir="auto">Once the installation is complete, frontend will be offered as a service at localhost:8080 and backend services (databases) will be offered at localhost:7474 (Neo4J), localhost:9099 (MinIO).</p>
+<h3 dir="auto">Detailed steps</h3>
+<p dir="auto">Follow the steps under <em>How to install</em> to complete installation.</p>
+<p dir="auto">To log into the database services, use the <em>database_name</em> as username and <em>password</em> as password. For security reasons, make sure to change these later in the docker-compose.yml file.</p>
+<h2 dir="auto"><strong>How To Use</strong></h2>
+<p dir="auto">To open the editor, go to localhost:8080. This will open the dashboard.</p>
+<p dir="auto">Backend services (databases) currently offered at localhost:7474 (Neo4J), localhost:9099 (MinIO). To log into the database services, use the <em>database_name</em> as username and <em>password</em> as password. <em>For security reasons, make sure to change these later in the docker-compose.yml file.</em></p>
+<p dir="auto">LLM-agents are (by default) powered by Llama models, but can also integrate with OpenAI models given an API key. Configure your setup in the dialog window. (TODO)</p>
+<h2 dir="auto"><strong>Other Information</strong></h2>
+<p dir="auto">inLUMEN is still under development, any current users should expect unstable behaviour.</p>
+<h2 dir="auto"><strong>OpenAPI Specification</strong></h2>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>Additional Links</strong></h2>
+<p dir="auto">n/a</p>
