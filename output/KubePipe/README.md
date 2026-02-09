@@ -1,97 +1,155 @@
-# Kubepipe
+# KubePipe
 
-by UIBK
+**University of Innsbruck**
 
+[![License](https://img.shields.io/badge/license-TBD-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
-| Project Links |
-| ------------- | 	
-| Software GitHub Repository -->  |
-| Progress GitHub Project
+> Pipeline orchestration platform bridging Kubeflow Pipelines and Argo Workflows with GDPR compliance and sustainability awareness.
 
-## **General Description**
-Pipeline creation, management and orchestration using Kubeflow
+![KubePipe Dashboard](docs/images/dashboard.png)
 
+## Features
 
-## **Architecture**
+| Category | Capabilities |
+|----------|-------------|
+| **Orchestration** | Kubeflow Pipelines, Argo Workflows, Automatic YAML↔Python conversion |
+| **Compliance** | GDPR privacy assessment, PII anonymization, Data minimization |
+| **Sustainability** | Carbon footprint tracking, Energy consumption monitoring, Carbon-aware scheduling |
+| **Runtime Adaptation** | Time-shifting, Region-shifting, Dynamic resource scaling, GDPR injection |
+| **Interface** | REST API, CLI, React Web UI, Real-time monitoring |
 
-![](https://github.com/DATAPACT/Kubepipe/blob/main/docs/images/architecture.png)
-## **Component Definition**
-Pipeline Components
+## Quick Start
 
-1. Data Preparation and Collection
+### Prerequisites
 
-The first component fetches and stores the dataset, explicitly separating the training and validation splits. This ensures reproducibility and consistency across subsequent pipeline stages. After this step, this dataset has been given to privacy risk assessment module for 
-assesing the privacy risk of the data being collected. 
+- Python 3.10+ with [uv](https://github.com/astral-sh/uv)
+- Node.js 18+ (for Web UI)
+- Docker & Minikube (for Kubernetes)
 
+### Installation
 
-2. Privacy Risk Assessment: Anonymization and Minimization of Data
+```bash
+git clone https://github.com/DATAPACT/Kubepipe.git
+cd Kubepipe && uv sync
+```
 
+### Start All Services
 
-Adhering to GDPR compliance, the anonymization component utilizes spaCy's named entity recognition (NER) and the Faker library to pseudonymize personal identifiable information such as names and organizations within the training dataset. This step mitigates privacy risks, ensuring data security and compliance with regulatory frameworks. The component of the minimized dataset implements GDPR's data minimization principle by selectively removing unnecessary columns (for example, ID and title), retaining only the essential fields (context, question, answers) required to train the model. This practice reduces potential data leakage and storage overhead, enhancing overall data security.
-references: https://ieeexplore.ieee.org/document/9839062
+```bash
+bash scripts/start_all.sh
+```
 
-4. Model Fine-Tuning
-The data collected from the 
-This stage incorporates advanced optimization techniques to fine-tune a pre-trained language model. 
+| Service | URL |
+|---------|-----|
+| Backend API | http://127.0.0.1:8001 |
+| Web UI | http://localhost:3000 |
+| Argo Server | https://localhost:2746 |
+| MinIO Console | http://localhost:9001 |
 
+## Usage
 
-5. Benchmarking
+### Argo Workflows
 
-After training, the model undergoes benchmarking against the validation dataset subset, evaluating standard performance metrics specific to question-answering tasks, namely Exact Match (EM) and F1 scores. This provides objective measures of the model's ability to generate accurate and contextually relevant answers.
+```bash
+kubepipe argo-deploy examples/argo/hello-world.yaml   # Deploy
+kubepipe argo-status <workflow-name>                   # Status
+kubepipe argo-list                                     # List all
+kubepipe argo-delete <workflow-name>                   # Delete
+```
 
-6. Evaluation and Visualization
+### Kubeflow Pipelines
 
-The evaluation stage performs in-depth analyzes by visualizing training dynamics and sustainability metrics. Sustainability metrics, captured during training, are incorporated into an informative markdown document displayed within the Kubeflow Pipelines UI, enabling easy inspection of model performance and ecological impact.
+```bash
+# Port-forward KFP API
+kubectl -n kubeflow port-forward svc/ml-pipeline 8888:8888
 
-## **Screenshots**
-![](https://github.com/DATAPACT/Kubepipe/blob/main/docs/images/Kubeflow_pipeline.png) "KubePipe Pipeline Definition for Complaint Aware LLM Fine tuning")
+# Execute via API
+curl -X POST http://127.0.0.1:8001/api/v1/execute \
+  -H 'Content-Type: application/json' \
+  -d '{"pipeline_id":"demo","environment":"dev","parameters":{}}'
+```
 
+### Argo → Kubeflow Conversion
 
-## **Commercial Information**
+```bash
+uv run python demo_converter.py
+```
 
-Table with the organisation, license nature (Open Source, Commercial ... ) and the license. Replace with the values of your module.
+## API Endpoints
 
-| Organisation (s) | License Nature | License |
-| ---------------  | -------------- | ------- |
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/v1/execute` | POST | Execute KFP pipeline |
+| `/api/v1/runs/{id}` | GET | Get run status |
+| `/api/v1/argo/deploy` | POST | Deploy Argo workflow |
+| `/api/v1/argo/workflows` | GET | List workflows |
+| `/api/v1/workflows/validate` | POST | Validate workflow YAML |
+| `/api/v1/workflows/dry-run` | POST | Dry-run with resource estimates |
+| `/api/v1/workflows/compliance-check` | POST | GDPR compliance analysis |
+| `/api/v1/adaptation/carbon-forecast` | GET | Carbon intensity forecast |
+| `/api/v1/adaptation/analyze` | POST | Analyze adaptation opportunities |
+| `/api/v1/adaptation/apply` | POST | Apply runtime adaptations |
+| `/api/v1/metrics/status` | GET | Check metrics-server status |
+| `/api/v1/metrics/cluster` | GET | Real-time cluster metrics |
 
-## **Top Features**
+## Accurate Measurements with Metrics-Server
 
+For accurate energy and carbon measurements, install the Kubernetes metrics-server:
 
+```bash
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+```
 
-## **How To Install**
+| Metric Source | Accuracy | Description |
+|---------------|----------|-------------|
+| **With metrics-server** | High | Real-time CPU/memory usage from pods |
+| **Without metrics-server** | Estimated | Based on resource requests/limits |
 
+## Configuration
 
-### Requirements
+```yaml
+# kubepipe.yaml
+execution:
+  mode: "mock"  # mock | kfp
+  kfp_host: "http://127.0.0.1:8888"
+```
 
-To be defined. 
+```bash
+# Environment variables
+export KUBEPIPE_EXECUTION_MODE=kfp
+export KUBEPIPE_KFP_HOST=http://127.0.0.1:8888
+```
 
-### Software
-n/a
+## Project Structure
 
-### Summary of installation steps
+```
+kubepipe/
+├── api/           # FastAPI server
+├── core/          # Compiler, executors, converters
+└── config.py      # Configuration
+examples/          # Sample pipelines
+scripts/           # Helper scripts
+ui/                # React web interface
+```
 
-Currently offered as a service at [add URL]. 
+## Documentation
 
-To obtain a login write an email to rajashekar.kolichala@uibk.ac.at, radu.prodan@uibk.ac.at ,  
+- [UI Guide](docs/UI_GUIDE.md)
+- [Runtime Adaptation](docs/RUNTIME_ADAPTATION.md)
+- [Service Monitoring](docs/SERVICE_MONITORING.md)
+- [Validation & Compliance](docs/VALIDATION_AND_COMPLIANCE.md)
+- [Troubleshooting](docs/TROUBLESHOOTING.md)
 
-### Detailed steps
+## Contact
 
- under development.
+**University of Innsbruck**
+- 📧 rajashekar.kolichala@uibk.ac.at
+- 📧 radu.prodan@uibk.ac.at
 
+## Acknowledgments
 
-## **How To Use**
+Funded by Horizon Europe (grant 101189771, DataPACT)
 
-
-
-
-## **Other Information**
-
-n/a
-
-## **OpenAPI Specification**
-
-n/a
-
-## **Additional Links**
-
-n/a
+---
+*Last Updated: February 2026*

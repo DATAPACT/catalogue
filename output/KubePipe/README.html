@@ -1,79 +1,224 @@
-<h1 dir="auto">Kubepipe</h1>
-<p dir="auto">by UIBK</p>
+<h1 dir="auto">KubePipe</h1>
+<p dir="auto"><strong>University of Innsbruck</strong></p>
+<p dir="auto"><a href="LICENSE"><img src="https://camo.githubusercontent.com/c9112cb313dd86605ef93526dddb03665e043d8bdc0811e78b96928acf21ca57/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d5442442d626c75652e737667" alt="License" data-canonical-src="https://img.shields.io/badge/license-TBD-blue.svg" style="max-width: 100%;"></a><br>
+<a href="https://www.python.org/downloads/" rel="nofollow"><img src="https://camo.githubusercontent.com/93a33cfc2339ec3fa9be792576576fbaafc42b0c7031285662b02f3aca1e1c59/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f707974686f6e2d332e31302b2d626c75652e737667" alt="Python" data-canonical-src="https://img.shields.io/badge/python-3.10+-blue.svg" style="max-width: 100%;"></a></p>
+<blockquote>
+<p dir="auto">Pipeline orchestration platform bridging Kubeflow Pipelines and Argo Workflows with GDPR compliance and sustainability awareness.</p>
+</blockquote>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="docs/images/dashboard.png"><img src="docs/images/dashboard.png" alt="KubePipe Dashboard" style="max-width: 100%;"></a></p>
+<h2 dir="auto">Features</h2>
 <markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
-<th>Project Links</th>
+<th>Category</th>
+<th>Capabilities</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Software GitHub Repository --&gt;</td>
+<td><strong>Orchestration</strong></td>
+<td>Kubeflow Pipelines, Argo Workflows, Automatic YAML↔Python conversion</td>
 </tr>
 <tr>
-<td>Progress GitHub Project</td>
+<td><strong>Compliance</strong></td>
+<td>GDPR privacy assessment, PII anonymization, Data minimization</td>
+</tr>
+<tr>
+<td><strong>Sustainability</strong></td>
+<td>Carbon footprint tracking, Energy consumption monitoring, Carbon-aware scheduling</td>
+</tr>
+<tr>
+<td><strong>Runtime Adaptation</strong></td>
+<td>Time-shifting, Region-shifting, Dynamic resource scaling, GDPR injection</td>
+</tr>
+<tr>
+<td><strong>Interface</strong></td>
+<td>REST API, CLI, React Web UI, Real-time monitoring</td>
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
-<h2 dir="auto"><strong>General Description</strong></h2>
-<p dir="auto">Pipeline creation, management and orchestration using Kubeflow</p>
-<h2 dir="auto"><strong>Architecture</strong></h2>
-<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="https://github.com/DATAPACT/Kubepipe/blob/main/docs/images/architecture.png"><img src="https://github.com/DATAPACT/Kubepipe/blob/main/docs/images/architecture.png" alt="" style="max-width: 100%;"></a></p>
-<h2 dir="auto"><strong>Component Definition</strong></h2>
-<p dir="auto">Pipeline Components</p>
-<ol dir="auto">
-<li>Data Preparation and Collection</li>
-</ol>
-<p dir="auto">The first component fetches and stores the dataset, explicitly separating the training and validation splits. This ensures reproducibility and consistency across subsequent pipeline stages. After this step, this dataset has been given to privacy risk assessment module for<br>
-assesing the privacy risk of the data being collected.</p>
-<ol start="2" dir="auto">
-<li>Privacy Risk Assessment: Anonymization and Minimization of Data</li>
-</ol>
-<p dir="auto">Adhering to GDPR compliance, the anonymization component utilizes spaCy's named entity recognition (NER) and the Faker library to pseudonymize personal identifiable information such as names and organizations within the training dataset. This step mitigates privacy risks, ensuring data security and compliance with regulatory frameworks. The component of the minimized dataset implements GDPR's data minimization principle by selectively removing unnecessary columns (for example, ID and title), retaining only the essential fields (context, question, answers) required to train the model. This practice reduces potential data leakage and storage overhead, enhancing overall data security.<br>
-references: <a href="https://ieeexplore.ieee.org/document/9839062" rel="nofollow">https://ieeexplore.ieee.org/document/9839062</a></p>
-<ol start="4" dir="auto">
-<li>
-<p dir="auto">Model Fine-Tuning<br>
-The data collected from the<br>
-This stage incorporates advanced optimization techniques to fine-tune a pre-trained language model.</p>
-</li>
-<li>
-<p dir="auto">Benchmarking</p>
-</li>
-</ol>
-<p dir="auto">After training, the model undergoes benchmarking against the validation dataset subset, evaluating standard performance metrics specific to question-answering tasks, namely Exact Match (EM) and F1 scores. This provides objective measures of the model's ability to generate accurate and contextually relevant answers.</p>
-<ol start="6" dir="auto">
-<li>Evaluation and Visualization</li>
-</ol>
-<p dir="auto">The evaluation stage performs in-depth analyzes by visualizing training dynamics and sustainability metrics. Sustainability metrics, captured during training, are incorporated into an informative markdown document displayed within the Kubeflow Pipelines UI, enabling easy inspection of model performance and ecological impact.</p>
-<h2 dir="auto"><strong>Screenshots</strong></h2>
-<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="https://github.com/DATAPACT/Kubepipe/blob/main/docs/images/Kubeflow_pipeline.png"><img src="https://github.com/DATAPACT/Kubepipe/blob/main/docs/images/Kubeflow_pipeline.png" alt="" style="max-width: 100%;"></a> "KubePipe Pipeline Definition for Complaint Aware LLM Fine tuning")</p>
-<h2 dir="auto"><strong>Commercial Information</strong></h2>
-<p dir="auto">Table with the organisation, license nature (Open Source, Commercial ... ) and the license. Replace with the values of your module.</p>
+<h2 dir="auto">Quick Start</h2>
+<h3 dir="auto">Prerequisites</h3>
+<ul dir="auto">
+<li>Python 3.10+ with <a href="https://github.com/astral-sh/uv">uv</a></li>
+<li>Node.js 18+ (for Web UI)</li>
+<li>Docker &amp; Minikube (for Kubernetes)</li>
+</ul>
+<h3 dir="auto">Installation</h3>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">git clone https://github.com/DATAPACT/Kubepipe.git
+<span class="pl-c1">cd</span> Kubepipe <span class="pl-k">&amp;&amp;</span> uv sync</pre></div>
+<h3 dir="auto">Start All Services</h3>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">bash scripts/start_all.sh</pre></div>
 <markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
-<th>Organisation (s)</th>
-<th>License Nature</th>
-<th>License</th>
+<th>Service</th>
+<th>URL</th>
 </tr>
 </thead>
+<tbody>
+<tr>
+<td>Backend API</td>
+<td><a href="http://127.0.0.1:8001" rel="nofollow">http://127.0.0.1:8001</a></td>
+</tr>
+<tr>
+<td>Web UI</td>
+<td><a href="http://localhost:3000" rel="nofollow">http://localhost:3000</a></td>
+</tr>
+<tr>
+<td>Argo Server</td>
+<td><a href="https://localhost:2746" rel="nofollow">https://localhost:2746</a></td>
+</tr>
+<tr>
+<td>MinIO Console</td>
+<td><a href="http://localhost:9001" rel="nofollow">http://localhost:9001</a></td>
+</tr>
+</tbody>
 </table></markdown-accessiblity-table>
-<h2 dir="auto"><strong>Top Features</strong></h2>
-<h2 dir="auto"><strong>How To Install</strong></h2>
-<h3 dir="auto">Requirements</h3>
-<p dir="auto">To be defined.</p>
-<h3 dir="auto">Software</h3>
-<p dir="auto">n/a</p>
-<h3 dir="auto">Summary of installation steps</h3>
-<p dir="auto">Currently offered as a service at [add URL].</p>
-<p dir="auto">To obtain a login write an email to <a href="mailto:rajashekar.kolichala@uibk.ac.at">rajashekar.kolichala@uibk.ac.at</a>, <a href="mailto:radu.prodan@uibk.ac.at">radu.prodan@uibk.ac.at</a> ,</p>
-<h3 dir="auto">Detailed steps</h3>
-<p dir="auto">under development.</p>
-<h2 dir="auto"><strong>How To Use</strong></h2>
-<h2 dir="auto"><strong>Other Information</strong></h2>
-<p dir="auto">n/a</p>
-<h2 dir="auto"><strong>OpenAPI Specification</strong></h2>
-<p dir="auto">n/a</p>
-<h2 dir="auto"><strong>Additional Links</strong></h2>
-<p dir="auto">n/a</p>
+<h2 dir="auto">Usage</h2>
+<h3 dir="auto">Argo Workflows</h3>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">kubepipe argo-deploy examples/argo/hello-world.yaml   <span class="pl-c"><span class="pl-c">#</span> Deploy</span>
+kubepipe argo-status <span class="pl-k">&lt;</span>workflow-name<span class="pl-k">&gt;</span>                   <span class="pl-c"><span class="pl-c">#</span> Status</span>
+kubepipe argo-list                                     <span class="pl-c"><span class="pl-c">#</span> List all</span>
+kubepipe argo-delete <span class="pl-k">&lt;</span>workflow-name<span class="pl-k">&gt;</span>                   <span class="pl-c"><span class="pl-c">#</span> Delete</span></pre></div>
+<h3 dir="auto">Kubeflow Pipelines</h3>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Port-forward KFP API</span>
+kubectl -n kubeflow port-forward svc/ml-pipeline 8888:8888
+
+<span class="pl-c"><span class="pl-c">#</span> Execute via API</span>
+curl -X POST http://127.0.0.1:8001/api/v1/execute \
+  -H <span class="pl-s"><span class="pl-pds">'</span>Content-Type: application/json<span class="pl-pds">'</span></span> \
+  -d <span class="pl-s"><span class="pl-pds">'</span>{"pipeline_id":"demo","environment":"dev","parameters":{}}<span class="pl-pds">'</span></span></pre></div>
+<h3 dir="auto">Argo → Kubeflow Conversion</h3>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">uv run python demo_converter.py</pre></div>
+<h2 dir="auto">API Endpoints</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">/api/v1/execute</code></td>
+<td>POST</td>
+<td>Execute KFP pipeline</td>
+</tr>
+<tr>
+<td><code class="notranslate">/api/v1/runs/{id}</code></td>
+<td>GET</td>
+<td>Get run status</td>
+</tr>
+<tr>
+<td><code class="notranslate">/api/v1/argo/deploy</code></td>
+<td>POST</td>
+<td>Deploy Argo workflow</td>
+</tr>
+<tr>
+<td><code class="notranslate">/api/v1/argo/workflows</code></td>
+<td>GET</td>
+<td>List workflows</td>
+</tr>
+<tr>
+<td><code class="notranslate">/api/v1/workflows/validate</code></td>
+<td>POST</td>
+<td>Validate workflow YAML</td>
+</tr>
+<tr>
+<td><code class="notranslate">/api/v1/workflows/dry-run</code></td>
+<td>POST</td>
+<td>Dry-run with resource estimates</td>
+</tr>
+<tr>
+<td><code class="notranslate">/api/v1/workflows/compliance-check</code></td>
+<td>POST</td>
+<td>GDPR compliance analysis</td>
+</tr>
+<tr>
+<td><code class="notranslate">/api/v1/adaptation/carbon-forecast</code></td>
+<td>GET</td>
+<td>Carbon intensity forecast</td>
+</tr>
+<tr>
+<td><code class="notranslate">/api/v1/adaptation/analyze</code></td>
+<td>POST</td>
+<td>Analyze adaptation opportunities</td>
+</tr>
+<tr>
+<td><code class="notranslate">/api/v1/adaptation/apply</code></td>
+<td>POST</td>
+<td>Apply runtime adaptations</td>
+</tr>
+<tr>
+<td><code class="notranslate">/api/v1/metrics/status</code></td>
+<td>GET</td>
+<td>Check metrics-server status</td>
+</tr>
+<tr>
+<td><code class="notranslate">/api/v1/metrics/cluster</code></td>
+<td>GET</td>
+<td>Real-time cluster metrics</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto">Accurate Measurements with Metrics-Server</h2>
+<p dir="auto">For accurate energy and carbon measurements, install the Kubernetes metrics-server:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml</pre></div>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Metric Source</th>
+<th>Accuracy</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>With metrics-server</strong></td>
+<td>High</td>
+<td>Real-time CPU/memory usage from pods</td>
+</tr>
+<tr>
+<td><strong>Without metrics-server</strong></td>
+<td>Estimated</td>
+<td>Based on resource requests/limits</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto">Configuration</h2>
+<div class="highlight highlight-source-yaml" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> kubepipe.yaml</span>
+<span class="pl-ent">execution</span>:
+  <span class="pl-ent">mode</span>: <span class="pl-s"><span class="pl-pds">"</span>mock<span class="pl-pds">"</span></span>  <span class="pl-c"><span class="pl-c">#</span> mock | kfp</span>
+  <span class="pl-ent">kfp_host</span>: <span class="pl-s"><span class="pl-pds">"</span>http://127.0.0.1:8888<span class="pl-pds">"</span></span></pre></div>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Environment variables</span>
+<span class="pl-k">export</span> KUBEPIPE_EXECUTION_MODE=kfp
+<span class="pl-k">export</span> KUBEPIPE_KFP_HOST=http://127.0.0.1:8888</pre></div>
+<h2 dir="auto">Project Structure</h2>
+<pre class="notranslate"><code class="notranslate">kubepipe/
+├── api/           # FastAPI server
+├── core/          # Compiler, executors, converters
+└── config.py      # Configuration
+examples/          # Sample pipelines
+scripts/           # Helper scripts
+ui/                # React web interface
+</code></pre>
+<h2 dir="auto">Documentation</h2>
+<ul dir="auto">
+<li><a href="docs/UI_GUIDE.md">UI Guide</a></li>
+<li><a href="docs/RUNTIME_ADAPTATION.md">Runtime Adaptation</a></li>
+<li><a href="docs/SERVICE_MONITORING.md">Service Monitoring</a></li>
+<li><a href="docs/VALIDATION_AND_COMPLIANCE.md">Validation &amp; Compliance</a></li>
+<li><a href="docs/TROUBLESHOOTING.md">Troubleshooting</a></li>
+</ul>
+<h2 dir="auto">Contact</h2>
+<p dir="auto"><strong>University of Innsbruck</strong></p>
+<ul dir="auto">
+<li>📧 <a href="mailto:rajashekar.kolichala@uibk.ac.at">rajashekar.kolichala@uibk.ac.at</a></li>
+<li>📧 <a href="mailto:radu.prodan@uibk.ac.at">radu.prodan@uibk.ac.at</a></li>
+</ul>
+<h2 dir="auto">Acknowledgments</h2>
+<p dir="auto">Funded by Horizon Europe (grant 101189771, DataPACT)</p>
+<hr>
+<p dir="auto"><em>Last Updated: February 2026</em></p>
