@@ -1,0 +1,109 @@
+<h1 dir="auto">CounteR Pseudonymization Tool</h1>
+<p dir="auto"><strong>ASSIST Software</strong></p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="/docs/images/cps.png"><img src="/docs/images/cps.png" alt="CPS" style="max-width: 100%;"></a></p>
+<p dir="auto">Used for data encryption/decryption, the service exposes a REST API for both operations.</p>
+<p dir="auto">The Data Pseudonymization module uses the encryption endpoints.<br>
+The Data Depseudonymization module uses the decryption endpoints.</p>
+<p dir="auto">This service abstracts the interaction with HashiCorp Vault.</p>
+<p dir="auto">At the moment, the chosen method of authentication is <code class="notranslate">userpass</code>.</p>
+<p dir="auto">This means Vault must be configured with this authentication method <strong>enabled</strong><br>
+and a pair of user/pass that will be passed to the application.</p>
+<p dir="auto">Vault should also have <code class="notranslate">transit</code> <strong>enabled</strong> (<a href="https://www.vaultproject.io/docs/secrets/transit" rel="nofollow">https://www.vaultproject.io/docs/secrets/transit</a>)</p>
+<p dir="auto">The vault user should have an attached policy configured as follows:</p>
+<pre class="notranslate"><code class="notranslate">path "transit/encrypt/enc-key" {
+  capabilities = [ "update" ]
+}
+path "transit/decrypt/enc-key" {
+  capabilities = [ "update" ]
+}
+</code></pre>
+<p dir="auto">Here, the name of the enc/dec key is <code class="notranslate">enc-key</code> =&gt; this should the value for  <code class="notranslate">VAULT_ENCRYPTION_KEY_NAME</code> env var</p>
+<h1 dir="auto">Requirements</h1>
+<h2 dir="auto">Environment</h2>
+<pre class="notranslate"><code class="notranslate">VAULT_URL=http://vault-server:8200
+VAULT_USER=${user}
+VAULT_PASSWORD=${password}
+VAULT_ENCRYPTION_KEY_NAME=${enc-key}
+</code></pre>
+<h1 dir="auto">Dependencies</h1>
+<h2 dir="auto">Infrastructure</h2>
+<ul dir="auto">
+<li>HashiCorp Vault</li>
+</ul>
+<h1 dir="auto">Technical Considerations</h1>
+<p dir="auto">This project uses Quarkus, the Supersonic Subatomic Java Framework.</p>
+<p dir="auto">If you want to learn more about Quarkus, please visit its website: <a href="https://quarkus.io/" rel="nofollow">https://quarkus.io/</a> .</p>
+<h2 dir="auto">Running the application in dev mode</h2>
+<p dir="auto">You can run your application in dev mode that enables live coding using:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">./mvnw compile quarkus:dev</pre></div>
+<blockquote>
+<p dir="auto"><strong><em>NOTE:</em></strong>  Quarkus now ships with a Dev UI, which is available in dev mode only at <a href="http://localhost:8077/q/dev/" rel="nofollow">http://localhost:8077/q/dev/</a>.</p>
+</blockquote>
+<h2 dir="auto">Packaging and running the application</h2>
+<p dir="auto">The application can be packaged using:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">./mvnw package</pre></div>
+<p dir="auto">It produces the <code class="notranslate">quarkus-run.jar</code> file in the <code class="notranslate">target/quarkus-app/</code> directory.<br>
+Be aware that it’s not an <em>über-jar</em> as the dependencies are copied into the <code class="notranslate">target/quarkus-app/lib/</code> directory.</p>
+<p dir="auto">The application is now runnable using <code class="notranslate">java -jar target/quarkus-app/quarkus-run.jar</code>.</p>
+<h2 dir="auto">Creating a native executable</h2>
+<p dir="auto">You can create a native executable using:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">./mvnw package -Pnative</pre></div>
+<p dir="auto">Or, if you don't have GraalVM installed, you can run the native executable build in a container using:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">./mvnw package -Pnative -Dquarkus.native.container-build=true</pre></div>
+<p dir="auto">You can then execute your native executable with: <code class="notranslate">./target/code-with-quarkus-1.0.0-SNAPSHOT-runner</code></p>
+<p dir="auto">If you want to learn more about building native executables, please consult <a href="https://quarkus.io/guides/maven-tooling" rel="nofollow">https://quarkus.io/guides/maven-tooling</a>.</p>
+<h2 dir="auto">Related Guides</h2>
+<ul dir="auto">
+<li>Vault (<a href="https://quarkiverse.github.io/quarkiverse-docs/quarkus-vault/dev/index.html" rel="nofollow">guide</a>): Store your credentials<br>
+securely in HashiCorp Vault</li>
+</ul>
+<h2 dir="auto">Vault docker image configuration</h2>
+<p dir="auto">For local developement, run vault as a docker image.</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Start Vault in dev mode</span>
+docker run --rm --name vault-dev --cap-add=IPC_LOCK \
+  -e VAULT_DEV_ROOT_TOKEN_ID=root \
+  -e VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200 \
+  -p 8200:8200 hashicorp/vault:latest server \
+  -dev -dev-root-token-id=root -dev-listen-address=0.0.0.0:8200
+
+<span class="pl-c"><span class="pl-c">#</span> Enter the Vault container</span>
+docker <span class="pl-c1">exec</span> -it vault-dev sh
+
+<span class="pl-c"><span class="pl-c">#</span> Set environment variables</span>
+<span class="pl-k">export</span> VAULT_ADDR=http://127.0.0.1:8200
+<span class="pl-k">export</span> VAULT_TOKEN=root
+
+<span class="pl-c"><span class="pl-c">#</span> Check Vault status</span>
+vault status
+
+<span class="pl-c"><span class="pl-c">#</span> Enable userpass authentication</span>
+vault auth <span class="pl-c1">enable</span> userpass
+
+<span class="pl-c"><span class="pl-c">#</span> Write the user with the correct policy name</span>
+vault write auth/userpass/users/admin password=<span class="pl-s"><span class="pl-pds">"</span>Admin123!<span class="pl-pds">"</span></span> policies=<span class="pl-s"><span class="pl-pds">"</span>transit-encdec<span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> Enable the transit secrets engine</span>
+vault secrets <span class="pl-c1">enable</span> transit
+
+<span class="pl-c"><span class="pl-c">#</span> Create the encryption key</span>
+vault write -f transit/keys/enc-key
+
+<span class="pl-c"><span class="pl-c">#</span> Read the key info</span>
+vault <span class="pl-c1">read</span> transit/keys/enc-key
+
+<span class="pl-c"><span class="pl-c">#</span> Write the policy using heredoc for clarity</span>
+vault policy write transit-encdec - <span class="pl-s"><span class="pl-k">&lt;&lt;</span>'<span class="pl-k">HCL</span>'</span>
+<span class="pl-s">path "transit/encrypt/enc-key" {</span>
+<span class="pl-s">  capabilities = ["update"]</span>
+<span class="pl-s">}</span>
+<span class="pl-s">path "transit/decrypt/enc-key" {</span>
+<span class="pl-s">  capabilities = ["update"]</span>
+<span class="pl-s">}</span>
+<span class="pl-s"><span class="pl-k">HCL</span></span></pre></div>
+<p dir="auto">This will configure the vault correctly. Afterwards, update application.yaml config file, for vault section</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">  vault:
+    url: http://localhost:8200
+    authentication:
+      userpass:
+        username: admin
+        password: Admin123<span class="pl-k">!</span></pre></div>

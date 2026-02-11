@@ -1,0 +1,93 @@
+<div dir="auto">
+  <h1 dir="auto">Koala UI</h1>
+  <a href="https://www.sintef.no/" rel="nofollow">
+    <img src="./images/sintef_logo.svg" alt="SINTEF logo" width="220" style="max-width: 100%;">
+  </a>
+</div>
+<h2 dir="auto"><strong>General Description</strong></h2>
+<p dir="auto">Koala UI is a web user interface that supports semantic annotation and human-in-the-loop review of tabular data. It lets users explore datasets, inspect tables, run entity linking and annotation jobs, and export enriched CSV files. The UI is designed to make enrichment workflows transparent and auditable by domain experts and data stewards.</p>
+<h2 dir="auto"><strong>Related Compliance aspects</strong></h2>
+<ul dir="auto">
+<li>Semantic annotation</li>
+<li>Human-in-the-loop validation to support compliant data enrichment</li>
+<li>Data review and quality assurance for enrichment outputs</li>
+</ul>
+<h2 dir="auto"><strong>Main Goal/Functionalities</strong></h2>
+<ul dir="auto">
+<li>Interactive dataset exploration and filtering</li>
+<li>Manual and assisted semantic annotation of table columns and cells</li>
+<li>Entity linking integration (e.g., Lion Linker)</li>
+<li>DPV annotation support</li>
+<li>Export of enriched datasets for downstream processing</li>
+</ul>
+<h2 dir="auto"><strong>Architecture</strong></h2>
+<p dir="auto">Koala UI is a React-based front-end that communicates with a Flask backend. The backend manages datasets and table metadata, orchestrates annotation and linking jobs, and handles export of enriched data. External linking/annotation services can be integrated via backend APIs.</p>
+<h2 dir="auto"><strong>Component Definition</strong></h2>
+<p dir="auto">Koala UI provides the human-facing interface for semantic enrichment workflows. It supports dataset ingestion, column type management, entity linking and disambiguation, and validation of suggested annotations. Users can review candidate entities, adjust annotations, and export enriched tables. The UI integrates with backend services that manage data storage and invoke external enrichment services.</p>
+<h2 dir="auto"><strong>Screenshots</strong></h2>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="./images/koala_ui_screenshot.png"><img src="./images/koala_ui_screenshot.png" alt="Koala UI table view" style="max-width: 100%;"></a></p>
+<h2 dir="auto"><strong>Commercial Information</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Organisation (s)</th>
+<th>License Nature</th>
+<th>License</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SINTEF</td>
+<td>Open Source</td>
+<td>MIT</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Expected KPIs</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>What (types)</th>
+<th>How(Process)</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Usability and effectiveness of human-in-the-loop validation of enriched datasets</td>
+<td>Usability evaluation with domain experts and data stewards using the SUS questionnaire, combined with time-on-task comparison against manual workflows</td>
+<td>Koala UI should achieve a mean SUS score of at least 75 across evaluated users, with no more than 25% of individual scores falling below 65. Annotation validation tasks should require at least 30% less time compared to baseline manual workflows</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Related Project Links</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Software GitHub Repository --&gt; Koala UI (upstream) <a href="https://github.com/enRichMyData/koala_ui">https://github.com/enRichMyData/koala_ui</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>How To Install</strong></h2>
+<p dir="auto">See the upstream repository for installation and setup instructions: <a href="https://github.com/enRichMyData/koala_ui">https://github.com/enRichMyData/koala_ui</a></p>
+<h3 dir="auto">Detailed steps</h3>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>How To Use</strong></h2>
+<ol dir="auto">
+<li>Start the Koala UI backend and front-end following the upstream instructions.</li>
+<li>Open the web UI and load a dataset.</li>
+<li>Define or review column types, then run entity linking and annotation.</li>
+<li>Validate and adjust annotations as needed.</li>
+<li>Export the enriched dataset.</li>
+</ol>
+<h2 dir="auto"><strong>Other Information</strong></h2>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>OpenAPI Specification</strong></h2>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>Additional Links</strong></h2>
+<p dir="auto">n/a</p>

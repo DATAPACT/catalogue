@@ -1,0 +1,93 @@
+<h1 dir="auto">Ontology Service</h1>
+<p dir="auto">Powered by</p>
+<p dir="auto"><a href="https://dips.soton.ac.uk/#home" rel="nofollow"><img src="./images/UniSouthampton.png" alt="UoSLOGO" style="max-width: 100%;"></a></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Software GitHub Repository --&gt; Policy Editor software <a href="https://github.com/...">https://github.com/...</a></td>
+</tr>
+<tr>
+<td>Progress GitHub Project [ADD URL]</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>General Description</strong></h2>
+<p dir="auto">This is a docker container of a FastAPI implementation of an Ontology Service that enables:</p>
+<ul dir="auto">
+<li>the storage and management of ontologies,</li>
+<li>the storage and management of ontology metadata (e.g. the user who created it and when) and</li>
+<li>functions to extract ODRL relevant terms (e.g. lists of actions or purposes) from specific ontologies.</li>
+</ul>
+<h2 dir="auto"><strong>Architecture</strong></h2>
+<h2 dir="auto"><strong>Component Definition</strong></h2>
+<h2 dir="auto"><strong>Screenshots</strong></h2>
+<h2 dir="auto"><strong>Commercial Information</strong></h2>
+<p dir="auto">Table with the organisation, license nature (Open Source, Commercial ... ) and the license. Replace with the values of your module.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Organisation (s)</th>
+<th>License Nature</th>
+<th>License</th>
+</tr>
+</thead>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Top Features</strong></h2>
+<h2 dir="auto"><strong>How To Install</strong></h2>
+<h3 dir="auto">Triplestore Configuration</h3>
+<p dir="auto">This service requires access to a SPARQL endpoint that enables select, ask and update queries. It was tested with Fuseki, with username and password authentication for the endpoint, but it should work with any other triplestore that exposes a SPARQL endpoint.</p>
+<p dir="auto">The sparql_client.py file should be configured to point to the triplestore.<br>
+The requirements for the triplestores are as follows:</p>
+<ul dir="auto">
+<li>Accept SPARQL and SPARQL UPDATE queries</li>
+<li>Contains a default graph with the default ontology already loaded (which will be used to return default results to the ODRL-sepcific queries even if no domain specific ontology has been selected)</li>
+</ul>
+<p dir="auto">Configuration:</p>
+<ul dir="auto">
+<li>SPARQL_ENDPOINT the endpoint for the sparql queries</li>
+<li>SPARQL_UPDATE_ENDPOINT the endpoint for the sparql update queries</li>
+<li>DEFAULT_ONTOLOGY_IRI the IRI for the named graph where the default ontology has been loaded (optional configuration, you can keep the default value)</li>
+<li>DEFAULT_METADATA_IRI the IRI for the named graph that will contain the metadata of the ontologies (optional configuration, you can keep the default value)</li>
+</ul>
+<p dir="auto">You can configure the port the docker container will listen to in the <code class="notranslate">docker-compose.yml</code> file. By default it is 8009.</p>
+<h3 dir="auto">Authentication configuration</h3>
+<p dir="auto">The docker compose file must include a .env file with the following environment variables.</p>
+<ul dir="auto">
+<li>USERNAME the username of the user account to access the triplestore</li>
+<li>PASSWORD the password of the user account to access the triplestore</li>
+</ul>
+<h3 dir="auto">Docker Setup Instructions</h3>
+<ul dir="auto">
+<li>Configure the files as mentioned above</li>
+<li>Build and run the docker container as usual (e.g. <code class="notranslate">docker compose build</code> and <code class="notranslate">docker compose up</code>)</li>
+<li>The API documentation will then be available under the <code class="notranslate">/docs</code> sub path, such as <code class="notranslate">http://127.0.0.1:8000/docs</code></li>
+</ul>
+<h3 dir="auto">Manual Installation Instructions</h3>
+<p dir="auto">If you are not using docker, you can run the project as follows:</p>
+<ul dir="auto">
+<li>Configure the files as mentioned above</li>
+<li>Install required libraries using <code class="notranslate">pip install fastapi uvicorn SPARQLWrapper python-multipart</code></li>
+<li>Run FastAPI <code class="notranslate">uvicorn main:app --reload</code> from the project directory</li>
+<li>See the API here <code class="notranslate">http://127.0.0.1:8000/docs</code></li>
+</ul>
+<h3 dir="auto">Requirements</h3>
+<p dir="auto">To be defined.</p>
+<h3 dir="auto">Software</h3>
+<p dir="auto">To be defined.</p>
+<h3 dir="auto">Summary of installation steps</h3>
+<p dir="auto">To be defined.</p>
+<h3 dir="auto">Detailed steps</h3>
+<p dir="auto">To be defined.</p>
+<h2 dir="auto"><strong>How To Use</strong></h2>
+<p dir="auto">To be defined.</p>
+<h2 dir="auto"><strong>Other Information</strong></h2>
+<p dir="auto">To be defined.</p>
+<h2 dir="auto"><strong>OpenAPI Specification</strong></h2>
+<p dir="auto">To be defined.</p>
+<h2 dir="auto"><strong>Additional Links</strong></h2>
+<p dir="auto">To be defined.</p>
