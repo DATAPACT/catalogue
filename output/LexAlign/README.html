@@ -1,0 +1,89 @@
+<div dir="auto">
+  <h1 dir="auto">LexAlign</h1>
+  <a href="https://www.sintef.no/" rel="nofollow">
+    <img src="./images/SINTEF_logo.jpg" alt="SINTEF Logo" style="max-width: 100%;">
+  </a>
+</div>
+<h2 dir="auto"><strong>General Description</strong></h2>
+<p dir="auto">LexAlign is a multi-service application that supports compliance analysis through configurable compliance flows. It provides a platform for managing compliance evaluation projects, an editor for building and visualizing flow executions, and an agentic evaluator for stage-by-stage analysis. The system integrates with external tools (e.g., SIMPIPE) for pipeline metadata and artifacts, and supports data storage in S3-compatible object storage for workflow assets and derived outputs.</p>
+<h2 dir="auto"><strong>Related Compliance aspects</strong></h2>
+<ul dir="auto">
+<li>AI Act compliance analysis</li>
+<li>Data governance and audit readiness</li>
+</ul>
+<h2 dir="auto"><strong>Main Goal/Functionalities</strong></h2>
+<ul dir="auto">
+<li>Create and manage compliance analyses</li>
+<li>Browse and execute compliance flows with structured inputs and derived facts</li>
+<li>Integrate with external pipeline systems and persist artifacts in object storage</li>
+<li>Visualize decision-tree flowcharts for compliance reasoning</li>
+</ul>
+<h2 dir="auto"><strong>Architecture</strong></h2>
+<p dir="auto">The picture below shows the LexAlign architecture.<br>
+<a target="_blank" rel="noopener noreferrer" href="./images/LexAlign-architecture.png"><img src="./images/LexAlign-architecture.png" alt="LexAlign Architecture" style="max-width: 100%;"></a></p>
+<h2 dir="auto"><strong>Component Definition</strong></h2>
+<p dir="auto">LexAlign is a modular compliance analysis environment designed to manage compliance analyses across complex AI and data pipelines. The platform offers a Django-based backend that persists compliance analysis records, structured user inputs, derived facts, and pipeline assets. It integrates with external services such as SIMPIPE to obtain pipeline specifications and artifacts, which are stored in S3-compatible object storage (MinIO in development).</p>
+<p dir="auto">The frontend provides a dashboard for analyses, structured regulatory context collection, and a flowchart visualization of decision logic. The system supports lazy retrieval of pipeline artifacts, linking analysis data to real pipeline steps, and organizing evidence and decision metadata for later compliance reporting.</p>
+<h2 dir="auto"><strong>Screenshots</strong></h2>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="./images/LexAlign-s1.png"><img src="./images/LexAlign-s1.png" alt="LexAlign Screenshot 1" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer" href="./images/LexAlign-s2.png"><img src="./images/LexAlign-s2.png" alt="LexAlign Screenshot 2" style="max-width: 100%;"></a></p>
+<h2 dir="auto"><strong>Commercial Information</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Organisation (s)</th>
+<th>License Nature</th>
+<th>License</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SINTEF</td>
+<td>Open Source</td>
+<td><a href="../LICENSE">Apache License 2.0</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Expected KPIs</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>What (types)</th>
+<th>How(Process)</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compliance flow accuracy on mutated pipelines</td>
+<td>Mutation-style evaluation: start with compliant Argo Workflows, apply non-compliance mutation operators, run each compliance flow, build confusion matrix (TP/TN/FP/FN) per flow, and compute accuracy = (TP+TN)/(TP+TN+FP+FN).</td>
+<td>&gt;= 90% accuracy per flow</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Related Project Links</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>n/a</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>How To Install</strong></h2>
+<ol dir="auto">
+<li>Clone the repository: <a href="https://github.com/datapact/LexAlign">https://github.com/datapact/LexAlign</a></li>
+<li>Follow the project setup instructions in the root README (run the required Docker Compose commands to start the platform, database, and storage services).</li>
+</ol>
+<h2 dir="auto"><strong>How To Use</strong></h2>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>Other Information</strong></h2>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>OpenAPI Specification</strong></h2>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>Additional Links</strong></h2>
+<p dir="auto">n/a</p>
