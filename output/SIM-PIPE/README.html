@@ -1,0 +1,134 @@
+<div dir="auto">
+  <h1 dir="auto">SIM-PIPE</h1>
+  <a href="https://github.com/DataCloud-project/SIM-PIPE/">
+    <img src="./images/sim-pipe_logo.png" alt="SIMPIPE logo" style="max-width: 100%;">
+  </a>
+</div>
+<h2 dir="auto"><strong>General Description</strong></h2>
+<p dir="auto">SIM-PIPE generates and simulates a deployment configuration for the final deployment that conforms to the hardware requirements and includes any additional necessary middleware inter-step communication code. Finally, the tool provides a pipeline testing functionality, including a sandbox for evaluating individual pipeline step performance, and a simulator to determine the performance of the overall Big Data pipeline. Specifically, SIM-PIPE provides the following high-level features:</p>
+<ul dir="auto">
+<li>Deploying each step of a pipeline and running it in a sandbox by providing sample input</li>
+<li>Evaluating pipeline step performance by recording and analysing metrics about its execution in order to identify bottlenecks and steps to be optimized</li>
+<li>Identification of resource requirements for pipeline by calculating step performance per resource used</li>
+</ul>
+<h2 dir="auto"><strong>Related Compliance aspects</strong></h2>
+<ul dir="auto">
+<li>Provides privacy analysis of output artifacts produced by data pipelines</li>
+</ul>
+<h2 dir="auto"><strong>Main Goal/Functionalities</strong></h2>
+<p dir="auto">SIM-PIPE provides a user-friendly interface for profiling, testing, and analyzing data pipelines, supporting resource analysis and performance evaluation.</p>
+<h2 dir="auto"><strong>Architecture</strong></h2>
+<p dir="auto">SIM-PIPE consists of a stateless NodeJS controller, a SvelteKit graphical user interface, and several open-source components. The controller provides a GraphQL API for the graphical user interface and other tools of the DataCloud toolbox. The system is designed to mirror real-world systems for accurate simulation, and to operate seamlessly on a developer’s laptop using only open-source software components.</p>
+<p align="center" dir="auto"><a target="_blank" rel="noopener noreferrer" href="./images/sim-pipe_architecture2.png"><img width="80%" src="./images/sim-pipe_architecture2.png" style="max-width: 100%;"></a></p>
+<h2 dir="auto">Kubernetes, the container orchestration platform</h2>
+<h2 dir="auto"><strong>Component Definition</strong></h2>
+<p dir="auto">The SIM-PIPE platform is composed of the following main components:</p>
+<ul dir="auto">
+<li>
+<p dir="auto"><strong>Kubernetes, the container orchestration platform</strong>: Kubernetes (K8s) automates deploying, scaling, and managing containerised applications. It provides a resilient framework for distributed systems, supporting features like failover, scaling, and rolling updates. SIM-PIPE leverages Kubernetes for managing complex infrastructures and running data pipelines in environments that closely resemble production.</p>
+</li>
+<li>
+<p dir="auto"><strong>Argo Workflows, to run software container-based data pipelines</strong>: Argo Workflows is a container-native workflow engine for orchestrating data pipelines and jobs on Kubernetes. It supports complex job orchestration using Directed Acyclic Graphs (DAG), parameterisation, artefact handling, and retries on failures.</p>
+</li>
+<li>
+<p dir="auto"><strong>cAdvisor, to gather detailed metrics</strong>: cAdvisor monitors running container resource usage and performance characteristics, providing metrics such as CPU, memory, network, and filesystem usage. It supports real-time and historical data collection, and can expose data to storage backends like Prometheus.</p>
+</li>
+<li>
+<p dir="auto"><strong>Prometheus, to collect and store metrics</strong>: Prometheus is a monitoring and alerting toolkit that scrapes metrics from instrumented jobs and stores samples locally. It supports a flexible query language (PromQL) and remote storage integrations for scalable data storage.</p>
+</li>
+<li>
+<p dir="auto"><strong>MinIO, the object store</strong>: MinIO is an open-source object storage server compatible with Amazon S3, used to securely store files, including inputs, outputs, and intermediate data for pipelines. It can be replaced with any S3-compatible storage system.</p>
+</li>
+<li>
+<p dir="auto"><strong>SFTPGo, every file transfer protocol for everyone</strong>: SFTPGo extends the S3-based storage infrastructure, supporting multiple file transfer protocols (SFTP, HTTP, FTP(S), WebDAV) for flexible file manipulation.</p>
+</li>
+<li>
+<p dir="auto"><strong>Grafana, to make beautiful dashboards</strong>: Grafana provides analytics and interactive visualisation, allowing users to display and analyse metric data in various formats, including time-series plots and heatmaps.</p>
+</li>
+<li>
+<p dir="auto"><strong>PostgreSQL, to persist long-term data</strong>: PostgreSQL is used to archive completed runs from Argo Workflows, segregating active and archived data for efficient operation.</p>
+</li>
+<li>
+<p dir="auto"><strong>K3S, a good Kubernetes Distribution</strong>: K3S is a lightweight Kubernetes distribution recommended for users without a preferred distribution. It is suitable for resource-constrained environments and local development.</p>
+</li>
+<li>
+<p dir="auto"><strong>Docker, the classic software container command line interface</strong>: Docker CLI is used for building and managing containers, with compatibility for alternatives like Nerdctl and Podman.</p>
+</li>
+<li>
+<p dir="auto"><strong>KWOK, Kubernetes Pretend Play</strong>: KWOK simulates large Kubernetes clusters for testing and experimentation without running real containers.</p>
+</li>
+<li>
+<p dir="auto"><strong>gVisor, a sandbox for software containers</strong>: gVisor provides an additional isolation layer for running containers, enhancing security by intercepting system calls and acting as a guest kernel.</p>
+</li>
+</ul>
+<p dir="auto">This modular architecture allows SIM-PIPE to provide a robust, flexible, and production-like environment for data pipeline simulation and analysis.</p>
+<h2 dir="auto"><strong>Screenshots</strong></h2>
+<p align="center" dir="auto"><a target="_blank" rel="noopener noreferrer" href="./images/simpipe_startup_page.png"><img width="80%" src="./images/simpipe_startup_page.png" style="max-width: 100%;"></a></p>
+<h2 dir="auto"><strong>Commercial Information</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Organisation (s)</th>
+<th>License Nature</th>
+<th>License</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DataCloud Project</td>
+<td>Open Source</td>
+<td>Apache 2.0</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Expected KPIs</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>What (types)</th>
+<th>How(Process)</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data/AI pipelines profiling and compliance evaluation</td>
+<td>Questionnaire about Usability/Ease of Use - Brooke, J. (1996). SUS-A quick and dirty usability scale. Usability evaluation in industry, 189(194), 4-7.</td>
+<td>The tool should achieve a mean SUS score of at least 80 across 20 participants, with no more than 20% of individual scores falling below 70</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Related Project Links</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/DataCloud-project/SIM-PIPE">SIM-PIPE GitHub Repository</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>How To Install</strong></h2>
+<p dir="auto">SIM-PIPE can be installed in several ways, depending on your environment and requirements:</p>
+<ul dir="auto">
+<li>
+<p dir="auto"><strong>Automated installation</strong>: You can use Python-based installation scripts (not included in this repository) that will set up all dependencies and services for you, including Kubernetes, K3S, and required middleware. This is the recommended approach for users who want a quick and easy setup.</p>
+</li>
+<li>
+<p dir="auto"><strong>Helm chart installation</strong>: If you already have a running Kubernetes or K3S cluster, you can deploy SIM-PIPE using the official Helm chart. This allows you to integrate SIM-PIPE into your existing infrastructure with minimal effort.</p>
+</li>
+</ul>
+<blockquote>
+<p dir="auto"><strong>Note:</strong> This repository is for documentation and description of the SIM-PIPE tool only. Installation scripts and deployment files are maintained in the main SIM-PIPE software repository or its distribution packages. Please refer to the <a href="https://github.com/DataCloud-project/SIM-PIPE">SIM-PIPE GitHub Repository</a> for installation resources and instructions.</p>
+</blockquote>
+<h2 dir="auto"><strong>How To Use</strong></h2>
+<p dir="auto">To use SIM-PIPE, run the provided Python script or launch the service as described in the installation instructions. This will start the SIM-PIPE frontend, which is user-friendly for creating, testing, and profiling data pipelines.</p>
+<h2 dir="auto"><strong>Other Information</strong></h2>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>OpenAPI Specification</strong></h2>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>Additional Links</strong></h2>
+<p dir="auto">n/a</p>

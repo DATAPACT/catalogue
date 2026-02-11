@@ -1,0 +1,82 @@
+<div dir="auto">
+  <h1 dir="auto">Lion-Linker</h1>
+  <a target="_blank" rel="noopener noreferrer" href="./images/SINTEF_Logo_Sentrert_RGB.svg"><img src="./images/SINTEF_Logo_Sentrert_RGB.svg" alt="SINTEF logo" width="220" style="max-width: 100%;"></a>
+</div>
+<h2 dir="auto"><strong>General Description</strong></h2>
+<p dir="auto">Lion-Linker is a Python library that uses large language models (LLMs) to perform entity linking and disambiguation for tabular data. It takes tabular inputs, retrieves candidate entities, and ranks them to produce linked entities that can be used for dataset enrichment and downstream analysis within DATAPACT workflows.</p>
+<h2 dir="auto"><strong>Related Compliance aspects</strong></h2>
+<ul dir="auto">
+<li>Data/AI pipeline step implementation for data enrichment</li>
+</ul>
+<h2 dir="auto"><strong>Main Goal/Functionalities</strong></h2>
+<ul dir="auto">
+<li>LLM-assisted entity linking and ambiguity resolution for tabular data</li>
+<li>Candidate ranking with top-k suggestions for ambiguous cells</li>
+<li>Outputs suitable for dataset enrichment and analysis workflows</li>
+</ul>
+<h2 dir="auto"><strong>Architecture</strong></h2>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="./images/lion-linker-architecture-placeholder.svg"><img src="./images/lion-linker-architecture-placeholder.svg" alt="Lion-Linker Architecture Placeholder" style="max-width: 100%;"></a></p>
+<h2 dir="auto"><strong>Component Definition</strong></h2>
+<p dir="auto">Lion-Linker is a modular library that accepts tabular inputs, integrates with external candidate retrieval services or knowledge bases, and applies LLM-based ranking to select the most relevant entity for each target cell. The resulting links can be exported as enriched tables or structured outputs for further processing.</p>
+<h2 dir="auto"><strong>Screenshots</strong></h2>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>Commercial Information</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Organisation (s)</th>
+<th>License Nature</th>
+<th>License</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SINTEF</td>
+<td>Open Source</td>
+<td>Apache License 2.0</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Expected KPIs</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>What (types)</th>
+<th>How(Process)</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Effectiveness of contextual entity linking and ambiguity resolution in tabular data</td>
+<td>Expert validation of entity linking results on ambiguous cases, comparing LLM-assisted ranking with non-LLM baseline ranking on representative table samples</td>
+<td>Lion-Linker should rank the expert-preferred entity as top-1 in at least 75% of evaluated cases, and show a minimum 10% improvement in disambiguation accuracy compared to non-LLM ranking approaches. Additionally, the correct entity should appear within the top-5 candidates in at least 90% of evaluated cases</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Related Project Links</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Related GitHub repository (Lion-Linker) <a href="https://github.com/enRichMyData/lion_linker">https://github.com/enRichMyData/lion_linker</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>How To Install</strong></h2>
+<p dir="auto">The DATAPACT packaging for Lion-Linker is not yet published.<br>
+For updates, see the Lion-Linker repository: <a href="https://github.com/enRichMyData/lion_linker">https://github.com/enRichMyData/lion_linker</a></p>
+<h3 dir="auto">Detailed steps</h3>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>How To Use</strong></h2>
+<p dir="auto">For usage patterns and examples, see the Lion-Linker repository: <a href="https://github.com/enRichMyData/lion_linker">https://github.com/enRichMyData/lion_linker</a></p>
+<h2 dir="auto"><strong>Other Information</strong></h2>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>OpenAPI Specification</strong></h2>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>Additional Links</strong></h2>
+<p dir="auto">n/a</p>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="220" viewBox="0 0 900 220">
+  <defs>
+    <style>
+      .box { fill: #f2f4f8; stroke: #2b2f36; stroke-width: 2; }
+      .arrow { stroke: #2b2f36; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .label { font-family: "Arial", sans-serif; font-size: 16px; fill: #1a1d22; }
+      .title { font-family: "Arial", sans-serif; font-size: 18px; font-weight: bold; fill: #1a1d22; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2b2f36" />
+    </marker>
+  </defs>
+
+  <rect class="box" x="40" y="70" width="220" height="80" rx="8" />
+  <text class="title" x="150" y="105" text-anchor="middle">Input dataset</text>
+  <text class="label" x="150" y="128" text-anchor="middle">tabular data</text>
+
+  <rect class="box" x="340" y="70" width="220" height="80" rx="8" />
+  <text class="title" x="450" y="105" text-anchor="middle">Crocodile</text>
+  <text class="label" x="450" y="128" text-anchor="middle">entity linking</text>
+
+  <rect class="box" x="640" y="70" width="220" height="80" rx="8" />
+  <text class="title" x="750" y="105" text-anchor="middle">Enriched dataset</text>
+  <text class="label" x="750" y="128" text-anchor="middle">annotations</text>
+
+  <line class="arrow" x1="260" y1="110" x2="340" y2="110" />
+  <line class="arrow" x1="560" y1="110" x2="640" y2="110" />
+</svg>
