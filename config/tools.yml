@@ -12,7 +12,7 @@ tools:
 #Architecture
   - repo: "GeneralArchitecture"
     mainfile: "README.html"
-    name: "General Architecture"       # Display name (optional if you want prettier)
+    name: "General Architecture"       
     category: "Architecture"
     branch: "main"
     readme_path: "docs/README.md"
@@ -20,7 +20,7 @@ tools:
 #PipelineR
   - repo: "inLUMEN"
     mainfile: "README.html"
-    name: "inLumen"       # Display name (optional if you want prettier)
+    name: "inLumen"       
     category: "PipelineR"
     branch: "main"
     readme_path: "docs/README.md"
@@ -78,35 +78,35 @@ tools:
 #TrustR
   - repo: "Minimal-Finite-Covering"
     mainfile: "README.html"
-    name: "Compresso" # Display name (optional if you want prettier)
+    name: "Compresso" 
     category: "TrustR"
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
   - repo: "FEL"
     mainfile: "README.html"
-    name: "FEL"       # Display name (optional if you want prettier)
+    name: "FEL"       
     category: "TrustR"
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
   - repo: "RepuLink"
     mainfile: "README.html"
-    name: "RepuLink"       # Display name (optional if you want prettier)
+    name: "RepuLink"       
     category: "TrustR"
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
   - repo: "Guardrails"
     mainfile: "README.html"
-    name: "Guardrails"       # Display name (optional if you want prettier)
+    name: "Guardrails"       
     category: "TrustR"
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
   - repo: "ITACA"
     mainfile: "README.html"
-    name: "ITACA"       # Display name (optional if you want prettier)
+    name: "ITACA"       
     category: "TrustR"
     branch: "main"
     readme_path: "docs/README.md"
@@ -136,28 +136,28 @@ tools:
 #AssessR
   - repo: "LLAC"
     mainfile: "README.html"
-    name: "LLAC"       # Display name (optional if you want prettier)
+    name: "LLAC"       
     category: "AssessR"
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
   - repo: "AILegalAssistant"
     mainfile: "README.html"
-    name: "AILegalAssistant"       # Display name (optional if you want prettier)
+    name: "AILegalAssistant"      
     category: "AssessR"
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
   - repo: "DPIA-Support"
     mainfile: "README.html"
-    name: "DPIA Support"       # Display name (optional if you want prettier)
+    name: "DPIA Support"      
     category: "AssessR"
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
   - repo: "LexAlign"
     mainfile: "README.html"
-    name: "LexAlign"  # Display name defaults to repo name if not set
+    name: "LexAlign" 
     category: "AssessR"     
     branch: "main"
     readme_path: "docs/README.md"
@@ -165,28 +165,28 @@ tools:
 #ApplyR
   - repo: "alligator"
     mainfile: "README.html"
-    name: "Alligator"       # Display name (optional if you want prettier)
+    name: "Alligator"       
     category: "ApplyR"
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
   - repo: "lion_linker"
     mainfile: "README.html"
-    name: "LionLinker"       # Display name (optional if you want prettier)
+    name: "LionLinker"       
     category: "ApplyR"
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
   - repo: "crocodile"
     mainfile: "README.html"
-    name: "Crocodile"       # Display name (optional if you want prettier)
+    name: "Crocodile"       
     category: "ApplyR"
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
   - repo: "Wikifier"
     mainfile: "README.html"
-    name: "Wikifier"     # Display name defaults to repo name if not set
+    name: "Wikifier"    
     category: "ApplyR"      
     branch: "main"
     readme_path: "docs/README.md"
