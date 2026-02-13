@@ -1,42 +1,69 @@
-# KubePipe
+<div class="tool-header">
+  <h1>KubePipe</h1>
+  <a href="https://www.uibk.ac.at/">
+    <img src="./images/uibk_logo.png" alt="UIBKLogo">
+  </a>
+</div>
 
-**University of Innsbruck**
+## **General Description**
+KubePipe is a unified pipeline orchestration platform designed to bridge Kubeflow Pipelines and Argo Workflows with built-in GDPR compliance and sustainability awareness. It enables users to deploy, monitor, and manage ML pipelines across both orchestrators from a single interface, while automatically assessing privacy risks, injecting compliance controls, and tracking carbon footprint and energy consumption per pipeline run.
 
-[![License](https://img.shields.io/badge/license-TBD-blue.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+## **Related Compliance Aspects**
+- GDPR Compliance (PII anonymization, data minimization, consent verification, pseudonymization)
+- Sustainability & Carbon-Aware Computing (ISO 23894, Green Software Foundation)
+- Risk Assessment (ISO/IEC 23894:2023 AI Risk Management)
 
-> Pipeline orchestration platform bridging Kubeflow Pipelines and Argo Workflows with GDPR compliance and sustainability awareness.
+## **Main Goal/Functionalities**
+- Unified management of Kubeflow Pipelines and Argo Workflows
+- Automatic GDPR compliance checking and one-click auto-injection of privacy controls
+- Consent management with full lifecycle (register, request, approve/reject/revoke, audit)
+- Per-run energy (kWh) and CO₂ (kg) tracking using real Kubernetes metrics
+- Runtime adaptation: time-shifting, region-shifting, dynamic resource scaling
+- Workflow validation, dry-run simulation, and Argo→KFP YAML conversion
+- React Web UI with real-time monitoring dashboard
 
-![KubePipe Dashboard](docs/images/dashboard.png)
+## **Architecture**
+The picture below shows the component in the DATAPACT architecture.
+![KubePipe Architecture](./images/dashboard.png)
 
-## Features
+## **Component Definition**
+KubePipe is a purpose-built solution that streamlines ML pipeline orchestration with integrated compliance and sustainability features. At its core, it leverages Kubeflow Pipelines (KFP v2) and Argo Workflows (v3) as execution backends, abstracting both behind a unified REST API (48 endpoints) and React-based Web UI. The compliance engine analyzes pipeline YAML for 8 GDPR checks (PII anonymization, consent verification, data minimization, pseudonymization, security contexts, audit logging, data retention, access controls) and can auto-inject missing controls. The sustainability engine measures per-run energy consumption using a SOTA model based on Strubell et al. (2019) with actual Kubernetes metrics-server data and region-specific carbon intensity factors, enabling carbon-aware scheduling decisions.
 
-| Category | Capabilities |
-|----------|-------------|
-| **Orchestration** | Kubeflow Pipelines, Argo Workflows, Automatic YAML↔Python conversion |
-| **Compliance** | GDPR privacy assessment, PII anonymization, Data minimization |
-| **Sustainability** | Carbon footprint tracking, Energy consumption monitoring, Carbon-aware scheduling |
-| **Runtime Adaptation** | Time-shifting, Region-shifting, Dynamic resource scaling, GDPR injection |
-| **Interface** | REST API, CLI, React Web UI, Real-time monitoring |
+## **Screenshots**
+![KubePipe Dashboard](./images/dashboard.png)
 
-## Quick Start
+## **Commercial Information**
+
+| Organisation(s) | License Nature | License |
+|------------------|----------------|---------|
+| University of Innsbruck | Open Source | TBD |
+
+## **Expected KPIs**
+
+| What (Types) | How (Process) | Values |
+|---|---|---|
+| Unified ML pipeline orchestration (KFP + Argo) with GDPR compliance auto-injection, consent management, and carbon-aware sustainability tracking | Analyzes pipeline YAML for 8 GDPR checks, auto-injects missing controls; measures per-run energy using SOTA model (Strubell et al. 2019) with real K8s metrics + regional carbon intensity; gates execution on consent status | Compliance: 0–100 score (≥90 Excellent, <40 Critical). Energy: per-run kWh + kg CO₂. Standards: ISO 23894, Green Software Foundation. API: 48 endpoints. |
+
+## **Related Project Links**
+
+| Project Links |
+|---|
+| Software GitHub Repository --> KubePipe <https://github.com/DATAPACT/Kubepipe> |
+
+## **How To Install**
 
 ### Prerequisites
-
 - Python 3.10+ with [uv](https://github.com/astral-sh/uv)
 - Node.js 18+ (for Web UI)
-- Docker & Minikube (for Kubernetes)
+- Docker & Minikube (for Kubernetes features)
 
-### Installation
+### Detailed Steps
 
 ```bash
 git clone https://github.com/DATAPACT/Kubepipe.git
-cd Kubepipe && uv sync
-```
-
-### Start All Services
-
-```bash
+cd Kubepipe
+python3 setup.py
+# — or —
 bash scripts/start_all.sh
 ```
 
@@ -47,7 +74,13 @@ bash scripts/start_all.sh
 | Argo Server | https://localhost:2746 |
 | MinIO Console | http://localhost:9001 |
 
-## Usage
+For accurate energy and carbon measurements, install the Kubernetes metrics-server:
+
+```bash
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+```
+
+## **How To Use**
 
 ### Argo Workflows
 
@@ -61,10 +94,8 @@ kubepipe argo-delete <workflow-name>                   # Delete
 ### Kubeflow Pipelines
 
 ```bash
-# Port-forward KFP API
 kubectl -n kubeflow port-forward svc/ml-pipeline 8888:8888
 
-# Execute via API
 curl -X POST http://127.0.0.1:8001/api/v1/execute \
   -H 'Content-Type: application/json' \
   -d '{"pipeline_id":"demo","environment":"dev","parameters":{}}'
@@ -76,7 +107,33 @@ curl -X POST http://127.0.0.1:8001/api/v1/execute \
 uv run python demo_converter.py
 ```
 
-## API Endpoints
+### Configuration
+
+```yaml
+# kubepipe.yaml
+execution:
+  mode: "mock"  # mock | kfp
+  kfp_host: "http://127.0.0.1:8888"
+```
+
+## **Other Information**
+
+### Documentation
+- [UI Guide](docs/UI_GUIDE.md)
+- [Runtime Adaptation](docs/RUNTIME_ADAPTATION.md)
+- [Service Monitoring](docs/SERVICE_MONITORING.md)
+- [Validation & Compliance](docs/VALIDATION_AND_COMPLIANCE.md)
+- [Troubleshooting](docs/TROUBLESHOOTING.md)
+
+### Contact
+**University of Innsbruck**
+- 📧 rajashekar.kolichala@uibk.ac.at
+- 📧 radu.prodan@uibk.ac.at
+
+### Acknowledgments
+Funded by Horizon Europe (grant 101189771, DataPACT)
+
+## **OpenAPI Specification**
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
@@ -93,63 +150,8 @@ uv run python demo_converter.py
 | `/api/v1/metrics/status` | GET | Check metrics-server status |
 | `/api/v1/metrics/cluster` | GET | Real-time cluster metrics |
 
-## Accurate Measurements with Metrics-Server
+Interactive API docs available at: http://127.0.0.1:8001/docs
 
-For accurate energy and carbon measurements, install the Kubernetes metrics-server:
+## **Additional Links**
 
-```bash
-kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
-```
-
-| Metric Source | Accuracy | Description |
-|---------------|----------|-------------|
-| **With metrics-server** | High | Real-time CPU/memory usage from pods |
-| **Without metrics-server** | Estimated | Based on resource requests/limits |
-
-## Configuration
-
-```yaml
-# kubepipe.yaml
-execution:
-  mode: "mock"  # mock | kfp
-  kfp_host: "http://127.0.0.1:8888"
-```
-
-```bash
-# Environment variables
-export KUBEPIPE_EXECUTION_MODE=kfp
-export KUBEPIPE_KFP_HOST=http://127.0.0.1:8888
-```
-
-## Project Structure
-
-```
-kubepipe/
-├── api/           # FastAPI server
-├── core/          # Compiler, executors, converters
-└── config.py      # Configuration
-examples/          # Sample pipelines
-scripts/           # Helper scripts
-ui/                # React web interface
-```
-
-## Documentation
-
-- [UI Guide](docs/UI_GUIDE.md)
-- [Runtime Adaptation](docs/RUNTIME_ADAPTATION.md)
-- [Service Monitoring](docs/SERVICE_MONITORING.md)
-- [Validation & Compliance](docs/VALIDATION_AND_COMPLIANCE.md)
-- [Troubleshooting](docs/TROUBLESHOOTING.md)
-
-## Contact
-
-**University of Innsbruck**
-- 📧 rajashekar.kolichala@uibk.ac.at
-- 📧 radu.prodan@uibk.ac.at
-
-## Acknowledgments
-
-Funded by Horizon Europe (grant 101189771, DataPACT)
-
----
-*Last Updated: February 2026*
+n/a

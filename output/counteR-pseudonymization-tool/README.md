@@ -1,14 +1,57 @@
-# CounteR Pseudonymization Tool
-**ASSIST Software**
+<div class="tool-header">
+  <h1>CPS: CounteR Pseudonymization Tool</h1>
+  <a href="https://assist-software.net/">
+    <img src="./images/new-logo-lightblue.svg" alt="ASSISTLOGO">
+  </a>
+</div>
 
-![CPS](/docs/images/cps.png)
-
+## **General Description**
+**CPS** is a DATAPACT tool that provides a structured frontend interface and REST APIs for executing pseudonymization workflows, allowing users to upload CSV files, select fields for encryption, and download the transformed datasets.
 Used for data encryption/decryption, the service exposes a REST API for both operations.
-
 The Data Pseudonymization module uses the encryption endpoints.
 The Data Depseudonymization module uses the decryption endpoints.
-
 This service abstracts the interaction with HashiCorp Vault.
+
+## **Related Compliance aspects**
+- GDPR's privacy-by-design
+- Data pseudonymization
+- Data minimization
+
+## **Main Goal/Functionalities**
+- Encrypts a single plaintext string
+- Decrypts a single ciphertext string
+- Encrypts a list of plaintext strings
+- Decrypts a list of ciphertext strings
+- Encrypts a list of plaintext strings stored within a CSV file
+- UI Implementation
+
+## **Architecture**
+
+[![CPS Architecture](./images/cps-architecture.jpeg)]
+
+## **Screenshots**
+[![CPS](./images/cps.png)]
+
+## **Commercial Information**
+| Organisation (s) | License Nature | License |
+| ASSIST Software | Proprietary, ASSIST ​ | Proprietary, ASSIST  |
+
+
+## **Expected KPIs**
+
+|What (types)|How(Process)|Values|
+|------------|------------|------|
+|Integration of Distributed Ledger Technology (Hyperledger-based) for secure storage of pipeline data and results|	Compare performance across different data sizes and access patterns.| Data integrity maintained with 100% consistency across nodes.|
+
+
+## **Related Project Links**
+| Project Links |
+| ------------- | 	
+| GitHub Repository --> CPS <https://github.com/DATAPACT/counteR-pseudonymization-tool> |
+
+## **How To Install**
+
+
 
 At the moment, the chosen method of authentication is `userpass`.
 

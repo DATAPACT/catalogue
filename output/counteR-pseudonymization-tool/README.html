@@ -1,10 +1,68 @@
-<h1 dir="auto">CounteR Pseudonymization Tool</h1>
-<p dir="auto"><strong>ASSIST Software</strong></p>
-<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="/docs/images/cps.png"><img src="/docs/images/cps.png" alt="CPS" style="max-width: 100%;"></a></p>
-<p dir="auto">Used for data encryption/decryption, the service exposes a REST API for both operations.</p>
-<p dir="auto">The Data Pseudonymization module uses the encryption endpoints.<br>
-The Data Depseudonymization module uses the decryption endpoints.</p>
-<p dir="auto">This service abstracts the interaction with HashiCorp Vault.</p>
+<div dir="auto">
+  <h1 dir="auto">CPS: CounteR Pseudonymization Tool</h1>
+  <a href="https://assist-software.net/" rel="nofollow">
+    <img src="./images/new-logo-lightblue.svg" alt="ASSISTLOGO" style="max-width: 100%;">
+  </a>
+</div>
+<h2 dir="auto"><strong>General Description</strong></h2>
+<p dir="auto"><strong>CPS</strong> is a DATAPACT tool that provides a structured frontend interface and REST APIs for executing pseudonymization workflows, allowing users to upload CSV files, select fields for encryption, and download the transformed datasets.<br>
+Used for data encryption/decryption, the service exposes a REST API for both operations.<br>
+The Data Pseudonymization module uses the encryption endpoints.<br>
+The Data Depseudonymization module uses the decryption endpoints.<br>
+This service abstracts the interaction with HashiCorp Vault.</p>
+<h2 dir="auto"><strong>Related Compliance aspects</strong></h2>
+<ul dir="auto">
+<li>GDPR's privacy-by-design</li>
+<li>Data pseudonymization</li>
+<li>Data minimization</li>
+</ul>
+<h2 dir="auto"><strong>Main Goal/Functionalities</strong></h2>
+<ul dir="auto">
+<li>Encrypts a single plaintext string</li>
+<li>Decrypts a single ciphertext string</li>
+<li>Encrypts a list of plaintext strings</li>
+<li>Decrypts a list of ciphertext strings</li>
+<li>Encrypts a list of plaintext strings stored within a CSV file</li>
+<li>UI Implementation</li>
+</ul>
+<h2 dir="auto"><strong>Architecture</strong></h2>
+<p dir="auto">[<a target="_blank" rel="noopener noreferrer" href="./images/cps-architecture.jpeg"><img src="./images/cps-architecture.jpeg" alt="CPS Architecture" style="max-width: 100%;"></a>]</p>
+<h2 dir="auto"><strong>Screenshots</strong></h2>
+<p dir="auto">[<a target="_blank" rel="noopener noreferrer" href="./images/cps.png"><img src="./images/cps.png" alt="CPS" style="max-width: 100%;"></a>]</p>
+<h2 dir="auto"><strong>Commercial Information</strong></h2>
+<p dir="auto">| Organisation (s) | License Nature | License |<br>
+| ASSIST Software | Proprietary, ASSIST ​ | Proprietary, ASSIST  |</p>
+<h2 dir="auto"><strong>Expected KPIs</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>What (types)</th>
+<th>How(Process)</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Integration of Distributed Ledger Technology (Hyperledger-based) for secure storage of pipeline data and results</td>
+<td>Compare performance across different data sizes and access patterns.</td>
+<td>Data integrity maintained with 100% consistency across nodes.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Related Project Links</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GitHub Repository --&gt; CPS <a href="https://github.com/DATAPACT/counteR-pseudonymization-tool">https://github.com/DATAPACT/counteR-pseudonymization-tool</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>How To Install</strong></h2>
 <p dir="auto">At the moment, the chosen method of authentication is <code class="notranslate">userpass</code>.</p>
 <p dir="auto">This means Vault must be configured with this authentication method <strong>enabled</strong><br>
 and a pair of user/pass that will be passed to the application.</p>

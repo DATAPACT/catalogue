@@ -81,21 +81,23 @@ This codebase implements a Retrieval-Augmented Generation (RAG) assistant focuse
 </ul>
 <h3 dir="auto">Detailed steps</h3>
 <p dir="auto"><strong>Option A — Local (venv)</strong></p>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c1">cd</span> legal-AI
+<pre lang="bash" class="notranslate"><code class="notranslate">cd legal-AI
 python -m venv .venv
-<span class="pl-c"><span class="pl-c">#</span> Activate (Windows): .venv\Scripts\activate</span>
-<span class="pl-c"><span class="pl-c">#</span> Activate (Unix): source .venv/bin/activate</span>
+# Activate (Windows): .venv\Scripts\activate
+# Activate (Unix): source .venv/bin/activate
 pip install -r package_requirements.txt
-<span class="pl-c"><span class="pl-c">#</span> Public app</span>
-<span class="pl-c1">cd</span> app-public
+# Public app
+cd app-public
 python app_public.py
-<span class="pl-c"><span class="pl-c">#</span> then open http://localhost:8001</span></pre></div>
+# then open http://localhost:8001
+</code></pre>
 <p dir="auto">(As in repo, you can also use the provided <code class="notranslate">run_app.bat</code> after pointing it to your absolute path.) (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</p>
 <p dir="auto"><strong>Option B — Docker</strong></p>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c1">cd</span> legal-AI
-docker build --no-cache -t legal-ai-app <span class="pl-c1">.</span>
+<pre lang="bash" class="notranslate"><code class="notranslate">cd legal-AI
+docker build --no-cache -t legal-ai-app .
 docker run -d -p 8001:8001 --name legal-ai-container legal-ai-app
-<span class="pl-c"><span class="pl-c">#</span> then open http://localhost:8001</span></pre></div>
+# then open http://localhost:8001
+</code></pre>
 <p dir="auto">(<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</p>
 <h2 dir="auto"><strong>How To Use</strong></h2>
 <ol dir="auto">
