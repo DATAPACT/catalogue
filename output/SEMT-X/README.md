@@ -71,6 +71,13 @@ SemT-X features are accessible interactively via a graphical user interface (Sem
 | ---------------  | -------------- | ---------- |
 | University of Milan-Bicocca           | Open Source    | Apache 2.0 |
 
+## **Expected KPIs**
+
+|What (types)|How(Process)|Values|
+|------------|------------|------|
+|Usability: ease of learning and overall user satisfaction when using the tool|	Assessment via the User Experience Questionnaire (UEQ)|Exceed the standard evaluation thresholds defined by the UEQ|
+
+
 ## **Top Features**
 SemT-X delivers a comprehensive tool for the semantic enrichment of tabular data, combining automated processes with human expertise.
 

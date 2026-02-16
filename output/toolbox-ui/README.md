@@ -1,9 +1,37 @@
+<div class="tool-header">
+  <h1>TOOLBOX UI</h1>
+  <a href="https://assist-software.net/">
+    <img src="./images/new-logo-lightblue.svg" alt="ASSISTLOGO">
+  </a>
+</div>
+
+## **General Description**
+**TOOLBOX UI** serves as the primary integration point for human-in-the-loop compliance tasks. It aggregates the interfaces of the underlying tools into a unified user interface.
+Rather than accessing disparate services, users access the AI Legal Assistant for regulatory queries or the LexAlign visual editor directly through this portal via secure iframes. 
+The portal handles the orchestration between these tools, allowing users to seamlessly transition from assessing a risk in the DPIA Support tool to viewing the final certification in the Compliance Result Manager. This unified frontend abstracts the underlying complexity of the microservices, providing a coherent, secure workflow for certification and reporting. 
+
+## **Architecture**
+[![TOOLBOX UI Architecture](./images/toolbox-ui-diagram.png)]
+
+## **Commercial Information**
+| Organisation (s) | License Nature | License |
+| ASSIST Software | Proprietary, ASSIST ​ | Proprietary, ASSIST  |
+
+
 # TOOLBOX UI
 **ASSIST Software**
 
-![TOOLBOX UI](/docs/images/datapact-toolbox.png)
+![TOOLBOX UI](./images/datapact-toolbox.png)
 
-## Getting Started
+
+## **Related Project Links**
+| Project Links |
+| ------------- | 	
+| GitHub Repository --> TOOLBOX UI <https://github.com/DATAPACT/toolbox-ui> |
+
+
+## **How To Install**
+
 
 First, run the development server:
 
