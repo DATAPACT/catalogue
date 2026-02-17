@@ -1,4 +1,4 @@
-# Policy Editor
+# Policy Engine
 
 Powered by
 
@@ -6,8 +6,16 @@ Powered by
 
 ## **General Description**
 
-This repository contains a django app, which displays the Policy Editor reference UI. 
-Allow user-friendly creation and maintenance of ODRL policies (including integration with domain specific ontologies).
+The Policy Engine provides a suite of functionality to inspect, process and use ODRL policies.
+
+## **Main Goal/Functionalities**
+
+Currently the following main functionalities are supported: 
+
+* Visualising an ODRL policy to inspect it
+* Validating the correctness of an ODRL policy file against the specification
+* Evaluating one or more ODRL policies against a State of the World (like an event log, or a data access request)
+* Generating synthetic ODRL policies, and generating synthetic States of the World about policies to be used for testing purposes.
 
 ## **Commercial Information**
 
@@ -21,37 +29,15 @@ Allow user-friendly creation and maintenance of ODRL policies (including integra
 
 ### Requirements
 
-Docker
-
-### Software
-
-Django, MongoDB
+Python, rdflib, pyshacl, pandas
 
 ### Detailed Steps
-1. Install dependencies
-```bash
-pip install -r requirements.txt
-```
-2.  Run the migrations
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
-3. Create a superuser to access admin interface
-```bash
-python manage.py createsuperuser
-```
-4. Run the server
-```bash
-python manage.py runserver 
 
-```
+Currently the Policy Engine can be inported as a Python library to use its main functions.
 
 
 
 ## Expected KPIs
-
-These KPI relate to the Policy Service suite of tools, which include the Policy Editor, the Policy Enginge and the Ontology Service.
 
 | What | How | Values |
 | --- | --- | --- |

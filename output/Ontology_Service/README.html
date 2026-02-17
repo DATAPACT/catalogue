@@ -1,21 +1,6 @@
 <h1 dir="auto">Ontology Service</h1>
 <p dir="auto">Powered by</p>
 <p dir="auto"><a href="https://dips.soton.ac.uk/#home" rel="nofollow"><img src="./images/UniSouthampton.png" alt="UoSLOGO" style="max-width: 100%;"></a></p>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Project Links</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Software GitHub Repository --&gt; Policy Editor software <a href="https://github.com/...">https://github.com/...</a></td>
-</tr>
-<tr>
-<td>Progress GitHub Project [ADD URL]</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
 <h2 dir="auto"><strong>General Description</strong></h2>
 <p dir="auto">This is a docker container of a FastAPI implementation of an Ontology Service that enables:</p>
 <ul dir="auto">
@@ -23,11 +8,7 @@
 <li>the storage and management of ontology metadata (e.g. the user who created it and when) and</li>
 <li>functions to extract ODRL relevant terms (e.g. lists of actions or purposes) from specific ontologies.</li>
 </ul>
-<h2 dir="auto"><strong>Architecture</strong></h2>
-<h2 dir="auto"><strong>Component Definition</strong></h2>
-<h2 dir="auto"><strong>Screenshots</strong></h2>
 <h2 dir="auto"><strong>Commercial Information</strong></h2>
-<p dir="auto">Table with the organisation, license nature (Open Source, Commercial ... ) and the license. Replace with the values of your module.</p>
 <markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
@@ -36,9 +17,19 @@
 <th>License</th>
 </tr>
 </thead>
+<tbody>
+<tr>
+<td>University of Southampton</td>
+<td>Open Source</td>
+<td>MIT Licence</td>
+</tr>
+</tbody>
 </table></markdown-accessiblity-table>
-<h2 dir="auto"><strong>Top Features</strong></h2>
 <h2 dir="auto"><strong>How To Install</strong></h2>
+<h3 dir="auto">Requirements</h3>
+<p dir="auto">Docker</p>
+<h3 dir="auto">Software</h3>
+<p dir="auto">FastAPI, Python</p>
 <h3 dir="auto">Triplestore Configuration</h3>
 <p dir="auto">This service requires access to a SPARQL endpoint that enables select, ask and update queries. It was tested with Fuseki, with username and password authentication for the endpoint, but it should work with any other triplestore that exposes a SPARQL endpoint.</p>
 <p dir="auto">The sparql_client.py file should be configured to point to the triplestore.<br>
@@ -75,19 +66,21 @@ The requirements for the triplestores are as follows:</p>
 <li>Run FastAPI <code class="notranslate">uvicorn main:app --reload</code> from the project directory</li>
 <li>See the API here <code class="notranslate">http://127.0.0.1:8000/docs</code></li>
 </ul>
-<h3 dir="auto">Requirements</h3>
-<p dir="auto">To be defined.</p>
-<h3 dir="auto">Software</h3>
-<p dir="auto">To be defined.</p>
-<h3 dir="auto">Summary of installation steps</h3>
-<p dir="auto">To be defined.</p>
-<h3 dir="auto">Detailed steps</h3>
-<p dir="auto">To be defined.</p>
-<h2 dir="auto"><strong>How To Use</strong></h2>
-<p dir="auto">To be defined.</p>
-<h2 dir="auto"><strong>Other Information</strong></h2>
-<p dir="auto">To be defined.</p>
-<h2 dir="auto"><strong>OpenAPI Specification</strong></h2>
-<p dir="auto">To be defined.</p>
-<h2 dir="auto"><strong>Additional Links</strong></h2>
-<p dir="auto">To be defined.</p>
+<h2 dir="auto">Expected KPIs</h2>
+<p dir="auto">These KPI relate to the Policy Service suite of tools, which include the Policy Editor, the Policy Enginge and the Ontology Service.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>What</th>
+<th>How</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1) Policy management expressiveness: ability to represent data processing regulations in a machine processable form. 2) Policy-based Data Access Control Accuracy</td>
+<td>1) analysis of an existing large (&gt;100) corpus of data sharing/data processing agreements 2) Experiments over at least two policies, asking the pilots to express (in machine processable form, through our tool's interface) a sample (min 20 each) of( access requests (evenly distributed as requests to be permitted, and to be denied).</td>
+<td>1) Ability to move &gt;15% of contractual clauses and privacy policies in an average agreement to machine-processable form. 2) High accuracy (&gt;90%) in predicting the correct access control response </td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>

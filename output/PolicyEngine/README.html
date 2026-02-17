@@ -1,9 +1,16 @@
-<h1 dir="auto">Policy Editor</h1>
+<h1 dir="auto">Policy Engine</h1>
 <p dir="auto">Powered by</p>
 <p dir="auto"><a href="https://dips.soton.ac.uk/#home" rel="nofollow"><img src="./images/UniSouthampton.png" alt="UoSLOGO" style="max-width: 100%;"></a></p>
 <h2 dir="auto"><strong>General Description</strong></h2>
-<p dir="auto">This repository contains a django app, which displays the Policy Editor reference UI.<br>
-Allow user-friendly creation and maintenance of ODRL policies (including integration with domain specific ontologies).</p>
+<p dir="auto">The Policy Engine provides a suite of functionality to inspect, process and use ODRL policies.</p>
+<h2 dir="auto"><strong>Main Goal/Functionalities</strong></h2>
+<p dir="auto">Currently the following main functionalities are supported:</p>
+<ul dir="auto">
+<li>Visualising an ODRL policy to inspect it</li>
+<li>Validating the correctness of an ODRL policy file against the specification</li>
+<li>Evaluating one or more ODRL policies against a State of the World (like an event log, or a data access request)</li>
+<li>Generating synthetic ODRL policies, and generating synthetic States of the World about policies to be used for testing purposes.</li>
+</ul>
 <h2 dir="auto"><strong>Commercial Information</strong></h2>
 <markdown-accessiblity-table><table role="table">
 <thead>
@@ -23,30 +30,10 @@ Allow user-friendly creation and maintenance of ODRL policies (including integra
 </table></markdown-accessiblity-table>
 <h2 dir="auto"><strong>How To Install</strong></h2>
 <h3 dir="auto">Requirements</h3>
-<p dir="auto">Docker</p>
-<h3 dir="auto">Software</h3>
-<p dir="auto">Django, MongoDB</p>
+<p dir="auto">Python, rdflib, pyshacl, pandas</p>
 <h3 dir="auto">Detailed Steps</h3>
-<ol dir="auto">
-<li>Install dependencies</li>
-</ol>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">pip install -r requirements.txt</pre></div>
-<ol start="2" dir="auto">
-<li>Run the migrations</li>
-</ol>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python manage.py makemigrations
-python manage.py migrate</pre></div>
-<ol start="3" dir="auto">
-<li>Create a superuser to access admin interface</li>
-</ol>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python manage.py createsuperuser</pre></div>
-<ol start="4" dir="auto">
-<li>Run the server</li>
-</ol>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python manage.py runserver 
-</pre></div>
+<p dir="auto">Currently the Policy Engine can be inported as a Python library to use its main functions.</p>
 <h2 dir="auto">Expected KPIs</h2>
-<p dir="auto">These KPI relate to the Policy Service suite of tools, which include the Policy Editor, the Policy Enginge and the Ontology Service.</p>
 <markdown-accessiblity-table><table role="table">
 <thead>
 <tr>

@@ -1,27 +1,9 @@
 <h1 dir="auto">Contract Tool</h1>
 <p dir="auto">Powered by</p>
 <p dir="auto"><a href="https://dips.soton.ac.uk/#home" rel="nofollow"><img src="./images/UniSouthampton.png" alt="UoSLOGO" style="max-width: 100%;"></a></p>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Project Links</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Software GitHub Repository --&gt; Policy Editor software <a href="https://github.com/...">https://github.com/...</a></td>
-</tr>
-<tr>
-<td>Progress GitHub Project [ADD URL]</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
 <h2 dir="auto"><strong>General Description</strong></h2>
-<h2 dir="auto"><strong>Architecture</strong></h2>
-<h2 dir="auto"><strong>Component Definition</strong></h2>
-<h2 dir="auto"><strong>Screenshots</strong></h2>
+<p dir="auto">Repository for the FastAPI implementation of a Contract Service that enables 1) the creation of contracts, 2) the storage and management of contracts and 3) functions to operate for specific contracts.</p>
 <h2 dir="auto"><strong>Commercial Information</strong></h2>
-<p dir="auto">Table with the organisation, license nature (Open Source, Commercial ... ) and the license. Replace with the values of your module.</p>
 <markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
@@ -30,22 +12,66 @@
 <th>License</th>
 </tr>
 </thead>
+<tbody>
+<tr>
+<td>University of Southampton</td>
+<td>Open Source</td>
+<td>MIT Licence</td>
+</tr>
+</tbody>
 </table></markdown-accessiblity-table>
-<h2 dir="auto"><strong>Top Features</strong></h2>
 <h2 dir="auto"><strong>How To Install</strong></h2>
 <h3 dir="auto">Requirements</h3>
-<p dir="auto">To be defined.</p>
+<p dir="auto">Docker</p>
 <h3 dir="auto">Software</h3>
-<p dir="auto">To be defined.</p>
+<p dir="auto">Django, Python</p>
 <h3 dir="auto">Summary of installation steps</h3>
-<p dir="auto">To be defined.</p>
-<h3 dir="auto">Detailed steps</h3>
-<p dir="auto">To be defined.</p>
-<h2 dir="auto"><strong>How To Use</strong></h2>
-<p dir="auto">To be defined.</p>
-<h2 dir="auto"><strong>Other Information</strong></h2>
-<p dir="auto">To be defined.</p>
-<h2 dir="auto"><strong>OpenAPI Specification</strong></h2>
-<p dir="auto">To be defined.</p>
-<h2 dir="auto"><strong>Additional Links</strong></h2>
-<p dir="auto">To be defined.</p>
+<h4 dir="auto">Docker Setup Instructions</h4>
+<ul dir="auto">
+<li>
+<p dir="auto">Configure the files as mentioned above</p>
+</li>
+<li>
+<p dir="auto">Build and run the docker container as usual</p>
+<ul dir="auto">
+<li>run MongoDB in Docker with your app
+<ul dir="auto">
+<li>build docker-compose.yml file</li>
+<li>docker compose up --build</li>
+<li>or  docker compose up -d --build (running on background)</li>
+<li>docker compose down</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p dir="auto">The API documentation will then be available under the <code class="notranslate">/docs</code> sub path, such as <code class="notranslate">http://127.0.0.1:8006/docs</code></p>
+</li>
+</ul>
+<h4 dir="auto">Manual Installation Instructions</h4>
+<p dir="auto">If you are not using docker, you can run the project as follows:</p>
+<ul dir="auto">
+<li>Configure the files as mentioned above</li>
+<li>Install MongoDB database</li>
+<li>Install required libraries using <code class="notranslate">pip install -r requirements.txt</code></li>
+<li>Run FastAPI  <code class="notranslate">python contract_service_api.py</code> from the project directory</li>
+<li>See the API here <code class="notranslate">http://127.0.0.1:8006/docs</code></li>
+</ul>
+<h2 dir="auto">Expected KPIs</h2>
+<p dir="auto">This KPI is shared with the Policy Service suite of tools, which include the Policy Editor, the Policy Enginge and the Ontology Service, as it is affected by the expressiveness of the ODRL Policy language used.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>What</th>
+<th>How</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Policy management expressiveness: ability to represent data processing regulations in a machine processable form.</td>
+<td>analysis of an existing large (&gt;100) corpus of data sharing/data processing agreements</td>
+<td>analysis of an existing large (&gt;100) corpus of data sharing/data processing agreements</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>

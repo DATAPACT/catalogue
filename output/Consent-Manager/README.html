@@ -1,27 +1,9 @@
 <h1 dir="auto">Consent Manager</h1>
 <p dir="auto">Powered by</p>
 <p dir="auto"><a href="https://dips.soton.ac.uk/#home" rel="nofollow"><img src="./images/UniSouthampton.png" alt="UoSLOGO" style="max-width: 100%;"></a></p>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Project Links</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Software GitHub Repository --&gt; Consent manager software <a href="https://github.com/...">https://github.com/...</a></td>
-</tr>
-<tr>
-<td>Progress GitHub Project [ADD URL]</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
 <h2 dir="auto"><strong>General Description</strong></h2>
-<h2 dir="auto"><strong>Architecture</strong></h2>
-<h2 dir="auto"><strong>Component Definition</strong></h2>
-<h2 dir="auto"><strong>Screenshots</strong></h2>
+<p dir="auto">The Consent Manger provides an interface and API to manage consent requests. Requesters can create consent requests based on ODRL Policies, and customised using domain specific terminology (through ontology files). Consent requests can be sent to users who can accept them, reject them. They have the ability to revoke them later.</p>
 <h2 dir="auto"><strong>Commercial Information</strong></h2>
-<p dir="auto">Table with the organisation, license nature (Open Source, Commercial ... ) and the license. Replace with the values of your module.</p>
 <markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
@@ -30,22 +12,71 @@
 <th>License</th>
 </tr>
 </thead>
+<tbody>
+<tr>
+<td>University of Southampton</td>
+<td>Open Source</td>
+<td>MIT Licence</td>
+</tr>
+</tbody>
 </table></markdown-accessiblity-table>
 <h2 dir="auto"><strong>Top Features</strong></h2>
+<ul dir="auto">
+<li>Requesters can create consent requests based on ODRL policies.​</li>
+<li>Requesters can send consent requests to data owners identified by their email address.​</li>
+<li>Requesters can keep track of who has approved or rejected their requests, and download the relevant consent forms.​</li>
+<li>Data owners can view, approve, reject and revoke consent requests.​</li>
+</ul>
 <h2 dir="auto"><strong>How To Install</strong></h2>
 <h3 dir="auto">Requirements</h3>
-<p dir="auto">To be defined.</p>
+<p dir="auto">Download and install <a href="https://nodejs.org/en" rel="nofollow">Node.js</a></p>
 <h3 dir="auto">Software</h3>
-<p dir="auto">To be defined.</p>
+<p dir="auto">React, Firebase</p>
 <h3 dir="auto">Summary of installation steps</h3>
-<p dir="auto">To be defined.</p>
-<h3 dir="auto">Detailed steps</h3>
-<p dir="auto">To be defined.</p>
-<h2 dir="auto"><strong>How To Use</strong></h2>
-<p dir="auto">To be defined.</p>
-<h2 dir="auto"><strong>Other Information</strong></h2>
-<p dir="auto">To be defined.</p>
-<h2 dir="auto"><strong>OpenAPI Specification</strong></h2>
-<p dir="auto">To be defined.</p>
-<h2 dir="auto"><strong>Additional Links</strong></h2>
-<p dir="auto">To be defined.</p>
+<ol dir="auto">
+<li><strong>Clone the project:</strong></li>
+</ol>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">  git clone https://github.com/EU-UPCAST/upconsent.git</pre></div>
+<ol start="2" dir="auto">
+<li><strong>Navigate into the project directory:</strong></li>
+</ol>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">  <span class="pl-c1">cd</span> upconsent</pre></div>
+<ol start="3" dir="auto">
+<li><strong>Install the required libraries</strong></li>
+</ol>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">  npm install</pre></div>
+<blockquote>
+<p dir="auto"><strong>Note:</strong> Mac users: If you face permission errors, you might need <strong>sudo npm install</strong>.</p>
+</blockquote>
+<ol start="4" dir="auto">
+<li><strong>Start the development server:</strong></li>
+</ol>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">  npm run dev</pre></div>
+<blockquote>
+<p dir="auto"><strong>Note:</strong> Mac users: If you face permission errors, you might need <strong>sudo npm run dev</strong>.</p>
+</blockquote>
+<ol start="5" dir="auto">
+<li><strong>Open the project in your browser:</strong></li>
+</ol>
+<ul dir="auto">
+<li>Once the server starts, a localhost URL (usually <a href="http://localhost:3000" rel="nofollow">http://localhost:3000</a>) will be shown in the terminal.</li>
+<li>Press Ctrl + Click on the URL or copy and paste it into your browser.</li>
+</ul>
+<p dir="auto">The project should now be running locally.</p>
+<h2 dir="auto">Expected KPIs</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>What</th>
+<th>How</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1) Engagement and satisfaction with consent manager  2) Scalability of reviewing stored consent</td>
+<td>1) Questionnaire for users of the consent manager (or pilots that are testing it, if the consent manager has not been deployed yet to a sufficient amount of users)  2) Experiment with synthetic data, and policies with 5 different permissions.</td>
+<td>1) ≥5/7 Likert scale rating in user satisfaction with usability of the tool, the ease to accept and/or revoke consent, and the ease to understand the policy clauses. 2) computing, based on the stored data on agred/revoked consents, which subset of a batch of 1000 users provided their consent to a complete policy (this should be computed in under a second), and which ones to a particular subset of permissions for a policy (this should be computed in under 5 seconds).</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
