@@ -1,0 +1,328 @@
+<div dir="auto">
+  <h1 dir="auto">ITACA (eticas-audit)</h1>
+  <a href="https://eticas.ai" rel="nofollow">
+    <img src="./images/eticas_logo.png" alt="Eticas Logo" style="max-width: 100%;">
+  </a>
+</div>
+<h2 dir="auto"><strong>General Description</strong></h2>
+<p dir="auto">ITACA (eticas-audit) is an open-source Python library for rigorous, reproducible auditing of AI systems across fairness, demographic representation, feature–outcome relationships, performance, and drift. It provides a comprehensive set of tools to ensure transparency, accountability, and ethical AI development by comparing privileged and underprivileged groups across all stages of the model lifecycle. Metrics are computed locally on datasets and returned as Python-native artifacts suitable for visualization, storage, CI gating, or downstream governance workflows. Data, configuration, and results remain entirely within the local analytical environment.</p>
+<h2 dir="auto"><strong>Related Compliance Aspects</strong></h2>
+<ul dir="auto">
+<li>Fairness &amp; Non-discrimination</li>
+<li>Bias Assessment (EU AI Act, Article 10 — Data and Data Governance)</li>
+<li>Risk Management (ISO/IEC 42001 — AI Management System)</li>
+</ul>
+<h2 dir="auto"><strong>Main Goal/Functionalities</strong></h2>
+<ul dir="auto">
+<li>Bias &amp; Fairness assessment across the full AI model lifecycle</li>
+<li>Non-discrimination monitoring for protected attributes</li>
+<li>Model lifecycle auditing and drift detection between training and operational phases</li>
+<li>Demographic benchmarking: group representation and outcome distribution analysis</li>
+<li>Feature distribution analysis: detection of proxy variables correlated with protected attributes</li>
+<li>Fairness auditing: Disparate Impact, Statistical Parity, Equalized Odds, Calibration metrics</li>
+<li>Per-group performance evaluation: accuracy, precision, recall, F1-score comparison</li>
+<li>Flexible configuration of simple and intersectional sensitive attributes via JSON schema</li>
+</ul>
+<h2 dir="auto"><strong>Architecture</strong></h2>
+<p dir="auto">The picture below shows the component in the DataPACT architecture. ITACA is part of the <strong>Fairness Assessment &amp; Guardrails</strong> component within <strong>TrustR</strong> (WP3), contributing to Result R3.4.</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="./images/ITACA_Architecture.jpg"><img src="./images/ITACA_Architecture.jpg" alt="ITACA_Architecture" style="max-width: 100%;"></a></p>
+<p dir="auto"><em>Figure: WP3 Component Diagram (D3.1) — ITACA highlighted within the Fairness Assessment &amp; Guardrails component of TrustR.</em></p>
+<p dir="auto">ITACA operates as a model-agnostic auditing library that ingests data to compute baseline metrics for fairness across the whole lifecycle of an AI model. During the training phase, these metrics can be fed into the Pareto Optimal Tradeoff (POT) tool for multi-objective trade-off analysis between fairness, robustness, and quality.</p>
+<p dir="auto">ITACA supports three lifecycle stages:</p>
+<ul dir="auto">
+<li><strong>Pre-processing (Labeled Audit):</strong> Audits the training dataset with ground truth labels, computing fairness, performance, benchmarking, and distribution metrics.</li>
+<li><strong>Post-processing (Production Audit):</strong> Audits operational/production data without true labels, computing fairness, benchmarking, and distribution metrics.</li>
+<li><strong>Impact (Impact Audit):</strong> Audits real-world outcome data after decisions have been made, measuring actual impact on different groups.</li>
+</ul>
+<p dir="auto">Additionally, a <strong>Drift Audit</strong> compares training vs. operational data to detect distribution shifts that may erode fairness or performance over time.</p>
+<h2 dir="auto"><strong>Component Definition</strong></h2>
+<p dir="auto">ITACA is a Python library for rigorous, reproducible auditing of AI systems. It currently supports <strong>binary classifiers</strong>, accepting either hard labels (e.g., {0, 1}) or scores/probabilities with a decision threshold. Metrics are computed and organized by subgroup and overall aggregates, then exposed as serializable Python structures for plotting, exporting, and CI checks.</p>
+<p dir="auto">Core capabilities span five complementary areas:</p>
+<ul dir="auto">
+<li><strong>Demographic Benchmarking</strong> characterizes group representation and the distribution of positive outcomes, highlighting under- or over-representation and imbalances in allocation.</li>
+<li><strong>Model Fairness</strong> quantifies parity with established measures such as disparate impact (selection-rate ratio), statistical parity difference, equalized-odds-style diagnostics, and groupwise calibration.</li>
+<li><strong>Features Distribution Analysis</strong> surfaces potential proxies and leakage by examining relationships among inputs, protected attributes, and outcomes, flagging indirect discrimination risks.</li>
+<li><strong>Performance Evaluation</strong> reports overall and per-group quality — accuracy, precision, recall, F1, and simple baselines — to distinguish localized unfairness from uniform model weakness.</li>
+<li><strong>Drift Monitoring</strong> compares training and operational (or time-separated) data and behavior to detect shifts that may erode fairness or performance.</li>
+</ul>
+<p dir="auto">Audits are structured around protected (sensitive) variables — attributes representing legally or ethically protected characteristics. Both single-attribute and intersectional specifications (e.g., sex × ethnicity) are supported via a compact JSON configuration schema.</p>
+<h2 dir="auto"><strong>Screenshots</strong></h2>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="./images/metric_flow.png"><img src="./images/metric_flow.png" alt="ITACA_Metrics_Flow" style="max-width: 100%;"></a></p>
+<p dir="auto"><em>Figure 1: ITACA metric computation flow — from input data and sensitive attribute configuration through audit stages to fairness, benchmarking, distribution, performance, and drift results.</em></p>
+<h2 dir="auto"><strong>Commercial Information</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Organisation(s)</th>
+<th>License Nature</th>
+<th>License</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Eticas Research and Consulting SL</td>
+<td>Open Source</td>
+<td>Apache 2.0</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Technical Characteristics</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Keywords</strong></td>
+<td>Fairness, Bias, Disparate Impact, Statistical Parity, Equalized Odds, Drift, Audit, Binary Classifier</td>
+</tr>
+<tr>
+<td><strong>TRL (Initial → Final)</strong></td>
+<td>TRL 5 → TRL 6</td>
+</tr>
+<tr>
+<td><strong>Licence</strong></td>
+<td>Open Source (Apache 2.0)</td>
+</tr>
+<tr>
+<td><strong>Github Page</strong></td>
+<td><a href="https://github.com/eticasai/eticas-audit">https://github.com/eticasai/eticas-audit</a></td>
+</tr>
+<tr>
+<td><strong>Access</strong></td>
+<td>Python library, local/offline mode</td>
+</tr>
+<tr>
+<td><strong>Standards</strong></td>
+<td>EU AI Act, ISO/IEC 42001 (compliance support)</td>
+</tr>
+<tr>
+<td><strong>Compliance certification output</strong></td>
+<td>YES</td>
+</tr>
+<tr>
+<td><strong>Tools already integrated with</strong></td>
+<td>Designed for integration with Pareto Optimal Tradeoff Tool (UC)</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Expected KPIs</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>What (types)</th>
+<th>How (Process)</th>
+<th>Values (concrete values)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Use case applicability and audit execution</td>
+<td>Assess each DataPACT use case for ITACA compatibility (binary classification task, availability of protected attributes, dataset readiness); execute audits on applicable use cases</td>
+<td>Applicability assessment completed for all use cases; ITACA audits successfully executed on ≥2 applicable use cases</td>
+</tr>
+<tr>
+<td>Fairness metric computation across audit types</td>
+<td>Run the audit types that match each use case's lifecycle stage and data availability (labeled, production, drift); compute all available metrics per audit type</td>
+<td>≥2 distinct audit types executed per integrated use case; full metric set computed without errors for each audit stage</td>
+</tr>
+<tr>
+<td>Bias detection validation on benchmark data</td>
+<td>Compare ITACA fairness metric outputs (Disparate Impact, Statistical Parity, Equalized Odds) against known biased/unbiased benchmark datasets with established ground truth</td>
+<td>ITACA correctly flags known bias in benchmark datasets; metric results consistent with published reference values (e.g., FEL ECAI benchmarks such as Adult, COMPAS)</td>
+</tr>
+<tr>
+<td>Integration with Pareto Optimal Tradeoff Tool</td>
+<td>Verify that ITACA fairness metric outputs are consumed by POT for multi-objective trade-off analysis between fairness, robustness, and quality</td>
+<td>Successful end-to-end data exchange with POT in ≥1 use case</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Related Project Links</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Software GitHub Repository → eticas-audit source code: <a href="https://github.com/eticasai/eticas-audit">https://github.com/eticasai/eticas-audit</a></td>
+</tr>
+<tr>
+<td>PyPI package: <a href="https://pypi.org/project/eticas-audit/" rel="nofollow">https://pypi.org/project/eticas-audit/</a></td>
+</tr>
+<tr>
+<td>Eticas website: <a href="https://eticas.ai/itaca/" rel="nofollow">https://eticas.ai/itaca/</a></td>
+</tr>
+<tr>
+<td>DataPACT Deliverable D3.1 — Compliance Toolbox v1 (Section 10.1)</td>
+</tr>
+<tr>
+<td>DataPACT Deliverable D4.1 — Compliance Framework v1 (Risk Category: Bias &amp; Fairness)</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>How To Install</strong></h2>
+<h3 dir="auto">Requirements</h3>
+<ul dir="auto">
+<li>Python ≥ 3.8</li>
+</ul>
+<h3 dir="auto">Installation</h3>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">pip install eticas-audit</pre></div>
+<h3 dir="auto">Quick Start</h3>
+<div class="highlight highlight-source-python" dir="auto"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">eticas</span>.<span class="pl-s1">model</span>.<span class="pl-s1">ml_model</span> <span class="pl-k">import</span> <span class="pl-v">MLModel</span>
+
+<span class="pl-c"># 1. Define sensitive attributes</span>
+<span class="pl-s1">sensitive_attributes</span> <span class="pl-c1">=</span> {
+    <span class="pl-s">"sensitive_attributes"</span>: {
+        <span class="pl-s">"gender"</span>: {
+            <span class="pl-s">"columns"</span>: [{<span class="pl-s">"name"</span>: <span class="pl-s">"gender"</span>, <span class="pl-s">"underprivileged"</span>: [<span class="pl-c1">2</span>]}],
+            <span class="pl-s">"type"</span>: <span class="pl-s">"simple"</span>
+        },
+        <span class="pl-s">"ethnicity"</span>: {
+            <span class="pl-s">"columns"</span>: [{<span class="pl-s">"name"</span>: <span class="pl-s">"ethnicity"</span>, <span class="pl-s">"privileged"</span>: [<span class="pl-c1">1</span>]}],
+            <span class="pl-s">"type"</span>: <span class="pl-s">"simple"</span>
+        }
+    }
+}
+
+<span class="pl-c"># 2. Create model</span>
+<span class="pl-s1">model</span> <span class="pl-c1">=</span> <span class="pl-en">MLModel</span>(
+    <span class="pl-s1">model_name</span><span class="pl-c1">=</span><span class="pl-s">"My Model Audit"</span>,
+    <span class="pl-s1">description</span><span class="pl-c1">=</span><span class="pl-s">"Fairness audit for binary classifier"</span>,
+    <span class="pl-s1">country</span><span class="pl-c1">=</span><span class="pl-s">"EU"</span>,
+    <span class="pl-s1">sensitive_attributes</span><span class="pl-c1">=</span><span class="pl-s1">sensitive_attributes</span>,
+    <span class="pl-s1">features</span><span class="pl-c1">=</span>[<span class="pl-s">"feature_0"</span>, <span class="pl-s">"feature_1"</span>, <span class="pl-s">"feature_2"</span>]
+)
+
+<span class="pl-c"># 3. Run a labeled audit</span>
+<span class="pl-s1">model</span>.<span class="pl-c1">run_labeled_audit</span>(
+    <span class="pl-s1">dataset_path</span><span class="pl-c1">=</span><span class="pl-s">'data/training_data.csv'</span>,
+    <span class="pl-s1">label_column</span><span class="pl-c1">=</span><span class="pl-s">'outcome'</span>,
+    <span class="pl-s1">output_column</span><span class="pl-c1">=</span><span class="pl-s">'predicted_outcome'</span>,
+    <span class="pl-s1">positive_output</span><span class="pl-c1">=</span>[<span class="pl-c1">1</span>]
+)
+
+<span class="pl-c"># 4. Run a production audit</span>
+<span class="pl-s1">model</span>.<span class="pl-c1">run_production_audit</span>(
+    <span class="pl-s1">dataset_path</span><span class="pl-c1">=</span><span class="pl-s">'data/production_data.csv'</span>,
+    <span class="pl-s1">output_column</span><span class="pl-c1">=</span><span class="pl-s">'predicted_outcome'</span>,
+    <span class="pl-s1">positive_output</span><span class="pl-c1">=</span>[<span class="pl-c1">1</span>]
+)
+
+<span class="pl-c"># 5. Run a drift audit</span>
+<span class="pl-s1">model</span>.<span class="pl-c1">run_drift_audit</span>(
+    <span class="pl-s1">dataset_path_dev</span><span class="pl-c1">=</span><span class="pl-s">'data/training_data.csv'</span>,
+    <span class="pl-s1">output_column_dev</span><span class="pl-c1">=</span><span class="pl-s">'outcome'</span>,
+    <span class="pl-s1">positive_output_dev</span><span class="pl-c1">=</span>[<span class="pl-c1">1</span>],
+    <span class="pl-s1">dataset_path_prod</span><span class="pl-c1">=</span><span class="pl-s">'data/production_data.csv'</span>,
+    <span class="pl-s1">output_column_prod</span><span class="pl-c1">=</span><span class="pl-s">'predicted_outcome'</span>,
+    <span class="pl-s1">positive_output_prod</span><span class="pl-c1">=</span>[<span class="pl-c1">1</span>]
+)
+
+<span class="pl-c"># 6. Explore results (normalized 0–100)</span>
+<span class="pl-s1">results_df</span> <span class="pl-c1">=</span> <span class="pl-s1">model</span>.<span class="pl-c1">df_results</span>(<span class="pl-s1">norm_values</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">results_json</span> <span class="pl-c1">=</span> <span class="pl-s1">model</span>.<span class="pl-c1">json_results</span>(<span class="pl-s1">norm_values</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)</pre></div>
+<h3 dir="auto">Available Metrics</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Group</th>
+<th>Metric</th>
+<th>Label needed?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fairness</td>
+<td>d_parity</td>
+<td>No</td>
+<td>Ratio of selection rates (Disparate Impact)</td>
+</tr>
+<tr>
+<td>Fairness</td>
+<td>d_statisticalparity</td>
+<td>No</td>
+<td>Difference in selection rates (Statistical Parity)</td>
+</tr>
+<tr>
+<td>Fairness</td>
+<td>d_equality</td>
+<td>No</td>
+<td>Whether the system treats all groups equally</td>
+</tr>
+<tr>
+<td>Fairness</td>
+<td>d_equity</td>
+<td>No</td>
+<td>Whether outcomes account for group needs</td>
+</tr>
+<tr>
+<td>Fairness</td>
+<td>d_equalodds_true</td>
+<td>Yes</td>
+<td>Equal true positive rates across groups</td>
+</tr>
+<tr>
+<td>Fairness</td>
+<td>d_equalodds_false</td>
+<td>Yes</td>
+<td>Equal false positive rates across groups</td>
+</tr>
+<tr>
+<td>Fairness</td>
+<td>d_calibrated_true</td>
+<td>Yes</td>
+<td>Same meaning of positive prediction across groups</td>
+</tr>
+<tr>
+<td>Fairness</td>
+<td>d_calibrated_false</td>
+<td>Yes</td>
+<td>Same meaning of negative prediction across groups</td>
+</tr>
+<tr>
+<td>Benchmarking</td>
+<td>da_inconsistency</td>
+<td>No</td>
+<td>% of samples from underprivileged group</td>
+</tr>
+<tr>
+<td>Benchmarking</td>
+<td>da_positive</td>
+<td>No</td>
+<td>% of positive outcomes from underprivileged group</td>
+</tr>
+<tr>
+<td>Distribution</td>
+<td>dxa_inconsistency</td>
+<td>No</td>
+<td>Proxy feature detection</td>
+</tr>
+<tr>
+<td>Distribution</td>
+<td>da_informative</td>
+<td>No</td>
+<td>Relationship between protected attributes and output</td>
+</tr>
+<tr>
+<td>Performance</td>
+<td>accuracy, F1, precision, recall</td>
+<td>Yes</td>
+<td>Standard classification metrics per group</td>
+</tr>
+<tr>
+<td>Drift</td>
+<td>drift</td>
+<td>No</td>
+<td>Distribution shift between training and operational data</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3 dir="auto">Detailed Documentation</h3>
+<p dir="auto">For full documentation, example notebooks, and API details, see the <a href="https://github.com/eticasai/eticas-audit">eticas-audit repository</a>.</p>
