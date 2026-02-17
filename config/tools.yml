@@ -118,7 +118,7 @@ tools:
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
-  - repo: "ITACA"
+  - repo: "ITACA_DATAPACT"
     mainfile: "README.html"
     name: "ITACA"       
     category: "TrustR"
