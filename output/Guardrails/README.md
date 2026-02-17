@@ -2,9 +2,11 @@
 
 Powered by
 
-<p align="left">
+<!--<p align="left">
   <a href="https://www.ijs.si/"><img src="https://www.ijs.si/ijsw/Rubrike?action=AttachFile&do=get&target=000-modra.jpg" alt="Jožef Stefan Institute (JSI) logo" width="220"></a>
-</p>
+</p>-->
+
+<img width="259" height="194" alt="image" src="https://github.com/user-attachments/assets/6351ed52-fcb7-4852-8557-277ed4a4623f" />
 
 | Project Links                                                            |
 | ------------------------------------------------------------------------ |
@@ -88,17 +90,26 @@ TBD
 
 ## **Screenshots**
 
-TBD
+<img width="716" height="772" alt="image" src="https://github.com/user-attachments/assets/2dc6b85a-736b-4779-a318-d7911ad90495" />
 
 ## **Commercial Information**
 
 | Organisation (s) | License Nature | License |
 | ---------------  | -------------- | ------- |
-| Jožef Stefan Institute (JSI) | TBD | TBD |
+| Jožef Stefan Institute (JSI) | Open Source | BSD-2-Clause|
+
+## **Expected KPIs**
+
+| What (Types)            | How (Process)                                                                       | Values                                                                                                                                                                        |
+| ---------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Core Safety & Classification Performance KPIs | Recall (Sensitivity), Precision, F1 measure, False negative rate, False positive rate| F1 measure > 0.8 |
+
 
 ## **Top Features**
 
-TBD
+- Evaluates LLM inputs and outputs against a predefined policy - policy is defined by deployer as instructions
+- Same guardrails model and underlying LLM can be used  for different purposes with different policies without retraining
+- Trained on a large diverse dataset on a large taxonomy using instruction tuning to follow different policies=
 
 ## **How To Install**
 

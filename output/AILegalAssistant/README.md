@@ -2,9 +2,12 @@
 
 Powered by
 
-<p align="left">
+<!--<p align="left">
   <a href="https://www.ijs.si/"><img src="https://www.ijs.si/ijsw/Rubrike?action=AttachFile&do=get&target=000-modra.jpg" alt="Jožef Stefan Institute (JSI) logo" width="220"></a>
-</p>
+</p>-->
+
+<img width="259" height="194" alt="image" src="https://github.com/user-attachments/assets/cd3e20e1-f0dd-49e8-a8c1-7ac0724f218d" />
+
 
 | Project Links                                                                                    |
 | ------------------------------------------------------------------------------------------------ |
@@ -34,7 +37,8 @@ This codebase implements a Retrieval-Augmented Generation (RAG) assistant focuse
 
 ## **Screenshots**
 
-TBD
+<img width="1337" height="1003" alt="image" src="https://github.com/user-attachments/assets/58156f38-fa87-4d17-83ff-33fd0fbaa278" />
+
 
 ## **Commercial Information**
 
@@ -43,6 +47,14 @@ TBD
 | Jožef Stefan Institute (JSI) | Open Source (permissive) | MIT     |
 
 (Repo is MIT-licensed.) ([GitHub][1])
+
+
+## **Expected KPIs**
+
+| What (Types)            | How (Process)                                                                       | Values                                                                                                                                                                        |
+| ---------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Answer Relevance | Benchmark on compliance questions derived from regulatory documents | Recall@10> 0.85 |
+
 
 ## **Top Features**
 

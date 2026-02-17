@@ -1,0 +1,85 @@
+<h1 dir="auto">JSI LLAC</h1>
+<p dir="auto">Powered by</p>
+
+<a target="_blank" rel="noopener noreferrer" href="https://private-user-images.githubusercontent.com/1080897/550362084-8881f50c-1720-4b97-8db3-f90d294c2b5c.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzEzMzc4NDQsIm5iZiI6MTc3MTMzNzU0NCwicGF0aCI6Ii8xMDgwODk3LzU1MDM2MjA4NC04ODgxZjUwYy0xNzIwLTRiOTctOGRiMy1mOTBkMjk0YzJiNWMucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MDIxNyUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjAyMTdUMTQxMjI0WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9ZjJjZTI1YWVhNzJkMjQyYjIyNWNhZDg3NDk1MTA2N2ZiMWY5YjgxMDk3YWJkYjY1NjkwZDU3MmUyOGJiNDAwNSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.Lrgn6aqsKQk02i77aDvbVEwFexIAKF71_rUyggrdLhU"><img width="259" height="194" alt="image" src="https://private-user-images.githubusercontent.com/1080897/550362084-8881f50c-1720-4b97-8db3-f90d294c2b5c.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzEzMzc4NDQsIm5iZiI6MTc3MTMzNzU0NCwicGF0aCI6Ii8xMDgwODk3LzU1MDM2MjA4NC04ODgxZjUwYy0xNzIwLTRiOTctOGRiMy1mOTBkMjk0YzJiNWMucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MDIxNyUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjAyMTdUMTQxMjI0WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9ZjJjZTI1YWVhNzJkMjQyYjIyNWNhZDg3NDk1MTA2N2ZiMWY5YjgxMDk3YWJkYjY1NjkwZDU3MmUyOGJiNDAwNSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.Lrgn6aqsKQk02i77aDvbVEwFexIAKF71_rUyggrdLhU" style="max-width: 100%; height: auto; max-height: 194px;"></a>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Software GitHub Repository</strong> → JSI LLAC <code class="notranslate">&lt;&gt;</code></td>
+</tr>
+<tr>
+<td><strong>Progress GitHub Project</strong> → <code class="notranslate">&lt;&gt;</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>General Description</strong></h2>
+<p dir="auto">LLAC is conceived as a socio-technical assistant that supports users in analysing regulatory obligations and assessing compliance risks in AI systems. LLAC is focused on LLM-powered pipelines for <strong>legal/privacy compliance work</strong> (e.g., GDPR) using <strong>agentic ingestion</strong>, <strong>claim extraction</strong>, and <strong>contextualization</strong> utilities.</p>
+<h2 dir="auto"><strong>Architecture</strong></h2>
+<p dir="auto">High-level flow (conceptual):</p>
+<ol dir="auto">
+<li><strong>Ingestion</strong>: Collect/ingest legal or policy text/corpus (agentic ingestion experiments).</li>
+<li><strong>Claim Extraction</strong>: Identify extractable claims/statements and structure them.</li>
+<li><strong>Contextualization</strong>: Enrich extracted claims with surrounding context (to reduce ambiguity).</li>
+<li><strong>Graph/Structuring</strong>: Represent extracted knowledge and relations in a graph-like structure for downstream querying/analysis.</li>
+</ol>
+<h2 dir="auto"><strong>Component Definition</strong></h2>
+<p dir="auto">Repository structure includes (non-exhaustive):</p>
+<ul dir="auto">
+<li><code class="notranslate">claim_extraction/</code> — claim extraction experiments/utilities</li>
+<li><code class="notranslate">contextualize/</code> — contextualization workflows</li>
+<li><code class="notranslate">prompts/</code> — prompt templates used by components</li>
+<li><code class="notranslate">config/</code> — configuration files/settings</li>
+<li><code class="notranslate">data/</code> — datasets / sample inputs</li>
+<li><code class="notranslate">system_corpus/</code> — corpus materials used for experiments</li>
+<li><code class="notranslate">util/</code> — shared helpers/utilities</li>
+<li>Root-level experiments mentioned in the repo overview include: <code class="notranslate">agentic_ingestion.py</code>, <code class="notranslate">graph.py</code>, <code class="notranslate">gdpr.txt</code>, plus folders like <code class="notranslate">gdpr_contextualized/</code> and <code class="notranslate">openrouter_test/</code>.</li>
+</ul>
+<h2 dir="auto"><strong>Screenshots</strong></h2>
+<a target="_blank" rel="noopener noreferrer" href="https://private-user-images.githubusercontent.com/1080897/550362777-b05e783b-46e5-4d15-8f7d-0023281e1ba8.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzEzMzc4NDQsIm5iZiI6MTc3MTMzNzU0NCwicGF0aCI6Ii8xMDgwODk3LzU1MDM2Mjc3Ny1iMDVlNzgzYi00NmU1LTRkMTUtOGY3ZC0wMDIzMjgxZTFiYTgucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MDIxNyUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjAyMTdUMTQxMjI0WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9NmU4MTI0ZTljNGViZDdjYjA3YmFlYWExMmFiNTA3ZmRiYzZiODY2YzMyZTI3ZTRmOWZlYTg1NWJmOGFiMmRiZiZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.LJMpCY60d78EfAUQKpstkaaGFS6lPd21SGFpjRNM_CU"><img width="1279" height="860" alt="image" src="https://private-user-images.githubusercontent.com/1080897/550362777-b05e783b-46e5-4d15-8f7d-0023281e1ba8.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzEzMzc4NDQsIm5iZiI6MTc3MTMzNzU0NCwicGF0aCI6Ii8xMDgwODk3LzU1MDM2Mjc3Ny1iMDVlNzgzYi00NmU1LTRkMTUtOGY3ZC0wMDIzMjgxZTFiYTgucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MDIxNyUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjAyMTdUMTQxMjI0WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9NmU4MTI0ZTljNGViZDdjYjA3YmFlYWExMmFiNTA3ZmRiYzZiODY2YzMyZTI3ZTRmOWZlYTg1NWJmOGFiMmRiZiZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.LJMpCY60d78EfAUQKpstkaaGFS6lPd21SGFpjRNM_CU" style="max-width: 100%; height: auto; max-height: 860px;"></a>
+<h2 dir="auto"><strong>Commercial Information</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Organisation (s)</th>
+<th>License Nature</th>
+<th>License</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jožef Stefan Institute (JSI)</td>
+<td>Open Source</td>
+<td>MIT</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Expected KPIs</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>What (Types)</th>
+<th>How (Process)</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Answer Quality</td>
+<td>Benchmark on compliance questions derived from regulatory documents/user evaluation</td>
+<td>Retriever Recall@10&gt;50%,   Accuracy &gt; 0.8</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Top Features</strong></h2>
+<ul dir="auto">
+<li>Modular experimentation layout (claim extraction, contextualization, prompts, utilities).</li>
+<li>Legal-oriented artifacts and experiments (e.g., <code class="notranslate">gdpr.txt</code>, contextualized GDPR folder).</li>
+<li>Agentic ingestion + graph/structuring exploration.</li>
+</ul>
+<h2 dir="auto"><strong>How To Install</strong></h2>
+<p dir="auto">For deploy/access please send an email to Inna Novalija (<a href="mailto:inna.koval@jsi.si">inna.koval@jsi.si</a>)</p>

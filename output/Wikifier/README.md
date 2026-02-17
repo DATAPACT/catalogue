@@ -2,9 +2,12 @@
 
 Powered by
 
-<p align="left">
+<!--<p align="left">
   <a href="https://www.ijs.si/"><img src="https://www.ijs.si/ijsw/Rubrike?action=AttachFile&do=get&target=000-modra.jpg" alt="Jožef Stefan Institute (JSI) logo" width="220"></a>
-</p>
+</p>-->
+
+<img width="259" height="194" alt="image" src="https://github.com/user-attachments/assets/fc210d14-b546-44f1-b8f6-7ff7ba0533af" />
+
 
 | Project Links                                                            |
 | ------------------------------------------------------------------------ |
@@ -53,6 +56,7 @@ High-level data flow:
 * Annotation preview (web UI): `![Preview](./images/preview.png)`
 * JSON response sample: `![JSON](./images/json.png)`
 
+<img width="879" height="811" alt="image" src="https://github.com/user-attachments/assets/36427c49-bc2d-4a4e-82ea-374bc3c895ac" />
 ---
 
 ## **Commercial Information**
@@ -62,6 +66,16 @@ High-level data flow:
 | Jožef Stefan Institute (JSI) | Public web service (fair use); source code for service infra not publicly distributed | Usage requires `userKey`; see [https://wikifier.org/register.html](https://wikifier.org/register.html) and service docs [https://wikifier.org/info.html](https://wikifier.org/info.html) |
 
 > For commercial or on‑premise options, contact the maintainers.
+
+
+---
+
+## **Expected KPIs**
+
+| What (Types)            | How (Process)                                                                       | Values                                                                                                                                                                        |
+| ---------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Annotation precision | Annotation precision. Measuring Precision Top N for semantic annotation/wikification task based on developed gold standard. | Annotation precision. Annotation Precision Top 1 > 0.8 |
+
 
 ---
 
@@ -129,12 +143,10 @@ curl -X POST "https://www.wikifier.org/annotate-article" \
 **Output shape (abridged):**
 
 ```json
-{
   "annotations": [ { "title": "New York City", "url": "…", "lang": "en", "wikiDataClassIds": ["Q515", …], "dbPediaIri": "…", "support": [ {"wFrom": 0, "wTo": 1, …} ] } ],
   "words": ["New", "York", "City"],
   "spaces": ["", " ", " ", "."],
   "ranges": [ { "wFrom": 0, "wTo": 1, "candidates": [ {"title": "New York", …} ] } ]
-}
 ```
 
 > Also available: `get-cosine-similarity` for page–page cosine and functions for extracting subgraphs of the Wikipedia link graph.
@@ -150,8 +162,8 @@ curl -X POST "https://www.wikifier.org/annotate-article" \
 ---
 
 ## **Additional Links**
-
-* Official documentation: [https://www.wikifier.org/info.html](https://www.wikifier.org/info.html)
+{wikifier.org/info.html)
 * Supported languages: [https://wikifier.net/languages.html](https://wikifier.net/languages.html)
 * About the service: [https://www.wikifier.org/about.html](https://www.wikifier.org/about.html)
+* Official documentation: [https://www.wikifier.org/info.html](https://www.
 * API (OpenAPI) spec page (project site): [https://jsi-eubusinessgraph.github.io/jsi-wikifier-api/](https://jsi-eubusinessgraph.github.io/jsi-wikifier-api/)

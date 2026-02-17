@@ -1,8 +1,7 @@
 <h1 dir="auto">JSI SPEFTR: Simple-Parameter-Efficient-Fine-Tuning-Recipe</h1>
 <p dir="auto">Powered by</p>
-<p align="left" dir="auto">
-  <a href="https://www.ijs.si/" rel="nofollow"><img src="https://camo.githubusercontent.com/51764b7be92b17d3bb8210b66d2aaacad04032890f0709d50ec5c0aa3d3f18b7/68747470733a2f2f7777772e696a732e73692f696a73772f52756272696b653f616374696f6e3d41747461636846696c6526646f3d676574267461726765743d3030302d6d6f6472612e6a7067" alt="Jožef Stefan Institute (JSI) logo" width="220" data-canonical-src="https://www.ijs.si/ijsw/Rubrike?action=AttachFile&amp;do=get&amp;target=000-modra.jpg" style="max-width: 100%;"></a>
-</p>
+
+<a target="_blank" rel="noopener noreferrer" href="https://private-user-images.githubusercontent.com/1080897/550363981-5b994a2b-a6fa-4eef-8a9f-6c3071e19423.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzEzMzc4NTIsIm5iZiI6MTc3MTMzNzU1MiwicGF0aCI6Ii8xMDgwODk3LzU1MDM2Mzk4MS01Yjk5NGEyYi1hNmZhLTRlZWYtOGE5Zi02YzMwNzFlMTk0MjMucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MDIxNyUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjAyMTdUMTQxMjMyWiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9MmNhZmVkNzAyYzg4ZmNiN2Y3YTdmNWM0NDM0MjI1OTZiZjIxMmQxOTliMWY5MmYzNmI5Mzc3NzE3M2Q5Y2QzOSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.fcV0Q8amTraT2GpUFuF_n_fDvyVqxiATBf2UueF6zSc"><img width="259" height="194" alt="image" src="https://private-user-images.githubusercontent.com/1080897/550363981-5b994a2b-a6fa-4eef-8a9f-6c3071e19423.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzEzMzc4NTIsIm5iZiI6MTc3MTMzNzU1MiwicGF0aCI6Ii8xMDgwODk3LzU1MDM2Mzk4MS01Yjk5NGEyYi1hNmZhLTRlZWYtOGE5Zi02YzMwNzFlMTk0MjMucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MDIxNyUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjAyMTdUMTQxMjMyWiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9MmNhZmVkNzAyYzg4ZmNiN2Y3YTdmNWM0NDM0MjI1OTZiZjIxMmQxOTliMWY5MmYzNmI5Mzc3NzE3M2Q5Y2QzOSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.fcV0Q8amTraT2GpUFuF_n_fDvyVqxiATBf2UueF6zSc" style="max-width: 100%; height: auto; max-height: 194px;"></a>
 <markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
@@ -20,12 +19,86 @@
 </table></markdown-accessiblity-table>
 <h2 dir="auto"><strong>General Description</strong></h2>
 <p dir="auto">SPEFTR is a parameter-efficient fine-tuning pipeline that selects and applies adapters (e.g., LoRA/QLoRA) with quantization to optimize LLMs for domain tasks within the PipelineR.FR.LLM-llm-rag-ops.finetuning stack.</p>
+<p dir="auto">SPEFTR (Simple Parameter-Efficient Fine-Tuning Recipe) provides a lightweight, reproducible implementation of LoRA-based adaptation workflows for Large Language Models (LLMs). Instead of updating all model parameters, the base model remains frozen and only small low-rank adapter matrices are trained. This significantly reduces GPU memory requirements, storage footprint, and overall computational cost.</p>
+<p dir="auto">The repository supports both supervised fine-tuning and reinforcement learning workflows while remaining compatible with the Hugging Face ecosystem (<code class="notranslate">transformers</code>, <code class="notranslate">peft</code>, <code class="notranslate">accelerate</code>, <code class="notranslate">torch</code>). The implementation is designed to run efficiently on consumer-grade GPUs.</p>
 <h2 dir="auto"><strong>Architecture</strong></h2>
-<p dir="auto">TBD</p>
+<p dir="auto">SPEFTR follows a modular PEFT-based architecture:<br>
+Pretrained Transformer Model<br>
+↓<br>
+LoRA Adapter Injection (q_proj, k_proj, v_proj, o_proj, etc.)<br>
+↓<br>
+Training Pipeline (SFT or RL)<br>
+↓<br>
+Adapter Saving / Optional Merge<br>
+↓<br>
+Deployment / Inference</p>
+<p dir="auto">Key architectural characteristics:</p>
+<ul dir="auto">
+<li>Base transformer weights remain frozen</li>
+<li>LoRA adapters injected into attention layers</li>
+<li>Configurable rank (<code class="notranslate">r</code>), alpha, dropout</li>
+<li>Optional quantized workflows (QLoRA-style setups)</li>
+<li>Adapter-only saving or merged model export</li>
+</ul>
+<hr>
 <h2 dir="auto"><strong>Component Definition</strong></h2>
-<p dir="auto">TBD</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Component</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">PESFT</code></td>
+<td>Parameter-Efficient Supervised Fine-Tuning pipeline</td>
+</tr>
+<tr>
+<td><code class="notranslate">PERL</code></td>
+<td>Parameter-Efficient Reinforcement Learning pipeline</td>
+</tr>
+<tr>
+<td><code class="notranslate">PESFTConfig</code></td>
+<td>Configuration class for supervised fine-tuning</td>
+</tr>
+<tr>
+<td><code class="notranslate">PERLConfig</code></td>
+<td>Configuration class for reinforcement learning</td>
+</tr>
+<tr>
+<td>LoRA adapters</td>
+<td>Low-rank parameter updates injected into transformer layers</td>
+</tr>
+<tr>
+<td>GRPO</td>
+<td>Group Relative Policy Optimization for lightweight RL training</td>
+</tr>
+<tr>
+<td>Trainer utilities</td>
+<td>Model loading, training, evaluation, and saving</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Expected KPIs</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>What (Types)</th>
+<th>How (Process)</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Task performance KPIs (would show if recipe works)</td>
+<td>Primary task metrics - classification (accuracy/F1)</td>
+<td>Accuracy &gt; 0.7</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
 <h2 dir="auto"><strong>Screenshots</strong></h2>
-<p dir="auto">TBD</p>
+<a target="_blank" rel="noopener noreferrer" href="https://private-user-images.githubusercontent.com/1080897/550364219-8aa064a6-a545-464f-b98b-a5819bf5dcf6.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzEzMzc4NTIsIm5iZiI6MTc3MTMzNzU1MiwicGF0aCI6Ii8xMDgwODk3LzU1MDM2NDIxOS04YWEwNjRhNi1hNTQ1LTQ2NGYtYjk4Yi1hNTgxOWJmNWRjZjYucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MDIxNyUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjAyMTdUMTQxMjMyWiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9OWU3NWNkNGY0MWUwZDhkZWQyNWI2Y2E3MGY2MGFhNzU0NGIwZDc2YTdiMjM0OTJhOThmMTU0ODA5Y2U5Yzk4YiZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.UUhy1leLTwvzv4lUW2JsyyrauhUvLEL7ICYtdYQEDaM"><img width="933" height="800" alt="image" src="https://private-user-images.githubusercontent.com/1080897/550364219-8aa064a6-a545-464f-b98b-a5819bf5dcf6.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzEzMzc4NTIsIm5iZiI6MTc3MTMzNzU1MiwicGF0aCI6Ii8xMDgwODk3LzU1MDM2NDIxOS04YWEwNjRhNi1hNTQ1LTQ2NGYtYjk4Yi1hNTgxOWJmNWRjZjYucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MDIxNyUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjAyMTdUMTQxMjMyWiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9OWU3NWNkNGY0MWUwZDhkZWQyNWI2Y2E3MGY2MGFhNzU0NGIwZDc2YTdiMjM0OTJhOThmMTU0ODA5Y2U5Yzk4YiZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.UUhy1leLTwvzv4lUW2JsyyrauhUvLEL7ICYtdYQEDaM" style="max-width: 100%; height: auto; max-height: 800px;"></a>
 <h2 dir="auto"><strong>Commercial Information</strong></h2>
 <markdown-accessiblity-table><table role="table">
 <thead>
@@ -35,24 +108,83 @@
 <th>License</th>
 </tr>
 </thead>
+<tbody>
+<tr>
+<td>Jožef Stefan Institute (JSI)</td>
+<td>Open Source</td>
+<td>BSD-2-Clause</td>
+</tr>
+</tbody>
 </table></markdown-accessiblity-table>
 <h2 dir="auto"><strong>Top Features</strong></h2>
-<p dir="auto">TBD</p>
+<ul dir="auto">
+<li>Parameter-efficient training using LoRA</li>
+<li>Optional QLoRA-style quantization workflows</li>
+<li>Stable hyperparameter recipe</li>
+<li>Supervised Fine-Tuning (SFT) support</li>
+<li>Reinforcement Learning (GRPO) support</li>
+<li>Adapter hot-swapping for multi-task setups</li>
+<li>Hugging Face ecosystem compatibility</li>
+<li>Designed for reproducibility and practical deployment</li>
+</ul>
 <h2 dir="auto"><strong>How To Install</strong></h2>
 <p dir="auto">For deploy/access please send an email to Inna Novalija (<a href="mailto:inna.koval@jsi.si">inna.koval@jsi.si</a>)</p>
 <h3 dir="auto">Requirements</h3>
-<p dir="auto">TBD</p>
+<ul dir="auto">
+<li>Python ≥ 3.13</li>
+<li>CUDA-compatible GPU (recommended for training)</li>
+</ul>
 <h3 dir="auto">Software</h3>
-<p dir="auto">TBD</p>
+<p dir="auto">Core dependencies include:</p>
+<ul dir="auto">
+<li>torch ≥ 2.7.1</li>
+<li>transformers ≥ 4.54.0</li>
+<li>peft ≥ 0.17.1</li>
+<li>accelerate ≥ 1.9.0</li>
+</ul>
 <h3 dir="auto">Summary of installation steps</h3>
-<p dir="auto">TBD</p>
+<ol dir="auto">
+<li>Clone the repository</li>
+<li>Install dependencies using <code class="notranslate">uv</code></li>
+<li>(Optional) Install reinforcement learning extras</li>
+</ol>
 <h3 dir="auto">Detailed steps</h3>
-<p dir="auto">TBD</p>
-<h2 dir="auto"><strong>How To Use</strong></h2>
-<p dir="auto">TBD</p>
-<h2 dir="auto"><strong>Other Information</strong></h2>
-<p dir="auto">n/a</p>
-<h2 dir="auto"><strong>OpenAPI Specification</strong></h2>
-<p dir="auto">n/a</p>
-<h2 dir="auto"><strong>Additional Links</strong></h2>
-<p dir="auto">n/a</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">git clone https://github.com/lrei/simple_peft_recipe
+<span class="pl-c1">cd</span> simple_peft_recipe
+uv sync
+
+
+<span class="pl-c"><span class="pl-c">#</span># **How To Use**</span>
+
+Supervised Fine-Tuning Example
+from speftr import PESFT, PESFTConfig
+
+config = PESFTConfig(
+    model_name_or_path=<span class="pl-s"><span class="pl-pds">"</span>unsloth/Qwen2.5-0.5B-Instruct<span class="pl-pds">"</span></span>,
+    lora_r=8,
+    lora_alpha=32,
+    target_modules=[<span class="pl-s"><span class="pl-pds">"</span>q_proj<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>k_proj<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>v_proj<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>o_proj<span class="pl-pds">"</span></span>],
+    per_device_train_batch_size=16,
+    learning_rate=2e-4,
+    scheduler=<span class="pl-s"><span class="pl-pds">"</span>constant<span class="pl-pds">"</span></span>,
+    output_dir=<span class="pl-s"><span class="pl-pds">"</span>./models/speftr-sft<span class="pl-pds">"</span></span>,
+)
+
+trainer = PESFT(config)
+
+model, tokenizer = <span class="pl-en">trainer.load_model</span>()
+trainer.train(train_dataset, eval_dataset, formatting_fn)
+<span class="pl-en">trainer.save_model</span>()
+
+
+<span class="pl-c"><span class="pl-c">#</span># **Other Information**</span>
+
+n/a
+
+<span class="pl-c"><span class="pl-c">#</span># **OpenAPI Specification**</span>
+
+n/a
+
+<span class="pl-c"><span class="pl-c">#</span># **Additional Links**</span>
+
+n/a</pre></div>

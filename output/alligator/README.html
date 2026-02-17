@@ -1,0 +1,92 @@
+<h1 dir="auto">Alligator</h1>
+<p dir="auto">Powered by</p>
+<p dir="auto"><a href="https://www.unimib.it/" rel="nofollow"><img src="./images/UNIMIB-logo.png" alt="UniMiB Logo" width="100" style="max-width: 100%;"></a></p>
+<h2 dir="auto"><strong>General Description</strong></h2>
+<p dir="auto">Alligator is a tool for semantic table interpretation (STI).</p>
+<p dir="auto">It analyzes tabular data by linking content cells to entities, classifying column content as entity names or literals, and associating column types and properties with a reference knowledge graph (KG) such as Wikidata or DBpedia.</p>
+<p dir="auto">By enriching tables with explicit semantic annotations, Alligator facilitates data integration, interoperability, and reuse in semantic and knowledge-based applications.</p>
+<h2 dir="auto"><strong>Related Compliance Aspects</strong></h2>
+<ul dir="auto">
+<li>Scalable knowledge-graph-based annotation of tabular data</li>
+<li>Pipeline component for semantic data enrichment</li>
+</ul>
+<h2 dir="auto"><strong>Main Goal/Functionalities</strong></h2>
+<ul dir="auto">
+<li>Perform cell-level semantic annotation using a two-stage ranking ML model</li>
+<li>Detect and link column types at schema level</li>
+<li>Detect and link column properties at schema level</li>
+<li>Perform entity matching and linking for cell content reconciliation</li>
+</ul>
+<h2 dir="auto"><strong>Architecture</strong></h2>
+<p dir="auto">Alligator takes as input a tabular dataset in CSV format together with a set of candidate entities for linking the labels appearing in table cells, and produces a JSON file containing the resulting annotations.</p>
+<p dir="auto">The figure below illustrates the core pipeline of the process, which includes a two-stage ranking of candidate entities performed by a neural network–based machine learning model, followed by a decision component that computes confidence scores to identify the best candidate for each cell mention.</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="./images/alligator%20core.png"><img src="./images/alligator%20core.png" alt="Alligator Architecture" style="max-width: 100%;"></a></p>
+<h2 dir="auto"><strong>Component Definition</strong></h2>
+<p dir="auto">Alligator is implemented as a Python library and exposed through a REST API, enabling the semantic annotation of tabular data. The underlying approach relies on the computation of confidence scores that are used to rank candidate matches and to select the most appropriate annotations.</p>
+<p dir="auto">For entity matching at the cell level, confidence scores are computed by jointly considering the entity mentions occurring in individual cells as well as the row-level context derived from the content of the other cells within the same row. For column-level annotation, including the detection and linking of column types and properties, Alligator leverages and aggregates the results of the entity matching performed on the cells within each column.</p>
+<p dir="auto">The high quality of the resulting semantic annotations improves the reliability of the produced outputs, facilitates their interpretability, and supports human-in-the-loop validation and revision.</p>
+<p dir="auto">Alligator has been integrated into the SemT-X framework, which enables interactive table enrichment, supports manual review and correction of annotations, and allows the definition of domain-dependent rules to further improve annotation accuracy.</p>
+<h2 dir="auto"><strong>Screenshots</strong></h2>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>Commercial Information</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Organisation (s)</th>
+<th>License Nature</th>
+<th>License</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>University of Milan-Bicocca</td>
+<td>Open Source</td>
+<td>Apache 2.0</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Expected KPIs</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>What (types)</th>
+<th>How(Process)</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quality of semantic annotations in tables for Entities (CEA), Predicates (CPA), and Types (CTA)</td>
+<td>Using benchmarks for semantic table interpretation, refined for compliance-related challenges</td>
+<td>CEA Accuracy &gt;= 0.8, CTA F1 &gt;= 0.8, CPA F1 &gt;= 0.8</td>
+</tr>
+<tr>
+<td>Efficiency</td>
+<td>Measure of average processing time on sample representative datasets</td>
+<td>ability to process 1000 rows in less than 500 seconds</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Related Project Links</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Software GitHub Repository --&gt; Refer to online documentation: <a href="https://github.com/enRichMyData/alligator">https://github.com/enRichMyData/alligator</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>How To Install</strong></h2>
+<p dir="auto">Refer to online documentation: <a href="https://github.com/enRichMyData/alligator">https://github.com/enRichMyData/alligator</a></p>
+<h2 dir="auto"><strong>How To Use</strong></h2>
+<p dir="auto">Refer to online documentation: <a href="https://github.com/enRichMyData/alligator">https://github.com/enRichMyData/alligator</a></p>
+<h2 dir="auto"><strong>Other Information</strong></h2>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>OpenAPI Specification</strong></h2>
+<p dir="auto">n/a</p>
+<h2 dir="auto"><strong>Additional Links</strong></h2>
+<p dir="auto"><a href="https://ieeexplore.ieee.org/document/10350082" rel="nofollow">R. Avogadro, M. Ciavotta, F. De Paoli, M. Palmonari and D. Roman, "Estimating Link Confidence for Human-in-the-Loop Table Annotation," 2023 IEEE/WIC International Conference on Web Intelligence and Intelligent Agent Technology (WI-IAT), Venice, Italy, 2023, pp. 142-149.</a></p>
