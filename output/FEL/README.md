@@ -1,15 +1,6 @@
 # Fairness Encoding in Logic Tensor Networks (FEL)
 
-
-<img src="https://www.unimib.it/sites/default/files/styles/foto_paragrafo_testo_640x360/public/logoist_3.jpg?itok=BigfOgRf" alt="UniMiB logo" width="80" />
-
-
-Software GitHub Repository: [github.com/unimib-datAI/FEL](https://github.com/unimib-datAI/FEL)
-
-
 ## **General Description**
-FEL is a debiasing framework for feature-based binary classification tasks.
-
 - FEL integrates fairness and accuracy objectives within the Logic Tensor Networks (LTN) framework, where learning is guided by logical axioms rather than direct loss modifications.
 - Through classification axioms, the model learns to correctly represent the relationship between features and target labels, ensuring predictive accuracy.
 - Fairness axioms introduce constraints that promote statistical parity between sensitive groups, embedding fairness directly into the training process.
@@ -17,6 +8,8 @@ FEL is a debiasing framework for feature-based binary classification tasks.
     - Fairness is assessed using Statistical Parity Distance (SPD) and Disparate Impact (DI).
     - Performance is measured through overall classification accuracy.
 
+## **Related Compliance aspects**
+- Fairness of ML-based decisions
 
 ## **Top Features**
 - Declarative representation of constraints: no need to modify the loss function
@@ -50,10 +43,18 @@ $ docker run --gpus all -it -v $(pwd):/home/developer/ -w /home/developer my_env
 ```bash
 $ python src/training.py --config ./config.yaml --dataset ./datasets/compas.csv
 ```
-**Run inference**:
+**Run inference on data with ground truth**:
 ```bash
 $ python src/inference.py --config ./config.yaml --dataset ./datasets/compas.csv --model ./models/kb.npz
 ```
+**Run inference on data without ground truth**:
+```bash
+$ python src/inference.py --config ./config.yaml --dataset ./datasets/compas.csv --model ./models/kb.npz --no-gt
+```
+
+Inference outputs:
+- `models/predictions.csv` (always)
+- `models/inference_metrics.png` (only when GT is present)
 
 
 ## **Configuration Guide**
@@ -62,8 +63,8 @@ The required YAML file need to specify the following parameters:
 - **target_variable**: Column name containing binary outcomes
 - **sensitive_feature**: Column name of the protected attribute
 - **labels**:
-  - **positive**: The outcome value to balance fairly across groups
-  - **negative**: The other possible outcome value
+  - **favourable**: The outcome value to balance fairly across groups
+  - **unfavourable**: The other possible outcome value
 - **protected_values**:
   - **privileged**: Value(s) marking the privileged group
   - **unprivileged**: Value(s) marking the unprivileged group
@@ -72,31 +73,41 @@ The required YAML file need to specify the following parameters:
 - **hidden_layer_sizes**: Neural network architecture [list of integers]
 - **implies**: LTN fuzzy implication operator:
   - Options: KleeneDienes, Godel, Reichenbach, Goguen, Luk
-- **p_mean**: Aggregation parameter 
+- **p_mean**: Quantifier aggregation parameter:
+  - Options: [1,3,5,7]
 - **aggregator_deviation**: Deviation control in aggregator 
+- **fairness_weight**: Weight of fairness axioms wrt classification axioms.
+  - Options: [1...3]: A value of 1 gives fairness and classification axioms equal weight, while 3 assigns 3x times importance to fairness satisfiability.
 
 ### Training Configuration
 - **epochs**: Number of training iterations
 
-## Understanding "Positive" and "Negative" Labels
+## Understanding "Favourable" and "Unfavourable" Labels
 
-The choice of positive/negative labels is crucial:
-- **Positive**: The outcome you want to balance fairly across groups
+The choice of favourable/unfavourable labels is crucial:
+- **Favourable**: The outcome you want to balance fairly across groups
   - Example: loan_approved=1 means "approved"
   - Fairness metrics measure this outcome's distribution
-- **Negative**: The alternative outcome
+- **Unfavourable**: The alternative outcome
   - Not directly balanced by fairness constraints
 
+## **Commercial Information**
 
-Examples:
+| Organisation (s) | License Nature | License |
+|------------------|----------------|---------|
+| University of Milano-Bicocca  | Open Source | Apache-2.0 |
 
-- Loan approval: positive = 1 (approved), negative = 0 (denied) → approval rates should be similar across groups.
+## **Expected KPIs**
 
-- Disease detection: positive = “has_disease”, negative = “no_disease” → detection rates should be comparable across groups.
+|What (types)|How(Process)|Values|
+|------------|------------|------|
+|Capacity to mitigate bias| Using SOTA benchmarks such as Adult, COMPAS, German (partially published in ECAI2023 + updates from G. Greco thesis + replication) |We improve fairness by at least 10%, with at most a 5% drop in performance. Measures: Accuracy; Accuracy at Statistical Parity Difference (SDI) cutoffs: Accuracy at Disparate Impact (DI) cutoffs. Targets: as or better than in ECAI paper|
+ Capacity to mitigate bias|	 Using a benchmark from a project business case (e.g., AUTH)| To be defined for the business case|
 
-## **License**
-
-FEL is open-source and released under the [Apache-2.0](./LICENSE) License.
+## **Related Project Links**
+| Project Links |
+| ------------- | 	
+| Software GitHub Repository --> [github.com/unimib-datAI/FEL](https://github.com/unimib-datAI/FEL)
 
 
 ## **Cite this Work**

@@ -6,7 +6,7 @@ Powered by
   <a href="https://www.ijs.si/"><img src="https://www.ijs.si/ijsw/Rubrike?action=AttachFile&do=get&target=000-modra.jpg" alt="Jožef Stefan Institute (JSI) logo" width="220"></a>
 </p>-->
 
-<img width="259" height="194" alt="image" src="https://github.com/user-attachments/assets/6351ed52-fcb7-4852-8557-277ed4a4623f" />
+<img src="../images/jsi-logo.png" width="200" alt="JSI Logo" />
 
 | Project Links                                                            |
 | ------------------------------------------------------------------------ |
@@ -90,7 +90,7 @@ TBD
 
 ## **Screenshots**
 
-<img width="716" height="772" alt="image" src="https://github.com/user-attachments/assets/2dc6b85a-736b-4779-a318-d7911ad90495" />
+<img src="../images/guardrails.png" width="800" alt="Guardrails" />
 
 ## **Commercial Information**
 

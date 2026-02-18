@@ -1,7 +1,6 @@
 <h1 dir="auto">DAVE: Document Assistant for Validation and Exploration</h1>
 <p dir="auto">Powered by</p>
 <p dir="auto"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/be427dbbbc0351f087a0de2cab7de6f4552cea7232545b3227aad91085bacf2d/68747470733a2f2f7777772e756e696d69622e69742f73697465732f64656661756c742f66696c65732f7374796c65732f666f746f5f70617261677261666f5f746573746f5f363430783336302f7075626c69632f6c6f676f6973745f332e6a70673f69746f6b3d426967664f675266"><img src="https://camo.githubusercontent.com/be427dbbbc0351f087a0de2cab7de6f4552cea7232545b3227aad91085bacf2d/68747470733a2f2f7777772e756e696d69622e69742f73697465732f64656661756c742f66696c65732f7374796c65732f666f746f5f70617261677261666f5f746573746f5f363430783336302f7075626c69632f6c6f676f6973745f332e6a70673f69746f6b3d426967664f675266" alt="UniMiB logo" width="80" data-canonical-src="https://www.unimib.it/sites/default/files/styles/foto_paragrafo_testo_640x360/public/logoist_3.jpg?itok=BigfOgRf" style="max-width: 100%;"></a></p>
-<p dir="auto">Software GitHub Repository: <a href="https://github.com/unimib-datAI/DAVE">github.com/unimib-datAI/DAVE</a></p>
 <h2 dir="auto"><strong>General Description</strong></h2>
 <p dir="auto">DAVE is an AI-powered framework designed for assisted analysis of document collections in knowledge-intensive domains. It enables domain experts to efficiently explore and analyze large text corpora through a combination of:</p>
 <ul dir="auto">
@@ -10,6 +9,12 @@
 <li><strong>Interactive entity annotation and correction</strong> for improved knowledge management</li>
 </ul>
 <p dir="auto">DAVE is particularly useful in domains such as <strong>law, healthcare, finance, and real estate</strong>, where factual data is closely tied to entities and their relationships.</p>
+<h2 dir="auto"><strong>Related Compliance aspects</strong></h2>
+<ul dir="auto">
+<li>Traceability and Transparency of AI-Generated Outputs​</li>
+<li>Operational Human Oversight​</li>
+<li>PII Protection and Pseudonymization</li>
+</ul>
 <h2 dir="auto"><strong>Top Features</strong></h2>
 <ul dir="auto">
 <li><strong>Search &amp; Filter:</strong> Retrieve documents using keyword-based and entity-driven faceted search.</li>
@@ -59,50 +64,777 @@ docker compose version</pre></div>
 └── .env                    # Environment variables (create from .env.sample)
 </code></pre>
 <h2 dir="auto">Setup Instructions</h2>
+<p dir="auto"><strong>NEW USER?</strong> Follow the <a href="docs/QUICK_START_CHECKLIST.md">Quick Start Checklist</a> for a step-by-step guide.</p>
 <h3 dir="auto">1. Configure Environment Variables</h3>
+<p dir="auto"><strong>IMPORTANT</strong>: You MUST create a <code class="notranslate">.env</code> file before building the project. Skipping this step will cause build failures.</p>
 <p dir="auto">Copy the sample environment file and configure it:</p>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">cp .env.sample .env</pre></div>
-<p dir="auto">Edit the <code class="notranslate">.env</code> file and populate the following variables:</p>
-<h4 dir="auto">UI Configuration</h4>
+<h4 dir="auto">Quick Start Configuration (Works Out of the Box)</h4>
+<p dir="auto">The <code class="notranslate">.env.sample</code> file has working defaults for local development. For a quick start:</p>
+<p dir="auto"><strong>Option 1: Use Defaults (Fastest)</strong></p>
+<p dir="auto">The <code class="notranslate">.env.sample</code> works as-is for local development. Just copy it:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">cp .env.sample .env</pre></div>
+<p dir="auto"><strong>IMPORTANT:</strong> You still need to configure Keycloak after starting the services. See <a href="docs/KEYCLOAK_SETUP.md">Keycloak Setup Guide</a> for details.</p>
+<p dir="auto"><strong>Option 2: Custom Configuration (Recommended for Production)</strong></p>
+<p dir="auto">If you want to customize or prepare for production:</p>
+<ol dir="auto">
+<li>
+<p dir="auto"><strong>Generate and set <code class="notranslate">NEXTAUTH_SECRET</code>:</strong></p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">openssl rand -base64 32</pre></div>
+<p dir="auto">Copy the output and replace the value in <code class="notranslate">.env</code></p>
+</li>
+<li>
+<p dir="auto"><strong>Update MongoDB passwords:</strong></p>
 <ul dir="auto">
-<li><strong><code class="notranslate">UI_ACCESS_USERNAME</code></strong> - Username for UI authentication (default: <code class="notranslate">admin</code>)</li>
-<li><strong><code class="notranslate">UI_ACCESS_PASSWORD</code></strong> - Password for UI authentication (default: <code class="notranslate">password</code>)</li>
-<li><strong><code class="notranslate">UI_NEXTAUTH_SECRET</code></strong> - Secret key for NextAuth.js session encryption (generate a random string)</li>
-<li><strong><code class="notranslate">UI_NEXTAUTH_URL</code></strong> - NextAuth callback URL (default: <code class="notranslate">http://127.0.0.1:3000/dave/api/auth</code>)</li>
-<li><strong><code class="notranslate">UI_NEXT_PUBLIC_BASE_PATH</code></strong> - Base path for the UI (default: <code class="notranslate">/dave</code>)</li>
-<li><strong><code class="notranslate">UI_NEXT_PUBLIC_FULL_PATH</code></strong> - Full path URL for the UI (default: <code class="notranslate">http://127.0.0.1:3000/dave</code>)</li>
-<li><strong><code class="notranslate">UI_API_LLM</code></strong> - Internal URL for text generation service</li>
-<li><strong><code class="notranslate">UI_API_INDEXER</code></strong> - Internal URL for indexer service</li>
-<li><strong><code class="notranslate">UI_VARIANT</code></strong> - UI variant configuration (default: <code class="notranslate">default</code>)</li>
-<li><strong><code class="notranslate">LISTEN_UI</code></strong> - Port for UI service (default: <code class="notranslate">3000</code>)</li>
+<li>Change <code class="notranslate">MONGO_ROOT_PASSWORD</code> to a secure password</li>
+<li>Change <code class="notranslate">MONGO_PASSWORD</code> to a different secure password</li>
+<li>Update the password in <code class="notranslate">MONGO</code> connection string to match <code class="notranslate">MONGO_PASSWORD</code></li>
 </ul>
-<h4 dir="auto">MongoDB Configuration</h4>
+</li>
+<li>
+<p dir="auto"><strong>Configure Keycloak client secret</strong> (after creating the Keycloak client):</p>
 <ul dir="auto">
-<li><strong><code class="notranslate">MONGO_ROOT_PASSWORD</code></strong> - Root password for MongoDB (change this!)</li>
-<li><strong><code class="notranslate">MONGO_PASSWORD</code></strong> - Application user password for MongoDB (change this!)</li>
-<li><strong><code class="notranslate">MONGO</code></strong> - MongoDB connection string (uses variables above)</li>
+<li>Follow the <a href="docs/KEYCLOAK_SETUP.md">Keycloak Setup Guide</a></li>
+<li>Update <code class="notranslate">KEYCLOAK_SECRET</code> with the actual client secret from Keycloak</li>
+</ul>
+</li>
+</ol>
+<p dir="auto">That's it! All other variables have sensible defaults for local development.</p>
+<hr>
+<h4 dir="auto">Environment Variables Quick Reference Table</h4>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Category</th>
+<th>Variable</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Authentication</strong></td>
+<td><code class="notranslate">NEXTAUTH_SECRET</code></td>
+<td>No</td>
+<td><code class="notranslate">dev-secret-key...</code></td>
+<td>NextAuth.js secret (works for dev, change in production!)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">NEXTAUTH_URL</code></td>
+<td>No</td>
+<td><code class="notranslate">http://127.0.0.1:3000/dave/api/auth</code></td>
+<td>Public auth callback URL</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">NEXTAUTH_URL_INTERNAL</code></td>
+<td>No</td>
+<td><code class="notranslate">http://localhost:3000</code></td>
+<td>Internal auth URL for server-side requests</td>
+</tr>
+<tr>
+<td><strong>MongoDB</strong></td>
+<td><code class="notranslate">MONGO_ROOT_PASSWORD</code></td>
+<td>No</td>
+<td><code class="notranslate">dev_root_password_123</code></td>
+<td>MongoDB root password (change in production!)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">MONGO_PASSWORD</code></td>
+<td>No</td>
+<td><code class="notranslate">dev_app_password_456</code></td>
+<td>MongoDB app user password (change in production!)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">MONGO</code></td>
+<td>No</td>
+<td><code class="notranslate">mongodb://usr:dev_app_password_456@...</code></td>
+<td>MongoDB connection string (change passwords in production!)</td>
+</tr>
+<tr>
+<td><strong>Frontend</strong></td>
+<td><code class="notranslate">LISTEN_UI</code></td>
+<td>No</td>
+<td><code class="notranslate">3000</code></td>
+<td>Port for UI service</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">ACCESS_USERNAME</code></td>
+<td>No</td>
+<td><code class="notranslate">admin</code></td>
+<td>Basic auth username (if not using Keycloak)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">ACCESS_PASSWORD</code></td>
+<td>No</td>
+<td><code class="notranslate">password</code></td>
+<td>Basic auth password (change in production!)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">NEXT_PUBLIC_BASE_PATH</code></td>
+<td>No</td>
+<td><code class="notranslate">/dave</code></td>
+<td>Base path for application URL</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">NEXT_PUBLIC_FULL_PATH</code></td>
+<td>No</td>
+<td><code class="notranslate">http://127.0.0.1:3000/dave</code></td>
+<td>Full public URL</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">VARIANT</code></td>
+<td>No</td>
+<td><code class="notranslate">default</code></td>
+<td>UI theme variant</td>
+</tr>
+<tr>
+<td><strong>Keycloak (SSO)</strong></td>
+<td><code class="notranslate">USE_KEYCLOAK</code></td>
+<td>No</td>
+<td><code class="notranslate">true</code></td>
+<td>Enable Keycloak authentication</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">KEYCLOAK_ADMIN</code></td>
+<td>No</td>
+<td><code class="notranslate">admin</code></td>
+<td>Keycloak admin username</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">KEYCLOAK_ADMIN_PASSWORD</code></td>
+<td>No</td>
+<td><code class="notranslate">admin</code></td>
+<td>Keycloak admin password (change in production!)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">KEYCLOAK_ID</code></td>
+<td>No</td>
+<td><code class="notranslate">dave_client</code></td>
+<td>Keycloak client ID</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">KEYCLOAK_SECRET</code></td>
+<td>Yes</td>
+<td><code class="notranslate">your-keycloak-secret-change-me</code></td>
+<td>Keycloak client secret (get from Keycloak admin console)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">KEYCLOAK_ISSUER</code></td>
+<td>No</td>
+<td><code class="notranslate">http://keycloak:8080/realms/DAVE</code></td>
+<td>Keycloak realm issuer URL</td>
+</tr>
+<tr>
+<td><strong>Elasticsearch</strong></td>
+<td><code class="notranslate">ELASTIC_INDEX</code></td>
+<td>No</td>
+<td><code class="notranslate">dave</code></td>
+<td>Elasticsearch index name</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">ELASTIC_PORT</code></td>
+<td>No</td>
+<td><code class="notranslate">9200</code></td>
+<td>Elasticsearch port</td>
+</tr>
+<tr>
+<td><strong>Document Service</strong></td>
+<td><code class="notranslate">DOCS_PORT</code></td>
+<td>No</td>
+<td><code class="notranslate">3001</code></td>
+<td>Document service port</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">API_BASE_URI</code></td>
+<td>No</td>
+<td><code class="notranslate">http://documents:3001</code></td>
+<td>Internal document service URL</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">API_USERNAME</code></td>
+<td>No</td>
+<td><code class="notranslate">api_user</code></td>
+<td>Internal API username</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">API_PASSWORD</code></td>
+<td>No</td>
+<td><code class="notranslate">dev_api_password_789</code></td>
+<td>Internal API password (change in production!)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">DOCUMENTS_JWT_SECRET</code></td>
+<td>No</td>
+<td><code class="notranslate">dev-jwt-secret-key...</code></td>
+<td>JWT secret for documents (change in production!)</td>
+</tr>
+<tr>
+<td><strong>Text Generation</strong></td>
+<td><code class="notranslate">TEXT_GENERATION_ADDR</code></td>
+<td>No</td>
+<td><code class="notranslate">http://text-generation:8000</code></td>
+<td>Text generation service URL</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">API_LLM</code></td>
+<td>No</td>
+<td><code class="notranslate">http://text-generation:8000/v1</code></td>
+<td>LLM API endpoint</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">TEXT_GENERATION_GPU_LAYERS</code></td>
+<td>No</td>
+<td><code class="notranslate">35</code></td>
+<td>GPU layers for model (adjust for your GPU)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">MODEL_NAME</code></td>
+<td>No</td>
+<td><code class="notranslate">default-model</code></td>
+<td>Text generation model name</td>
+</tr>
+<tr>
+<td><strong>QA Vectorizer</strong></td>
+<td><code class="notranslate">QAVECTORIZER_ADDR</code></td>
+<td>No</td>
+<td><code class="notranslate">7863</code></td>
+<td>QA vectorizer service port</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">API_INDEXER</code></td>
+<td>No</td>
+<td><code class="notranslate">http://qavectorizer:7863</code></td>
+<td>Indexer API endpoint</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">SENTENCE_TRANSFORMER_EMBEDDING_MODEL</code></td>
+<td>No</td>
+<td><code class="notranslate">Alibaba-NLP/gte-multilingual-base</code></td>
+<td>Hugging Face embedding model</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">SENTENCE_TRANSFORMER_DEVICE</code></td>
+<td>No</td>
+<td><code class="notranslate">cuda</code></td>
+<td>Device for inference (<code class="notranslate">cuda</code> or <code class="notranslate">cpu</code>)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">OGG2NAME_INDEX</code></td>
+<td>No</td>
+<td><code class="notranslate">dave_ogg2name</code></td>
+<td>Object-to-name mapping index</td>
+</tr>
+<tr>
+<td><strong>Docker</strong></td>
+<td><code class="notranslate">RESTART_POLICY</code></td>
+<td>No</td>
+<td><code class="notranslate">unless-stopped</code></td>
+<td>Container restart policy</td>
+</tr>
+<tr>
+<td><strong>Optional Features</strong></td>
+<td><code class="notranslate">NO_LOGIN</code></td>
+<td>No</td>
+<td><code class="notranslate">false</code></td>
+<td>Disable authentication (dev only)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">LOCALE</code></td>
+<td>No</td>
+<td><code class="notranslate">ita</code></td>
+<td>Application language (<code class="notranslate">ita</code>, <code class="notranslate">eng</code>)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">NEXT_PUBLIC_QUESTIONS</code></td>
+<td>No</td>
+<td>-</td>
+<td>Predefined chat questions (separated by <code class="notranslate">-|</code>)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">NEXT_PUBLIC_SYSTEM_PROMPT</code></td>
+<td>No</td>
+<td>-</td>
+<td>Custom AI system prompt</td>
+</tr>
+<tr>
+<td><strong>Annotation Services</strong></td>
+<td><code class="notranslate">ANNOTATION_SPACYNER_URL</code></td>
+<td>No</td>
+<td>-</td>
+<td>SpaCy NER service URL (optional)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">ANNOTATION_BLINK_URL</code></td>
+<td>No</td>
+<td>-</td>
+<td>BLINK entity linking URL (optional)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">ANNOTATION_INDEXER_URL</code></td>
+<td>No</td>
+<td>-</td>
+<td>Annotation indexer URL (optional)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">ANNOTATION_NILPREDICTION_URL</code></td>
+<td>No</td>
+<td>-</td>
+<td>NIL prediction service URL (optional)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">ANNOTATION_NILCLUSTER_URL</code></td>
+<td>No</td>
+<td>-</td>
+<td>NIL clustering service URL (optional)</td>
+</tr>
+<tr>
+<td></td>
+<td><code class="notranslate">ANNOTATION_CONSOLIDATION_URL</code></td>
+<td>No</td>
+<td>-</td>
+<td>Annotation consolidation URL (optional)</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h4 dir="auto">Detailed Environment Variables Reference</h4>
+<p dir="auto">For production deployments or custom configurations, review and adjust these variables as needed:</p>
+<h4 dir="auto">Variables to Update (Development vs Production)</h4>
+<p dir="auto">The <code class="notranslate">.env.sample</code> file has working defaults for all variables. For <strong>local development</strong>, you can use them as-is. For <strong>production</strong>, you should update these:</p>
+<ul dir="auto">
+<li>
+<p dir="auto"><strong><code class="notranslate">NEXTAUTH_SECRET</code></strong> - Authentication secret for NextAuth.js</p>
+<ul dir="auto">
+<li>Development default: <code class="notranslate">dev-secret-key-change-in-production-use-openssl-rand-base64-32</code> (works but insecure)</li>
+<li>Production: Generate with <code class="notranslate">openssl rand -base64 32</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">NEXTAUTH_URL</code></strong> - Public URL for authentication callbacks</p>
+<ul dir="auto">
+<li>Development default: <code class="notranslate">http://127.0.0.1:3000/dave/api/auth</code> (works for local)</li>
+<li>Production: <code class="notranslate">https://yourdomain.com/dave/api/auth</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">MONGO_ROOT_PASSWORD</code></strong> - MongoDB root password</p>
+<ul dir="auto">
+<li>Development default: <code class="notranslate">dev_root_password_123</code> (works but insecure)</li>
+<li>Production: Use a strong password</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">MONGO_PASSWORD</code></strong> - MongoDB application user password</p>
+<ul dir="auto">
+<li>Development default: <code class="notranslate">dev_app_password_456</code> (works but insecure)</li>
+<li>Production: Use a strong password (different from root password)</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">MONGO</code></strong> - MongoDB connection string</p>
+<ul dir="auto">
+<li>Development default: <code class="notranslate">mongodb://usr:dev_app_password_456@mongo:27017/dave?authSource=admin</code> (works)</li>
+<li>Production: Update password to match your <code class="notranslate">MONGO_PASSWORD</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">KEYCLOAK_SECRET</code></strong> - Keycloak client secret (MUST be set after Keycloak setup)</p>
+<ul dir="auto">
+<li>No working default - must get from Keycloak Admin Console</li>
+<li>See <a href="docs/KEYCLOAK_SETUP.md">Keycloak Setup Guide</a></li>
+</ul>
+</li>
+</ul>
+<h4 dir="auto">Docker Configuration</h4>
+<ul dir="auto">
+<li><strong><code class="notranslate">RESTART_POLICY</code></strong> - Docker restart policy for all containers
+<ul dir="auto">
+<li>Options: <code class="notranslate">no</code>, <code class="notranslate">always</code>, <code class="notranslate">on-failure</code>, <code class="notranslate">unless-stopped</code></li>
+<li>Default: <code class="notranslate">unless-stopped</code></li>
+</ul>
+</li>
+</ul>
+<h4 dir="auto">Keycloak Authentication (Optional - for SSO/OAuth)</h4>
+<p dir="auto">DAVE supports Keycloak for enterprise SSO. If not using Keycloak, you can use basic authentication.</p>
+<ul dir="auto">
+<li>
+<p dir="auto"><strong><code class="notranslate">USE_KEYCLOAK</code></strong> - Enable/disable Keycloak authentication</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">true</code></li>
+<li>Set to <code class="notranslate">false</code> to use basic auth only</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">KEYCLOAK_DB_PASSWORD</code></strong> - Password for Keycloak's PostgreSQL database</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">keycloak</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">KEYCLOAK_ADMIN</code></strong> - Keycloak admin username</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">admin</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">KEYCLOAK_ADMIN_PASSWORD</code></strong> - Keycloak admin password</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">admin</code></li>
+<li><strong>Change in production!</strong></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">KEYCLOAK_HOSTNAME</code></strong> - Hostname for Keycloak server</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">vm.chronos.disco.unimib.it</code></li>
+<li>Adjust for your domain</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">KEYCLOAK_ISSUER</code></strong> - Keycloak realm issuer URL</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">http://keycloak:8080/realms/DAVE</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">KEYCLOAK_ID</code></strong> - Keycloak client ID</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">dave_client</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">KEYCLOAK_SECRET</code></strong> - Keycloak client secret</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">your-keycloak-secret-change-me</code></li>
+<li><strong>Change in production!</strong></li>
+</ul>
+</li>
+</ul>
+<h4 dir="auto">Frontend (UI) Configuration</h4>
+<ul dir="auto">
+<li>
+<p dir="auto"><strong><code class="notranslate">LISTEN_UI</code></strong> - Port for the UI service to listen on</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">3000</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">ACCESS_USERNAME</code></strong> - Basic auth username for UI (when not using Keycloak)</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">admin</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">ACCESS_PASSWORD</code></strong> - Basic auth password for UI (when not using Keycloak)</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">password</code></li>
+<li><strong>Change in production!</strong></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">NEXT_PUBLIC_BASE_PATH</code></strong> - Base path for the application in the URL</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">/dave</code></li>
+<li>Used for reverse proxy setups</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">NEXT_PUBLIC_FULL_PATH</code></strong> - Full public URL for the application</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">http://127.0.0.1:3000/dave</code></li>
+<li>For production: <code class="notranslate">https://yourdomain.com/dave</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">NEXTAUTH_URL_INTERNAL</code></strong> - Internal NextAuth URL (for server-side requests)</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">http://localhost:3000</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">VARIANT</code></strong> - UI variant/theme configuration</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">default</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">HOST</code></strong> - Host binding for services</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">0.0.0.0</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">NEXT_PUBLIC_ELASTIC_INDEX</code></strong> - Elasticsearch index name (exposed to frontend)</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">dave</code></li>
+</ul>
+</li>
+</ul>
+<p dir="auto"><strong>Optional UI Features:</strong></p>
+<ul dir="auto">
+<li>
+<p dir="auto"><strong><code class="notranslate">NO_LOGIN</code></strong> - Disable authentication (development/testing only)</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">false</code></li>
+<li>Set to <code class="notranslate">true</code> to bypass login</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">LOCALE</code></strong> - Application locale/language</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">ita</code> (Italian)</li>
+<li>Other options: <code class="notranslate">eng</code> (English)</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">NEXT_PUBLIC_QUESTIONS</code></strong> - Predefined chat questions (separated by <code class="notranslate">-|</code>)</p>
+<ul dir="auto">
+<li>Example: <code class="notranslate">What is this document about?-|Summarize the main points-|Who are the key entities?</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">NEXT_PUBLIC_SYSTEM_PROMPT</code></strong> - Custom system prompt for AI chat</p>
+<ul dir="auto">
+<li>Default: Uses built-in expert assistant prompt</li>
+</ul>
+</li>
+</ul>
+<h4 dir="auto">Document Service Configuration</h4>
+<ul dir="auto">
+<li>
+<p dir="auto"><strong><code class="notranslate">DOCS_PORT</code></strong> - Port for the document service</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">3001</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">API_BASE_URI</code></strong> - Internal URL for document service API</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">http://documents:3001</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">API_USERNAME</code></strong> - Username for internal API authentication</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">api_user</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">API_PASSWORD</code></strong> - Password for internal API authentication</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">api_password_change_me</code></li>
+<li><strong>Change in production!</strong></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">DOCUMENTS_JWT_SECRET</code></strong> - JWT secret for document service authentication</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">your-secret-key-change-in-production</code></li>
+<li><strong>Change in production!</strong></li>
+</ul>
+</li>
 </ul>
 <h4 dir="auto">Elasticsearch Configuration</h4>
 <ul dir="auto">
-<li><strong><code class="notranslate">ELASTIC_INDEX</code></strong> - Name of the Elasticsearch index (default: <code class="notranslate">dave</code>)</li>
-</ul>
-<h4 dir="auto">Text Generation Configuration</h4>
+<li>
+<p dir="auto"><strong><code class="notranslate">ELASTIC_INDEX</code></strong> - Name of the Elasticsearch index</p>
 <ul dir="auto">
-<li><strong><code class="notranslate">TEXT_GENERATION_ADDR</code></strong> - Internal URL for text generation service</li>
-<li><strong><code class="notranslate">TEXT_GENERATION_GPU_LAYERS</code></strong> - Number of GPU layers to use (default: <code class="notranslate">35</code>)</li>
+<li>Default: <code class="notranslate">dave</code></li>
 </ul>
-<h4 dir="auto">QA Vectorizer Configuration</h4>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">ELASTIC_PORT</code></strong> - Elasticsearch port</p>
 <ul dir="auto">
-<li><strong><code class="notranslate">HOST_BASE_URL</code></strong> - Base URL for the host (default: <code class="notranslate">http://0.0.0.0</code>)</li>
-<li><strong><code class="notranslate">QAVECTORIZER_ADDR</code></strong> - Port for QA vectorizer service (default: <code class="notranslate">7863</code>)</li>
-<li><strong><code class="notranslate">SENTENCE_TRANSFORMER_EMBEDDING_MODEL</code></strong> - Hugging Face model for embeddings</li>
-<li><strong><code class="notranslate">SENTENCE_TRANSFORMER_DEVICE</code></strong> - Device for inference (<code class="notranslate">cuda</code> for GPU, <code class="notranslate">cpu</code> for CPU)</li>
-<li><strong><code class="notranslate">OGG2NAME_INDEX</code></strong> - Index name for object-to-name mapping</li>
+<li>Default: <code class="notranslate">9200</code></li>
 </ul>
-<h4 dir="auto">General Configuration</h4>
+</li>
+</ul>
+<h4 dir="auto">Text Generation Service Configuration</h4>
 <ul dir="auto">
-<li><strong><code class="notranslate">RESTART_POLICY</code></strong> - Docker restart policy (default: <code class="notranslate">unless-stopped</code>)</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">TEXT_GENERATION_ADDR</code></strong> - Internal URL for text generation service</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">http://text-generation:8000</code></li>
 </ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">TEXT_GENERATION_KEY</code></strong> - API key for text generation service</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">your-key</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">MODEL_NAME</code></strong> - Name of the text generation model</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">default-model</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">API_LLM</code></strong> - LLM API endpoint (OpenAI-compatible format)</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">http://text-generation:8000/v1</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">TEXT_GENERATION_GPU_LAYERS</code></strong> - Number of GPU layers to offload</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">35</code></li>
+<li>Adjust based on your GPU memory (higher = more GPU usage, faster inference)</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">TEXT_GENERATION</code></strong> - Enable text generation features</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">true</code></li>
+</ul>
+</li>
+</ul>
+<h4 dir="auto">QA Vectorizer Service Configuration</h4>
+<ul dir="auto">
+<li>
+<p dir="auto"><strong><code class="notranslate">HOST_BASE_URL</code></strong> - Base URL for the vectorizer host</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">http://0.0.0.0</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">QAVECTORIZER_ADDR</code></strong> - Port for QA vectorizer service</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">7863</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">API_INDEXER</code></strong> - Indexer API endpoint (exposed to frontend)</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">http://qavectorizer:7863</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">CHROMA_PORT</code></strong> - Port for ChromaDB (if used)</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">8000</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">SENTENCE_TRANSFORMER_EMBEDDING_MODEL</code></strong> - Hugging Face model for embeddings</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">Alibaba-NLP/gte-multilingual-base</code></li>
+<li>Other options: <code class="notranslate">sentence-transformers/all-MiniLM-L6-v2</code>, <code class="notranslate">intfloat/multilingual-e5-large</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">SENTENCE_TRANSFORMER_DEVICE</code></strong> - Device for inference</p>
+<ul dir="auto">
+<li>Options: <code class="notranslate">cuda</code> (GPU), <code class="notranslate">cpu</code> (CPU)</li>
+<li>Default: <code class="notranslate">cuda</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">OGG2NAME_INDEX</code></strong> - Elasticsearch index for object-to-name mapping</p>
+<ul dir="auto">
+<li>Default: <code class="notranslate">dave_ogg2name</code></li>
+</ul>
+</li>
+</ul>
+<h4 dir="auto">Annotation Pipeline Services (Optional)</h4>
+<p dir="auto">These services enable advanced NER (Named Entity Recognition) and entity linking features. Leave empty if not using these features.</p>
+<ul dir="auto">
+<li>
+<p dir="auto"><strong><code class="notranslate">ANONYMIZATION_ENDPOINT</code></strong> - URL for anonymization service</p>
+<ul dir="auto">
+<li>Optional, leave empty if not used</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">ANNOTATION_SPACYNER_URL</code></strong> - URL for SpaCy NER annotation service</p>
+<ul dir="auto">
+<li>Optional, leave empty if not used</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">ANNOTATION_BLINK_URL</code></strong> - URL for BLINK entity linking service</p>
+<ul dir="auto">
+<li>Optional, leave empty if not used</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">ANNOTATION_INDEXER_URL</code></strong> - URL for annotation indexer service</p>
+<ul dir="auto">
+<li>Optional, leave empty if not used</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">ANNOTATION_NILPREDICTION_URL</code></strong> - URL for NIL (Not In Lexicon) prediction service</p>
+<ul dir="auto">
+<li>Optional, leave empty if not used</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">ANNOTATION_NILCLUSTER_URL</code></strong> - URL for NIL clustering service</p>
+<ul dir="auto">
+<li>Optional, leave empty if not used</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong><code class="notranslate">ANNOTATION_CONSOLIDATION_URL</code></strong> - URL for annotation consolidation service</p>
+<ul dir="auto">
+<li>Optional, leave empty if not used</li>
+</ul>
+</li>
+</ul>
+<h4 dir="auto">Security Best Practices</h4>
+<ol dir="auto">
+<li><strong>Never use default passwords in production</strong> - Change all default passwords and secrets</li>
+<li><strong>Generate strong secrets</strong> - Use <code class="notranslate">openssl rand -base64 32</code> for all secret values</li>
+<li><strong>Use HTTPS in production</strong> - Configure a reverse proxy (nginx, traefik) with SSL/TLS</li>
+<li><strong>Restrict network access</strong> - Use firewall rules to limit access to services</li>
+<li><strong>Keep credentials secure</strong> - Never commit <code class="notranslate">.env</code> file to version control</li>
+<li><strong>Regular updates</strong> - Keep all services and dependencies up to date</li>
+</ol>
+<h4 dir="auto">Example Production Configuration</h4>
+<p dir="auto">For production deployments, your <code class="notranslate">.env</code> should look similar to:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Production example (DO NOT copy these exact values!)</span>
+NEXTAUTH_SECRET=Kx8vQ2pL9mR3wN7sJ4fY1hT6cV5bA0zE2gU8xD3qW9e=
+NEXTAUTH_URL=https://yourdomain.com/dave/api/auth
+MONGO_ROOT_PASSWORD=SecureRootPass123
+MONGO_PASSWORD=SecureAppPass456
+MONGO=mongodb://usr:SecureAppPass456@mongo:27017/dave<span class="pl-k">?</span>authSource=admin
+KEYCLOAK_ADMIN_PASSWORD=SecureKeycloakAdmin789
+DOCUMENTS_JWT_SECRET=JWTSecret234567890abcdef</pre></div>
 <h3 dir="auto">2. Install Python Dependencies</h3>
 <p dir="auto">From the <strong>root folder</strong> of the project, install the required Python packages:</p>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">pip install -r requirements.txt</pre></div>
@@ -115,6 +847,8 @@ pip install -r requirements.txt</pre></div>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose up -d</pre></div>
 <p dir="auto">This command will:</p>
 <ul dir="auto">
+<li>Build and start PostgreSQL (for Keycloak)</li>
+<li>Build and start Keycloak (authentication server)</li>
 <li>Build and start MongoDB</li>
 <li>Build and start Elasticsearch</li>
 <li>Build and start the document service</li>
@@ -124,12 +858,40 @@ pip install -r requirements.txt</pre></div>
 </ul>
 <p dir="auto">Check that all services are running:</p>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose ps</pre></div>
-<p dir="auto">Wait for all services to be healthy (especially Elasticsearch, which may take a minute to initialize).</p>
+<p dir="auto">Wait for all services to be healthy (especially Elasticsearch and Keycloak, which may take a minute to initialize).</p>
+<h3 dir="auto">4. Configure Keycloak Authentication</h3>
+<p dir="auto">After the services start, you need to configure Keycloak:</p>
+<ol dir="auto">
+<li>
+<p dir="auto"><strong>Access Keycloak Admin Console:</strong></p>
+<ul dir="auto">
+<li>URL: <code class="notranslate">http://127.0.0.1:8080</code></li>
+<li>Username: <code class="notranslate">admin</code></li>
+<li>Password: <code class="notranslate">admin</code></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong>Follow the Keycloak Setup Guide:</strong></p>
+<ul dir="auto">
+<li>See <a href="docs/KEYCLOAK_SETUP.md">docs/KEYCLOAK_SETUP.md</a> for detailed step-by-step instructions</li>
+<li>Create the <code class="notranslate">DAVE</code> realm</li>
+<li>Create the <code class="notranslate">dave_client</code> client</li>
+<li>Get the client secret</li>
+<li>Update <code class="notranslate">KEYCLOAK_SECRET</code> in your <code class="notranslate">.env</code> file</li>
+<li>Create at least one user to log in with</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><strong>Restart the UI service</strong> after updating the <code class="notranslate">.env</code>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose restart ui</pre></div>
+</li>
+</ol>
+<p dir="auto"><strong>Alternative:</strong> If you don't want to use Keycloak, set <code class="notranslate">USE_KEYCLOAK=false</code> in <code class="notranslate">.env</code> and use basic authentication (username: <code class="notranslate">admin</code>, password: <code class="notranslate">password</code>).</p>
 <h2 dir="auto">Data Ingestion</h2>
-<h3 dir="auto">4. Prepare Your Documents</h3>
+<h3 dir="auto">5. Prepare Your Documents</h3>
 <p dir="auto">Place your <strong>GateNLP format documents</strong> in the following directory:</p>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">scripts/input_data/</pre></div>
-<h3 dir="auto">5. Upload Documents to MongoDB</h3>
+<h3 dir="auto">6. Upload Documents to MongoDB</h3>
 <p dir="auto">From the <strong>root folder</strong>, run the MongoDB upload script:</p>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python scripts/upload_mongo.py</pre></div>
 <p dir="auto">This script will:</p>
@@ -138,7 +900,7 @@ pip install -r requirements.txt</pre></div>
 <li>Parse and validate the document format</li>
 <li>Upload documents to MongoDB</li>
 </ul>
-<h3 dir="auto">6. Index Documents in Elasticsearch</h3>
+<h3 dir="auto">7. Index Documents in Elasticsearch</h3>
 <p dir="auto">From the <strong>root folder</strong>, run the Elasticsearch indexing script:</p>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python scripts/insert_elastic.py</pre></div>
 <p dir="auto">This script will:</p>
@@ -160,17 +922,57 @@ pip install -r requirements.txt</pre></div>
 <li><strong>MongoDB</strong>: <code class="notranslate">27018</code> (internal: 27017)</li>
 <li><strong>Document Service</strong>: <code class="notranslate">3001</code></li>
 <li><strong>Elasticsearch</strong>: <code class="notranslate">9200</code></li>
+<li><strong>Keycloak</strong>: <code class="notranslate">8080</code> (<a href="http://127.0.0.1:8080" rel="nofollow">http://127.0.0.1:8080</a>)</li>
+<li><strong>PostgreSQL</strong> (Keycloak DB): <code class="notranslate">5432</code> (internal only)</li>
 <li><strong>QA Vectorizer</strong>: <code class="notranslate">7863</code></li>
 <li><strong>Text Generation</strong>: <code class="notranslate">7862</code>, <code class="notranslate">8000</code></li>
 </ul>
 <h2 dir="auto">Troubleshooting</h2>
+<h3 dir="auto">Build Fails with "Invalid URL" or "ERR_INVALID_URL"</h3>
+<p dir="auto"><strong>Error:</strong></p>
+<pre class="notranslate"><code class="notranslate">TypeError [ERR_INVALID_URL]: Invalid URL
+at parseUrl (.../next-auth/utils/parse-url.js:13:16)
+</code></pre>
+<p dir="auto"><strong>Solution:</strong> This means your <code class="notranslate">.env</code> file is missing.</p>
+<ol dir="auto">
+<li>Ensure you created the <code class="notranslate">.env</code> file: <code class="notranslate">cp .env.sample .env</code></li>
+<li>The <code class="notranslate">.env.sample</code> already has correct defaults, so this should work immediately</li>
+<li>Rebuild: <code class="notranslate">docker compose build --no-cache ui</code></li>
+</ol>
+<h3 dir="auto">Build Fails with Missing Function Import</h3>
+<p dir="auto"><strong>Error:</strong></p>
+<pre class="notranslate"><code class="notranslate">Attempted import error: 'getStartAndEndIndexForPagination' is not exported from '@/utils/shared'
+</code></pre>
+<p dir="auto"><strong>Solution:</strong> This is fixed in the latest version. Pull the latest changes:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">git pull origin main
+docker compose build --no-cache ui</pre></div>
+<h3 dir="auto">Cannot Log In to DAVE</h3>
+<p dir="auto"><strong>Error:</strong> Login fails or redirects incorrectly</p>
+<p dir="auto"><strong>Solution:</strong> You need to configure Keycloak first.</p>
+<ol dir="auto">
+<li>Make sure you completed the Keycloak setup steps</li>
+<li>Verify <code class="notranslate">KEYCLOAK_SECRET</code> in <code class="notranslate">.env</code> matches the secret from Keycloak admin console</li>
+<li>Restart UI service: <code class="notranslate">docker compose restart ui</code></li>
+<li>See <a href="docs/KEYCLOAK_SETUP.md">Keycloak Setup Guide</a> for detailed instructions</li>
+</ol>
+<p dir="auto"><strong>Alternative:</strong> Disable Keycloak and use basic auth:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> In .env file, set:</span>
+USE_KEYCLOAK=false
+
+<span class="pl-c"><span class="pl-c">#</span> Restart services</span>
+docker compose restart ui documents
+
+<span class="pl-c"><span class="pl-c">#</span> Log in with:</span>
+<span class="pl-c"><span class="pl-c">#</span> Username: admin</span>
+<span class="pl-c"><span class="pl-c">#</span> Password: password</span></pre></div>
 <h3 dir="auto">Services Not Starting</h3>
 <p dir="auto">Check logs for a specific service:</p>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose logs -f <span class="pl-k">&lt;</span>service_name<span class="pl-k">&gt;</span></pre></div>
 <p dir="auto">Example:</p>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose logs -f ui
 docker compose logs -f es
-docker compose logs -f mongo</pre></div>
+docker compose logs -f mongo
+docker compose logs -f keycloak</pre></div>
 <h3 dir="auto">Elasticsearch Memory Issues</h3>
 <p dir="auto">If Elasticsearch fails to start, you may need to increase Docker's memory allocation:</p>
 <ul dir="auto">
@@ -178,13 +980,17 @@ docker compose logs -f mongo</pre></div>
 </ul>
 <h3 dir="auto">MongoDB Connection Issues</h3>
 <p dir="auto">Verify MongoDB is running and accepting connections:</p>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose <span class="pl-c1">exec</span> mongo mongosh -u root -p <span class="pl-k">&lt;</span>MONGO_ROOT_PASSWORD<span class="pl-k">&gt;</span></pre></div>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Using default password from .env.sample</span>
+docker compose <span class="pl-c1">exec</span> mongo mongosh -u root -p dev_root_password_123
+
+<span class="pl-c"><span class="pl-c">#</span> Or use your custom password if you changed it</span>
+docker compose <span class="pl-c1">exec</span> mongo mongosh -u root -p <span class="pl-k">&lt;</span>YOUR_MONGO_ROOT_PASSWORD<span class="pl-k">&gt;</span></pre></div>
 <h3 dir="auto">Python Script Errors</h3>
 <p dir="auto">Ensure you're running scripts from the root folder:</p>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> ✓ Correct</span>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Correct</span>
 python scripts/upload_mongo.py
 
-<span class="pl-c"><span class="pl-c">#</span> ✗ Incorrect</span>
+<span class="pl-c"><span class="pl-c">#</span> Incorrect</span>
 <span class="pl-c1">cd</span> scripts <span class="pl-k">&amp;&amp;</span> python upload_mongo.py</pre></div>
 <h3 dir="auto">GPU Not Detected</h3>
 <p dir="auto">If you have an NVIDIA GPU but it's not being used:</p>
@@ -202,10 +1008,63 @@ python scripts/upload_mongo.py
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose down
 docker compose build --no-cache
 docker compose up -d</pre></div>
-<h2 dir="auto">Support</h2>
-<p dir="auto">For issues or questions, please refer to the project documentation or contact the development team.</p>
-<h2 dir="auto"><strong>License</strong></h2>
-<p dir="auto">DAVE is open-source and released under the <a href="./LICENSE">Apache-2.0</a> License.</p>
+<h2 dir="auto"><strong>Commercial Information</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Organisation (s)</th>
+<th>License Nature</th>
+<th>License</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>University of Milano-Bicocca</td>
+<td>Open Source</td>
+<td>Apache-2.0</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Expected KPIs</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>What (types)</th>
+<th>How(Process)</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quality of RAG responses to user prompts</td>
+<td>Using internal benchmarks with ground truth answers, including  one internal benchmark from Philips BC of questions developed in the project</td>
+<td>Recall@10 &gt; 50% on retrieved context</td>
+</tr>
+<tr>
+<td>User satisfaction when using the application</td>
+<td>Using a User Experience Questionnaire (UEQ)</td>
+<td>Exceed the standard evaluation thresholds defined by the UEQ, on generated answer</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Related Project Links</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Software GitHub Repository --&gt; <a href="https://github.com/unimib-datAI/DAVE">github.com/unimib-datAI/DAVE</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
 <h2 dir="auto"><strong>Additional Links</strong></h2>
 <p dir="auto">Check out our demonstration video:<br>
 <a href="https://www.youtube.com/watch?v=XG7RsI3t-2Q" rel="nofollow"><img src="https://camo.githubusercontent.com/ce23637c2fd01404d3269394ad965d5dda43e934726041ab91485bacd426d675/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f57617463682d44656d6f2d7265643f7374796c653d666f722d7468652d6261646765266c6f676f3d796f7574756265" alt="Watch the Demo" data-canonical-src="https://img.shields.io/badge/Watch-Demo-red?style=for-the-badge&amp;logo=youtube" style="max-width: 100%;"></a></p>
+<h2 dir="auto"><strong>Cite this Work</strong></h2>
+<p dir="auto">Agazzi, R., Alva Principe, R., Pozzi, R., Ripamonti, M., &amp; Palmonari, M. (2025).<br>
+DAVE: A Framework for Assisted Analysis of Document Collections in Knowledge-Intensive Domains.<br>
+In Proceedings of the Thirty-Fourth International Joint Conference on Artificial Intelligence (IJCAI-25), Demo Track.<br>
+<a href="https://doi.org/10.24963/ijcai.2025/1246" rel="nofollow">https://doi.org/10.24963/ijcai.2025/1246</a></p>

@@ -6,12 +6,12 @@ Powered by
   <a href="https://www.ijs.si/"><img src="https://www.ijs.si/ijsw/Rubrike?action=AttachFile&do=get&target=000-modra.jpg" alt="Jožef Stefan Institute (JSI) logo" width="220"></a>
 </p>-->
 
-<img width="259" height="194" alt="image" src="https://github.com/user-attachments/assets/8881f50c-1720-4b97-8db3-f90d294c2b5c" />
+<img src="../images/jsi-logo.png" width="220" alt="JSI Logo" />
 
 | Project Links                                                            |
 | ------------------------------------------------------------------------ |
-| **Software GitHub Repository** → JSI LLAC `<>` |
-| **Progress GitHub Project** → `<>`             |
+| **Software GitHub Repository** → JSI LLAC `<in progress>` |
+| **Progress GitHub Project** → `<in progress>`             |
 
 ## **General Description**
 
@@ -41,7 +41,9 @@ Repository structure includes (non-exhaustive):
 
 ## **Screenshots**
 
-<img width="1279" height="860" alt="image" src="https://github.com/user-attachments/assets/b05e783b-46e5-4d15-8f7d-0023281e1ba8" />
+<!--<img width="1279" height="860" alt="image" src="https://github.com/user-attachments/assets/b05e783b-46e5-4d15-8f7d-0023281e1ba8" />-->
+<img src="../images/llac.png" width="500" alt="LLAC" />
+
 
 ## **Commercial Information**
 

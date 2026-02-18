@@ -1,7 +1,7 @@
 <div class="tool-header">
   <h1>KubePipe</h1>
   <a href="https://www.uibk.ac.at/">
-    <img src="./images/uibk_logo.png" alt="UIBKLogo">
+    <img src="./docs/images/uibk.jpg" alt="UIBKLogo">
   </a>
 </div>
 

@@ -6,7 +6,7 @@ Powered by
   <a href="https://www.ijs.si/"><img src="https://www.ijs.si/ijsw/Rubrike?action=AttachFile&do=get&target=000-modra.jpg" alt="Jožef Stefan Institute (JSI) logo" width="220"></a>
 </p>-->
 
-<img width="259" height="194" alt="image" src="https://github.com/user-attachments/assets/fc210d14-b546-44f1-b8f6-7ff7ba0533af" />
+<img src="../images/jsi-logo.png" width="200" alt="JSI Logo" />
 
 
 | Project Links                                                            |
@@ -51,12 +51,9 @@ High-level data flow:
 
 ---
 
-## **Screenshots** (TBD)
+## **Screenshots** 
 
-* Annotation preview (web UI): `![Preview](./images/preview.png)`
-* JSON response sample: `![JSON](./images/json.png)`
-
-<img width="879" height="811" alt="image" src="https://github.com/user-attachments/assets/36427c49-bc2d-4a4e-82ea-374bc3c895ac" />
+<img src="../images/wikifier.png" width="1000" alt="Wikifier" />
 ---
 
 ## **Commercial Information**

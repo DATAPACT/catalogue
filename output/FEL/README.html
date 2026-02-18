@@ -1,8 +1,5 @@
 <h1 dir="auto">Fairness Encoding in Logic Tensor Networks (FEL)</h1>
-<p dir="auto"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/be427dbbbc0351f087a0de2cab7de6f4552cea7232545b3227aad91085bacf2d/68747470733a2f2f7777772e756e696d69622e69742f73697465732f64656661756c742f66696c65732f7374796c65732f666f746f5f70617261677261666f5f746573746f5f363430783336302f7075626c69632f6c6f676f6973745f332e6a70673f69746f6b3d426967664f675266"><img src="https://camo.githubusercontent.com/be427dbbbc0351f087a0de2cab7de6f4552cea7232545b3227aad91085bacf2d/68747470733a2f2f7777772e756e696d69622e69742f73697465732f64656661756c742f66696c65732f7374796c65732f666f746f5f70617261677261666f5f746573746f5f363430783336302f7075626c69632f6c6f676f6973745f332e6a70673f69746f6b3d426967664f675266" alt="UniMiB logo" width="80" data-canonical-src="https://www.unimib.it/sites/default/files/styles/foto_paragrafo_testo_640x360/public/logoist_3.jpg?itok=BigfOgRf" style="max-width: 100%;"></a></p>
-<p dir="auto">Software GitHub Repository: <a href="https://github.com/unimib-datAI/FEL">github.com/unimib-datAI/FEL</a></p>
 <h2 dir="auto"><strong>General Description</strong></h2>
-<p dir="auto">FEL is a debiasing framework for feature-based binary classification tasks.</p>
 <ul dir="auto">
 <li>FEL integrates fairness and accuracy objectives within the Logic Tensor Networks (LTN) framework, where learning is guided by logical axioms rather than direct loss modifications.</li>
 <li>Through classification axioms, the model learns to correctly represent the relationship between features and target labels, ensuring predictive accuracy.</li>
@@ -13,6 +10,10 @@
 <li>Performance is measured through overall classification accuracy.</li>
 </ul>
 </li>
+</ul>
+<h2 dir="auto"><strong>Related Compliance aspects</strong></h2>
+<ul dir="auto">
+<li>Fairness of ML-based decisions</li>
 </ul>
 <h2 dir="auto"><strong>Top Features</strong></h2>
 <ul dir="auto">
@@ -35,8 +36,15 @@
 <p dir="auto"><strong>4. Inside the container</strong></p>
 <p dir="auto"><strong>Train a fair model</strong>:</p>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">$ python src/training.py --config ./config.yaml --dataset ./datasets/compas.csv</pre></div>
-<p dir="auto"><strong>Run inference</strong>:</p>
+<p dir="auto"><strong>Run inference on data with ground truth</strong>:</p>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">$ python src/inference.py --config ./config.yaml --dataset ./datasets/compas.csv --model ./models/kb.npz</pre></div>
+<p dir="auto"><strong>Run inference on data without ground truth</strong>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">$ python src/inference.py --config ./config.yaml --dataset ./datasets/compas.csv --model ./models/kb.npz --no-gt</pre></div>
+<p dir="auto">Inference outputs:</p>
+<ul dir="auto">
+<li><code class="notranslate">models/predictions.csv</code> (always)</li>
+<li><code class="notranslate">models/inference_metrics.png</code> (only when GT is present)</li>
+</ul>
 <h2 dir="auto"><strong>Configuration Guide</strong></h2>
 <p dir="auto">The required YAML file need to specify the following parameters:</p>
 <h3 dir="auto">Data Configuration</h3>
@@ -45,8 +53,8 @@
 <li><strong>sensitive_feature</strong>: Column name of the protected attribute</li>
 <li><strong>labels</strong>:
 <ul dir="auto">
-<li><strong>positive</strong>: The outcome value to balance fairly across groups</li>
-<li><strong>negative</strong>: The other possible outcome value</li>
+<li><strong>favourable</strong>: The outcome value to balance fairly across groups</li>
+<li><strong>unfavourable</strong>: The other possible outcome value</li>
 </ul>
 </li>
 <li><strong>protected_values</strong>:
@@ -64,39 +72,89 @@
 <li>Options: KleeneDienes, Godel, Reichenbach, Goguen, Luk</li>
 </ul>
 </li>
-<li><strong>p_mean</strong>: Aggregation parameter</li>
+<li><strong>p_mean</strong>: Quantifier aggregation parameter:
+<ul dir="auto">
+<li>Options: [1,3,5,7]</li>
+</ul>
+</li>
 <li><strong>aggregator_deviation</strong>: Deviation control in aggregator</li>
+<li><strong>fairness_weight</strong>: Weight of fairness axioms wrt classification axioms.
+<ul dir="auto">
+<li>Options: [1...3]: A value of 1 gives fairness and classification axioms equal weight, while 3 assigns 3x times importance to fairness satisfiability.</li>
+</ul>
+</li>
 </ul>
 <h3 dir="auto">Training Configuration</h3>
 <ul dir="auto">
 <li><strong>epochs</strong>: Number of training iterations</li>
 </ul>
-<h2 dir="auto">Understanding "Positive" and "Negative" Labels</h2>
-<p dir="auto">The choice of positive/negative labels is crucial:</p>
+<h2 dir="auto">Understanding "Favourable" and "Unfavourable" Labels</h2>
+<p dir="auto">The choice of favourable/unfavourable labels is crucial:</p>
 <ul dir="auto">
-<li><strong>Positive</strong>: The outcome you want to balance fairly across groups
+<li><strong>Favourable</strong>: The outcome you want to balance fairly across groups
 <ul dir="auto">
 <li>Example: loan_approved=1 means "approved"</li>
 <li>Fairness metrics measure this outcome's distribution</li>
 </ul>
 </li>
-<li><strong>Negative</strong>: The alternative outcome
+<li><strong>Unfavourable</strong>: The alternative outcome
 <ul dir="auto">
 <li>Not directly balanced by fairness constraints</li>
 </ul>
 </li>
 </ul>
-<p dir="auto">Examples:</p>
-<ul dir="auto">
-<li>
-<p dir="auto">Loan approval: positive = 1 (approved), negative = 0 (denied) → approval rates should be similar across groups.</p>
-</li>
-<li>
-<p dir="auto">Disease detection: positive = “has_disease”, negative = “no_disease” → detection rates should be comparable across groups.</p>
-</li>
-</ul>
-<h2 dir="auto"><strong>License</strong></h2>
-<p dir="auto">FEL is open-source and released under the <a href="./LICENSE">Apache-2.0</a> License.</p>
+<h2 dir="auto"><strong>Commercial Information</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Organisation (s)</th>
+<th>License Nature</th>
+<th>License</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>University of Milano-Bicocca</td>
+<td>Open Source</td>
+<td>Apache-2.0</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Expected KPIs</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>What (types)</th>
+<th>How(Process)</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Capacity to mitigate bias</td>
+<td>Using SOTA benchmarks such as Adult, COMPAS, German (partially published in ECAI2023 + updates from G. Greco thesis + replication)</td>
+<td>We improve fairness by at least 10%, with at most a 5% drop in performance. Measures: Accuracy; Accuracy at Statistical Parity Difference (SDI) cutoffs: Accuracy at Disparate Impact (DI) cutoffs. Targets: as or better than in ECAI paper</td>
+</tr>
+<tr>
+<td>Capacity to mitigate bias</td>
+<td>Using a benchmark from a project business case (e.g., AUTH)</td>
+<td>To be defined for the business case</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Related Project Links</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Software GitHub Repository --&gt; <a href="https://github.com/unimib-datAI/FEL">github.com/unimib-datAI/FEL</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
 <h2 dir="auto"><strong>Cite this Work</strong></h2>
 <p dir="auto">Greco, G., Alberici, F., Palmonari, M., &amp; Cosentini, A. (2023).<br>
 Declarative Encoding of Fairness in Logic Tensor Networks.<br>

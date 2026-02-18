@@ -6,7 +6,7 @@ Powered by
   <a href="https://www.ijs.si/"><img src="https://www.ijs.si/ijsw/Rubrike?action=AttachFile&do=get&target=000-modra.jpg" alt="Jožef Stefan Institute (JSI) logo" width="220"></a>
 </p>-->
 
-<img width="259" height="194" alt="image" src="https://github.com/user-attachments/assets/5b994a2b-a6fa-4eef-8a9f-6c3071e19423" />
+<img src="../images/jsi-logo.png" width="200" alt="JSI Logo" />
 
 | Project Links                                                            |
 | ------------------------------------------------------------------------ |
@@ -69,7 +69,7 @@ Key architectural characteristics:
 
 ## **Screenshots**
 
-<img width="933" height="800" alt="image" src="https://github.com/user-attachments/assets/8aa064a6-a545-464f-b98b-a5819bf5dcf6" />
+<img src="../images/speftr.png" width="800" alt="SPEFTR" />
 
 
 ## **Commercial Information**
