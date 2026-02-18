@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Datapact Tools Catalogue</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked@14.1.2/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; font-family: Arial, sans-serif; overflow-x: hidden; }
+    body { display: flex; background: #f5f5f5; }
+    .sidebar { width: 300px; background: #2c3e50; color: white; padding: 2rem; height: 100vh; overflow-y: auto; flex-shrink: 0; position: fixed; left: 0; top: 0; z-index: 1000; }
+    .sidebar h1 { margin-bottom: 2rem; }
+    .home-btn { display: block; padding: 0.75rem 1rem 0.75rem 1.5rem; color: #3498db; background: #34495e; text-decoration: none; border-radius: 6px; margin-bottom: 1.5rem; }
+    .home-btn:hover { background: #3498db; color: white; }
+    .category { margin-bottom: 1.5rem; }
+    .category h3 { color: #3498db; margin-bottom: 0.5rem; }
+    .tool a { display: block; padding: 0.75rem 1rem 0.75rem 1.5rem; color: #bdc3c7; text-decoration: none; border-radius: 6px; transition: all 0.3s; }
+    .tool a:hover, .tool a.active { background: #3498db; color: white; }
+    .main { margin-left: 300px; flex: 1; padding: 2rem; min-height: 100vh; max-width: calc(100vw - 300px); overflow-x: hidden; }
+    #main-content { min-height: 70vh; }
+    .content-card { background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; }
+    .markdown-content { padding: 2rem; line-height: 1.6; font-size: 16px; text-align: left; }
+    .markdown-content h1, .markdown-content h2, .markdown-content h3 { color: #2c3e50; margin: 2rem 0 1rem 0; }
+    .markdown-content img { max-width: 100%; height: auto; display: block; margin: 2rem auto; border-radius: 8px; }
+    .markdown-content a { color: #3498db; text-decoration: none; }
+    .markdown-content a:hover { text-decoration: underline; }
+    .markdown-content pre { background: #2c3e50; color: white; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
+    .markdown-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    .markdown-content th, .markdown-content td { border: 1px solid #ddd; padding: 0.5rem; }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <h1>📋 Tools Catalogue</h1>
+    <a href="#" class="home-btn" onclick="loadHome(); return false;">🏠 Home</a>
+    
+    <div class="category">
+      <h3>PipelineR</h3>
+      <div class="tool"><a href="#" data-repo="KubePipe" onclick="loadTool('KubePipe', this); return false;">KubePipe</a></div>
+    </div>
+    
+    <div class="category">
+      <h3>PolicyR</h3>
+      <div class="tool"><a href="#" data-repo="Policy-Editor" onclick="loadTool('Policy-Editor', this); return false;">Policy Editor</a></div>
+    </div>
+    
+    <div class="category">
+      <h3>AssessR</h3>
+      <div class="tool"><a href="#" data-repo="DPIA-Support" onclick="loadTool('DPIA-Support', this); return false;">DPIA Support</a></div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div id="main-content">
+      <div class="content-card">
+        <h1>Loading...</h1>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Configure marked
+    marked.setOptions({ gfm: true, breaks: true });
+    
+    function loadHome() {
+      fetch('home.html')
+        .then(r => r.ok ? r.text() : Promise.reject())
+        .then(html => document.getElementById('main-content').innerHTML = html)
+        .catch(() => {
+          document.getElementById('main-content').innerHTML = 
+            '<div class="content-card"><h1>📋 Datapact Tools Catalogue</h1><p><strong>Welcome!</strong> Browse tools in the sidebar to get started.</p></div>';
+        });
+    }
+    
+    async function loadTool(repo, link) {
+      // Clear active state
+      document.querySelectorAll('.tool a').forEach(a => a.classList.remove('active'));
+      link.classList.add('active');
+      
+      const content = document.getElementById('main-content');
+      content.innerHTML = '<div class="content-card"><h2>Loading ' + repo + '...</h2></div>';
+      
+      const paths = [`output/${repo}/README.md`, `output/${repo}/readme.md`];
+      
+      for (const path of paths) {
+        try {
+          const res = await fetch(path);
+          if (res.ok) {
+            const md = await res.text();
+            let html = marked.parse(md);
+            
+            // FIXED IMAGE PATHS - CORRECT REPLACE METHOD
+            html = html.replace(/src=["']([^"']+)["']/g, (match, src) => {
+              if (src.startsWith('./images/')) {
+                const filename = src.replace('./images/', '');
+                return `src="output/${repo}/images/${filename}"`;
+              }
+              if (src.startsWith('images/')) {
+                const filename = src.replace('images/', '');
+                return `src="output/${repo}/images/${filename}"`;
+              }
+              return match;
+            });
+            
+            content.innerHTML = `
+              <div class="content-card">
+                <h1 style="color: #2c3e50; margin-bottom: 2rem;">${link.textContent}</h1>
+                <div class="markdown-content">${DOMPurify.sanitize(html)}</div>
+              </div>
+            `;
+            return;
+          }
+        } catch(e) {
+          console.log('Failed to load:', path);
+        }
+      }
+      
+      content.innerHTML = `
+        <div class="content-card">
+          <h1 style="color: #2c3e50;">${repo}</h1>
+          <p style="color: #e74c3c;">README not found in expected location</p>
+          <p>Checked: output/${repo}/README.md</p>
+        </div>
+      `;
+    }
+    
+    // Initialize
+    loadHome();
+  </script>
+</body>
+</html>

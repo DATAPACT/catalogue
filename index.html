@@ -1,96 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Datapact Tools Catalogue</title>
-  <script src="https://cdn.jsdelivr.net/npm/marked@14.1.2/marked.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; font-family: Arial, sans-serif; overflow-x: hidden; }
-    body { display: flex; background: #f5f5f5; }
-    .sidebar { width: 300px; background: #2c3e50; color: white; padding: 2rem; height: 100vh; overflow-y: auto; flex-shrink: 0; position: fixed; left: 0; top: 0; z-index: 1000; }
-    .sidebar h1 { margin-bottom: 2rem; }
-    .home-btn { display: block; padding: 0.75rem 1rem 0.75rem 1.5rem; color: #3498db; background: #34495e; text-decoration: none; border-radius: 6px; margin-bottom: 1.5rem; }
-    .home-btn:hover { background: #3498db; color: white; }
-    .category { margin-bottom: 1.5rem; }
-    .category h3 { color: #3498db; margin-bottom: 0.5rem; }
-    .tool a { display: block; padding: 0.75rem 1rem 0.75rem 1.5rem; color: #bdc3c7; text-decoration: none; border-radius: 6px; transition: all 0.3s; }
-    .tool a:hover, .tool a.active { background: #3498db; color: white; }
-    .main { margin-left: 300px; flex: 1; padding: 2rem; min-height: 100vh; max-width: calc(100vw - 300px); overflow-x: hidden; }
-    #main-content { min-height: 70vh; }
-    .content-card { background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; }
-    .markdown-content { padding: 2rem; line-height: 1.6; font-size: 16px; text-align: left; }
-    .markdown-content h1, .markdown-content h2, .markdown-content h3 { color: #2c3e50; margin: 2rem 0 1rem 0; }
-    .markdown-content img { max-width: 100%; height: auto; display: block; margin: 2rem auto; border-radius: 8px; }
-    .markdown-content a { color: #3498db; text-decoration: none; }
-    .markdown-content a:hover { text-decoration: underline; }
-    .markdown-content pre { background: #2c3e50; color: white; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
-    .markdown-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-    .markdown-content th, .markdown-content td { border: 1px solid #ddd; padding: 0.5rem; }
-  </style>
+<meta charset="UTF-8">
+<title>Tools Catalogue</title>
+<style>
+  body {
+    font-family: sans-serif;
+    margin: 0;
+    display: flex;
+  }
+  #sidebar {
+    width: 250px;
+    background-color: #f5f5f5;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    height: 100vh;
+    overflow-y: auto;
+  }
+  #sidebar h2 { margin-top: 0; }
+  .home-btn {
+    display: block;
+    background: #0070f3;
+    color: white;
+    text-decoration: none;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: bold;
+  }
+  .home-btn:hover {
+    background: #005bb5;
+  }
+  #main {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  ul { list-style: none; padding-left: 0; }
+  .category > span { 
+    font-weight: bold; 
+    margin-top: 10px; 
+    display: block; 
+  }
+  .tool { 
+    margin-left: 15px; 
+  }
+  .tool a { 
+    text-decoration: none; 
+    color: #333; 
+    cursor: pointer; 
+    display: block;
+    padding: 5px 0;
+  }
+  .tool a:hover { 
+    text-decoration: underline; 
+    color: #0070f3; 
+  }
+  #main .tool-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  #main .tool-header h1 {
+    margin: 0;
+  }
+  #main .tool-header img {
+    height: 80px;
+    width: auto;
+  }
+
+#main .readme-wrapper > div[dir="auto"]:first-child {
+  display: flex !important;
+  align-items: center;
+  gap: 20px;
+}
+#main .readme-wrapper > div[dir="auto"]:first-child h1 { margin: 0; }
+#main .readme-wrapper > div[dir="auto"]:first-child img { 
+  height: 120px !important; 
+  width: auto; 
+}
+
+#main table {
+  border-collapse: collapse;
+  margin: 1em 0;
+  width: 100%;
+}
+#main th, #main td {
+  border: 1px solid #d0d7de;
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+#main th {
+  background-color: #f6f8fa;
+  font-weight: 600;
+}
+#main tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+#main ul, #main ol {
+  padding-left: 2em;
+  margin: 1em 0;
+}
+#main li {
+  margin: 0.25em 0;
+}
+#main blockquote {
+  border-left: 4px solid #d0d7de;
+  padding-left: 1em;
+  margin: 1em 0;
+  color: #6a737d;
+}
+#main code {
+  background-color: #f3f4f6;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+#main pre {
+  background-color: #f6f8fa;
+  padding: 1em;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+/* Fix ALL GitHub Markdown tables + lists */
+#main .readme-wrapper table,
+#main .readme-wrapper markdown-accessiblity-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+#main .readme-wrapper th,
+#main .readme-wrapper td {
+  border: 1px solid #d0d7de !important;
+  padding: 0.75em;
+  text-align: left;
+}
+#main .readme-wrapper th {
+  background-color: #f6f8fa;
+  font-weight: 600;
+}
+#main .readme-wrapper tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+#main .readme-wrapper ul,
+#main .readme-wrapper ol {
+  padding-left: 2em !important;
+  margin: 1em 0;
+}
+#main .readme-wrapper li {
+  margin: 0.25em 0;
+}
+  
+</style>
 </head>
 <body>
-  <nav class="sidebar">
-    <h1>📋 Tools Catalogue</h1>
-    <a href="#" class="home-btn" onclick="loadHome(); return false;">🏠 Home</a>
-    
-    <div class="category">
-      <h3>PipelineR</h3>
-      <div class="tool"><a href="#" data-repo="KubePipe" onclick="loadTool('KubePipe', this); return false;">KubePipe</a></div>
-    </div>
-    
-    <div class="category">
-      <h3>PolicyR</h3>
-      <div class="tool"><a href="#" data-repo="Policy-Editor" onclick="loadTool('Policy-Editor', this); return false;">Policy Editor</a></div>
-    </div>
-    
-    <div class="category">
-      <h3>AssessR</h3>
-      <div class="tool"><a href="#" data-repo="DPIA-Support" onclick="loadTool('DPIA-Support', this); return false;">DPIA Support</a></div>
-    </div>
-  </nav>
 
-  <main class="main">
-    <div id="main-content">
-      <div class="content-card">
-        <h1>Loading...</h1>
-      </div>
-    </div>
-  </main>
+<div id="sidebar">
+  <img src="images/DataPACTLogo.png" alt="DataPACT Logo" style="max-width: 320px; width: 100%; height: auto;">
+  <a href="#" class="home-btn" onclick="loadHome(); return false;">🏠 Home</a>
+  <nav id="tools-menu"></nav>
+</div>
 
-  <script>
-    // Configure marked
-    marked.setOptions({ gfm: true, breaks: true });
+<div id="main">
+  <!-- Home content will load dynamically -->
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
+<script>
+// Load Home dynamically
+async function loadHome() {
+  const main = document.getElementById('main');
+  try {
+    const resp = await fetch('home.html');
+    if (!resp.ok) throw new Error("Could not load home.html");
+    const html = await resp.text();
+    main.innerHTML = html;
+  } catch (err) {
+    main.innerHTML = `<p>Error loading home: ${err.message}</p>`;
+  }
+}
+
+// Load tools.yml configuration
+async function loadConfig() {
+  const response = await fetch("config/tools.yml");
+  if (!response.ok) throw new Error("Could not fetch tools.yml");
+  const yamlText = await response.text();
+  return jsyaml.load(yamlText);
+}
+
+// Build menu data from config
+function buildMenuData(config) {
+  const categories = config.categories || [];
+  const tools = config.tools || [];
+  const catMap = new Map();
+  
+  categories.forEach(cat => catMap.set(cat, []));
+  
+  tools.forEach(tool => {
+    if (!tool.repo || !tool.mainfile) return;
+    const cat = tool.category || "Uncategorized";
+    if (!catMap.has(cat)) catMap.set(cat, []);
     
-    function loadHome() {
-      fetch('home.html')
-        .then(r => r.ok ? r.text() : Promise.reject())
-        .then(html => document.getElementById('main-content').innerHTML = html)
-        .catch(() => {
-          document.getElementById('main-content').innerHTML = 
-            '<div class="content-card"><h1>📋 Datapact Tools Catalogue</h1><p><strong>Welcome!</strong> Browse tools in the sidebar to get started.</p></div>';
-        });
-    }
+    catMap.get(cat).push({
+      name: tool.name || tool.repo,
+      repo: tool.repo,
+      readmePath: `output/${tool.repo}/${tool.mainfile}`
+    });
+  });
+
+  return categories.map(category => ({
+    category,
+    tools: catMap.get(category) || []
+  })).filter(({tools}) => tools.length > 0);
+}
+
+// Render the sidebar menu
+function renderMenu(menuData) {
+  const container = document.getElementById("tools-menu");
+  container.innerHTML = "";
+  
+  const ul = document.createElement("ul");
+
+  menuData.forEach(({ category, tools }) => {
+    if (tools.length === 0) return;
     
-    async function loadTool(repo, link) {
-      // Clear active state
-      document.querySelectorAll('.tool a').forEach(a => a.classList.remove('active'));
-      link.classList.add('active');
+    const catLi = document.createElement("li");
+    catLi.className = "category";
+
+    const title = document.createElement("span");
+    title.textContent = category;
+    catLi.appendChild(title);
+
+    const subUl = document.createElement("ul");
+    
+    tools.forEach(toolData => {
+      const toolLi = document.createElement("li");
+      toolLi.className = "tool";
+
+      const link = document.createElement("a");
+      link.href = "#";
+      link.textContent = toolData.name;
       
-      const content = document.getElementById('main-content');
-      content.innerHTML = '<div class="content-card"><h2>Loading ' + repo + '...</h2></div>';
+      link.dataset.repo = toolData.repo;
+      link.dataset.readmePath = toolData.readmePath;
+      link.dataset.toolName = toolData.name;
       
-      const paths = [`output/${repo}/README.md`, `output/${repo}/readme.md`];
-      
-      for (const path of paths) {
+      link.addEventListener("click", async function(e) {
+        e.preventDefault();
+        const main = document.getElementById("main");
+        
+        const repo = this.dataset.repo;
+        const readmePath = this.dataset.readmePath;
+        const toolName = this.dataset.toolName;
+        
+        main.innerHTML = `<h2>Loading ${toolName}...</h2>`;
+        
         try {
-          const res = await fetch(path);
-          if (res.ok) {
-            const md = await res.text();
-            let html = marked.parse(md);
+          const resp = await fetch(readmePath);
+          if (resp.ok) {
+            let html = await resp.text();
             
-            // FIXED IMAGE PATHS - CORRECT REPLACE METHOD
+            // Fix image paths
             html = html.replace(/src=["']([^"']+)["']/g, (match, src) => {
               if (src.startsWith('./images/')) {
                 const filename = src.replace('./images/', '');
@@ -103,30 +275,39 @@
               return match;
             });
             
-            content.innerHTML = `
-              <div class="content-card">
-                <h1 style="color: #2c3e50; margin-bottom: 2rem;">${link.textContent}</h1>
-                <div class="markdown-content">${DOMPurify.sanitize(html)}</div>
-              </div>
-            `;
-            return;
+            main.innerHTML = `<div class="readme-wrapper">${html}</div>`;
+          } else {
+            main.innerHTML = `<h2>${toolName}</h2><p>Tool not loaded. README not found: ${readmePath}</p>`;
           }
-        } catch(e) {
-          console.log('Failed to load:', path);
+        } catch (err) {
+          main.innerHTML = `<h2>${toolName}</h2><p>Error loading tool: ${err.message}</p>`;
         }
-      }
-      
-      content.innerHTML = `
-        <div class="content-card">
-          <h1 style="color: #2c3e50;">${repo}</h1>
-          <p style="color: #e74c3c;">README not found in expected location</p>
-          <p>Checked: output/${repo}/README.md</p>
-        </div>
-      `;
-    }
+      });
+
+      toolLi.appendChild(link);
+      subUl.appendChild(toolLi);
+    });
     
-    // Initialize
-    loadHome();
-  </script>
+    catLi.appendChild(subUl);
+    ul.appendChild(catLi);
+  });
+  
+  container.appendChild(ul);
+}
+
+// Initialize page
+(async function() {
+  try {
+    const config = await loadConfig();
+    const menuData = buildMenuData(config);
+    renderMenu(menuData);
+
+    // Load Home on page load
+    await loadHome();
+  } catch (err) {
+    document.getElementById("main").innerHTML = `<p>Error: ${err.message}</p>`;
+  }
+})();
+</script>
 </body>
 </html>
