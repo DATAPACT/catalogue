@@ -2,25 +2,41 @@
 <p dir="auto">Powered by</p>
 
 <p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../images/jsi-logo.png"><img src="../images/jsi-logo.png" width="200" alt="JSI Logo" style="max-width: 100%;"></a></p>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Project Links</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Public Service</strong> → <a href="https://wikifier.org" rel="nofollow">https://wikifier.org</a></td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-<hr>
 <h2 dir="auto"><strong>General Description</strong></h2>
 <p dir="auto">JSI Wikifier is a semantic annotation and entity linking tool that identifies concepts in text and links them to knowledge bases (e.g., Wikipedia / Wikidata / DBpedia). It supports <strong>~100 languages</strong>, performs context-aware disambiguation, and returns rich metadata (titles, KB identifiers, offsets, confidence, and support scores). Typical use cases include content enrichment, information extraction, search/indexing, and analytics.</p>
 <blockquote>
 <p dir="auto">🔎 Quick view: Input free text → <strong>Wikifier</strong> → Output JSON with entities and links.</p>
 </blockquote>
-<hr>
+<h2 dir="auto"><strong>Commercial Information</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Organisation (s)</th>
+<th>License Nature</th>
+<th>License / Terms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jožef Stefan Institute (JSI)</td>
+<td>Public web service (fair use); source code for service infra not publicly distributed</td>
+<td>Usage requires <code class="notranslate">userKey</code>; see <a href="https://wikifier.org/register.html" rel="nofollow">https://wikifier.org/register.html</a> and service docs <a href="https://wikifier.org/info.html" rel="nofollow">https://wikifier.org/info.html</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<blockquote>
+<p dir="auto">For commercial or on‑premise options, contact the maintainers.</p>
+</blockquote>
+<h2 dir="auto"><strong>Top Features</strong></h2>
+<ul dir="auto">
+<li><strong>Multilingual</strong> annotation (≈100 languages)</li>
+<li><strong>Entity linking</strong> to Wikipedia / Wikidata / DBpedia</li>
+<li><strong>Context-aware disambiguation</strong> with confidence/support scores</li>
+<li><strong>Offsets &amp; spans</strong> for mentions (begin/end character positions)</li>
+<li><strong>Flexible output</strong> (JSON for machines; HTML for quick inspection)</li>
+<li><strong>Batch &amp; streaming</strong> friendly requests</li>
+<li><strong>Configurable thresholds</strong> (e.g., minimum confidence/support)</li>
+</ul>
 <h2 dir="auto"><strong>Architecture</strong></h2>
 <p dir="auto">High-level data flow:</p>
 <ol dir="auto">
@@ -48,7 +64,6 @@
 <p dir="auto">(Optional) <strong>Caching &amp; Storage</strong> for performance and auditing</p>
 </li>
 </ol>
-<hr>
 <h2 dir="auto"><strong>Component Definition</strong></h2>
 <ul dir="auto">
 <li><strong>REST API</strong> — HTTP endpoints for annotation and configuration (rate‑limited; <strong>requires <code class="notranslate">userKey</code></strong> on the public service).</li>
@@ -58,31 +73,8 @@
 <li><strong>Cache/Store (optional)</strong> — Redis/SQLite/PostgreSQL depending on deployment</li>
 <li><strong>Admin/Monitoring (optional)</strong> — metrics, usage stats, health checks</li>
 </ul>
-<hr>
 <h2 dir="auto"><strong>Screenshots</strong></h2>
 <p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../images/wikifier.png"><img src="../images/wikifier.png" width="1000" alt="Wikifier" style="max-width: 100%;"></a></p>
----
-<h2 dir="auto"><strong>Commercial Information</strong></h2>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Organisation (s)</th>
-<th>License Nature</th>
-<th>License / Terms</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Jožef Stefan Institute (JSI)</td>
-<td>Public web service (fair use); source code for service infra not publicly distributed</td>
-<td>Usage requires <code class="notranslate">userKey</code>; see <a href="https://wikifier.org/register.html" rel="nofollow">https://wikifier.org/register.html</a> and service docs <a href="https://wikifier.org/info.html" rel="nofollow">https://wikifier.org/info.html</a></td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-<blockquote>
-<p dir="auto">For commercial or on‑premise options, contact the maintainers.</p>
-</blockquote>
-<hr>
 <h2 dir="auto"><strong>Expected KPIs</strong></h2>
 <markdown-accessiblity-table><table role="table">
 <thead>
@@ -100,19 +92,19 @@
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
-<hr>
-<h2 dir="auto"><strong>Top Features</strong></h2>
-<ul dir="auto">
-<li><strong>Multilingual</strong> annotation (≈100 languages)</li>
-<li><strong>Entity linking</strong> to Wikipedia / Wikidata / DBpedia</li>
-<li><strong>Context-aware disambiguation</strong> with confidence/support scores</li>
-<li><strong>Offsets &amp; spans</strong> for mentions (begin/end character positions)</li>
-<li><strong>Flexible output</strong> (JSON for machines; HTML for quick inspection)</li>
-<li><strong>Batch &amp; streaming</strong> friendly requests</li>
-<li><strong>Configurable thresholds</strong> (e.g., minimum confidence/support)</li>
-</ul>
-<hr>
 <h2 dir="auto"><strong>How To Use</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Public Service</strong> → <a href="https://wikifier.org" rel="nofollow">https://wikifier.org</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
 <h3 dir="auto">Call the public service (GET or POST)</h3>
 <p dir="auto">According to the official documentation, call:<br>
 <code class="notranslate">https://www.wikifier.org/annotate-article?text=...&amp;lang=...&amp;...</code> (GET) or send the same parameters as <code class="notranslate">application/x-www-form-urlencoded</code> in the POST body. <strong><code class="notranslate">userKey</code> is required.</strong></p>
@@ -158,14 +150,12 @@
 <blockquote>
 <p dir="auto">Also available: <code class="notranslate">get-cosine-similarity</code> for page–page cosine and functions for extracting subgraphs of the Wikipedia link graph.</p>
 </blockquote>
-<hr>
 <h2 dir="auto"><strong>Other Information</strong></h2>
 <ul dir="auto">
 <li>Data sources: Wikipedia / Wikidata / DBpedia (versions depend on your indices)</li>
 <li>Privacy: avoid sending sensitive text to external endpoints; prefer self‑hosting if needed</li>
 <li>Internationalization: pass <code class="notranslate">lang</code> or enable auto-detection</li>
 </ul>
-<hr>
 <h2 dir="auto"><strong>Additional Links</strong></h2>
 <p dir="auto">{wikifier.org/info.html)</p>
 <ul dir="auto">

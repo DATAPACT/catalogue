@@ -8,20 +8,29 @@ Powered by
 
 <img src="../images/jsi-logo.png" width="200" alt="JSI Logo" />
 
-
-| Project Links                                                            |
-| ------------------------------------------------------------------------ |
-| **Public Service** → [https://wikifier.org](https://wikifier.org)        |
-
----
-
 ## **General Description**
 
 JSI Wikifier is a semantic annotation and entity linking tool that identifies concepts in text and links them to knowledge bases (e.g., Wikipedia / Wikidata / DBpedia). It supports **~100 languages**, performs context-aware disambiguation, and returns rich metadata (titles, KB identifiers, offsets, confidence, and support scores). Typical use cases include content enrichment, information extraction, search/indexing, and analytics.
 
 > 🔎 Quick view: Input free text → **Wikifier** → Output JSON with entities and links.
 
----
+## **Commercial Information**
+
+| Organisation (s)             | License Nature                                                                        | License / Terms                                                                                                                                                                          |
+| ---------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Jožef Stefan Institute (JSI) | Public web service (fair use); source code for service infra not publicly distributed | Usage requires `userKey`; see [https://wikifier.org/register.html](https://wikifier.org/register.html) and service docs [https://wikifier.org/info.html](https://wikifier.org/info.html) |
+
+> For commercial or on‑premise options, contact the maintainers.
+
+## **Top Features**
+
+* **Multilingual** annotation (≈100 languages)
+* **Entity linking** to Wikipedia / Wikidata / DBpedia
+* **Context-aware disambiguation** with confidence/support scores
+* **Offsets & spans** for mentions (begin/end character positions)
+* **Flexible output** (JSON for machines; HTML for quick inspection)
+* **Batch & streaming** friendly requests
+* **Configurable thresholds** (e.g., minimum confidence/support)
 
 ## **Architecture**
 
@@ -38,8 +47,6 @@ High-level data flow:
 5. **Response Formatter** → JSON / HTML preview
 6. (Optional) **Caching & Storage** for performance and auditing
 
----
-
 ## **Component Definition**
 
 * **REST API** — HTTP endpoints for annotation and configuration (rate‑limited; **requires `userKey`** on the public service).
@@ -49,23 +56,9 @@ High-level data flow:
 * **Cache/Store (optional)** — Redis/SQLite/PostgreSQL depending on deployment
 * **Admin/Monitoring (optional)** — metrics, usage stats, health checks
 
----
-
 ## **Screenshots** 
 
 <img src="../images/wikifier.png" width="1000" alt="Wikifier" />
----
-
-## **Commercial Information**
-
-| Organisation (s)             | License Nature                                                                        | License / Terms                                                                                                                                                                          |
-| ---------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Jožef Stefan Institute (JSI) | Public web service (fair use); source code for service infra not publicly distributed | Usage requires `userKey`; see [https://wikifier.org/register.html](https://wikifier.org/register.html) and service docs [https://wikifier.org/info.html](https://wikifier.org/info.html) |
-
-> For commercial or on‑premise options, contact the maintainers.
-
-
----
 
 ## **Expected KPIs**
 
@@ -73,22 +66,11 @@ High-level data flow:
 | ---------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Annotation precision | Annotation precision. Measuring Precision Top N for semantic annotation/wikification task based on developed gold standard. | Annotation precision. Annotation Precision Top 1 > 0.8 |
 
-
----
-
-## **Top Features**
-
-* **Multilingual** annotation (≈100 languages)
-* **Entity linking** to Wikipedia / Wikidata / DBpedia
-* **Context-aware disambiguation** with confidence/support scores
-* **Offsets & spans** for mentions (begin/end character positions)
-* **Flexible output** (JSON for machines; HTML for quick inspection)
-* **Batch & streaming** friendly requests
-* **Configurable thresholds** (e.g., minimum confidence/support)
-
----
-
 ## **How To Use**
+
+| Project Links                                                            |
+| ------------------------------------------------------------------------ |
+| **Public Service** → [https://wikifier.org](https://wikifier.org)        |
 
 ### Call the public service (GET or POST)
 
@@ -148,15 +130,11 @@ curl -X POST "https://www.wikifier.org/annotate-article" \
 
 > Also available: `get-cosine-similarity` for page–page cosine and functions for extracting subgraphs of the Wikipedia link graph.
 
----
-
 ## **Other Information**
 
 * Data sources: Wikipedia / Wikidata / DBpedia (versions depend on your indices)
 * Privacy: avoid sending sensitive text to external endpoints; prefer self‑hosting if needed
 * Internationalization: pass `lang` or enable auto-detection
-
----
 
 ## **Additional Links**
 {wikifier.org/info.html)

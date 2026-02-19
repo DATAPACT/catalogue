@@ -2,26 +2,34 @@
 <p dir="auto">Powered by</p>
 
 <p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../images/jsi-logo.png"><img src="../images/jsi-logo.png" width="200" alt="JSI Logo" style="max-width: 100%;"></a></p>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Project Links</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Software GitHub Repository</strong> → JSI Guardrails <code class="notranslate">&lt;REPO URL TBD HERE&gt;</code></td>
-</tr>
-<tr>
-<td><strong>Progress GitHub Project</strong> → <code class="notranslate">&lt;PROJECT BOARD URL TBD HERE&gt;</code></td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
 <h2 dir="auto"><strong>General Description</strong></h2>
 <p dir="auto">Tool to guard against misbehaviours by classifying generated content (model).</p>
 <h3 dir="auto">GuardRails Tool</h3>
 <p dir="auto">A guardrails model is a dedicated component designed to ensure that a Large Language Model (LLM) behaves safely, reliably, and in alignment with organizsation requirements, policies, and ethical standards. Unlike the core LLM, whose primary function is to generate text or perform reasoning, the guardrails model operates as a protective layer that monitors and constrains the LLM’s outputs and interactions. It takes the form of a classifier model associated with a set of restrictive rules.</p>
 <p dir="auto">Guardrails are necessary to guard against misbehaviours because modern LLMs are highly capable but inherently probabilistic systems: they generate outputs based on patterns learned from data rather than explicit programming. As a result, they can inadvertently produce content that is harmful, biased, or in violation of legal, ethical, or domain-specific requirements. In safety-critical or regulated environments, such as those falling under the EU AI Act, these risks must be mitigated systematically. Guardrails also help ensure responsible use of computational resources by aligning LLM behaviour with an organisation’s intended purposes and policies. This becomes increasingly important as automation workflows expand and LLM-driven agents are chained together, since harmful or unsafe outputs can propagate through multiple steps if not intercepted early.</p>
+<h2 dir="auto"><strong>Commercial Information</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Organisation (s)</th>
+<th>License Nature</th>
+<th>License</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jožef Stefan Institute (JSI)</td>
+<td>Open Source</td>
+<td>BSD-2-Clause</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Top Features</strong></h2>
+<ul dir="auto">
+<li>Evaluates LLM inputs and outputs against a predefined policy - policy is defined by deployer as instructions</li>
+<li>Same guardrails model and underlying LLM can be used  for different purposes with different policies without retraining</li>
+<li>Trained on a large diverse dataset on a large taxonomy using instruction tuning to follow different policies=</li>
+</ul>
 <h2 dir="auto"><strong>Tool Design</strong></h2>
 <h3 dir="auto">Overview</h3>
 <p dir="auto">A guardrails model serves several key functions:</p>
@@ -100,27 +108,9 @@ The architecture emphasizses:</p>
 </ul>
 </li>
 </ol>
-<h2 dir="auto"><strong>Component Definition</strong></h2>
-<p dir="auto">TBD</p>
+
 <h2 dir="auto"><strong>Screenshots</strong></h2>
 <p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../images/guardrails.png"><img src="../images/guardrails.png" width="800" alt="Guardrails" style="max-width: 100%;"></a></p>
-<h2 dir="auto"><strong>Commercial Information</strong></h2>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Organisation (s)</th>
-<th>License Nature</th>
-<th>License</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Jožef Stefan Institute (JSI)</td>
-<td>Open Source</td>
-<td>BSD-2-Clause</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
 <h2 dir="auto"><strong>Expected KPIs</strong></h2>
 <markdown-accessiblity-table><table role="table">
 <thead>
@@ -138,24 +128,24 @@ The architecture emphasizses:</p>
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
-<h2 dir="auto"><strong>Top Features</strong></h2>
-<ul dir="auto">
-<li>Evaluates LLM inputs and outputs against a predefined policy - policy is defined by deployer as instructions</li>
-<li>Same guardrails model and underlying LLM can be used  for different purposes with different policies without retraining</li>
-<li>Trained on a large diverse dataset on a large taxonomy using instruction tuning to follow different policies=</li>
-</ul>
 <h2 dir="auto"><strong>How To Install</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Software GitHub Repository</strong> → JSI Guardrails <code class="notranslate">&lt;in progress&gt;</code></td>
+</tr>
+<tr>
+<td><strong>Progress GitHub Project</strong> → <code class="notranslate">&lt;in progress&gt;</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
 <p dir="auto">For deploy/access please send an email to Inna Novalija (<a href="mailto:inna.koval@jsi.si">inna.koval@jsi.si</a>)</p>
-<h3 dir="auto">Requirements</h3>
-<p dir="auto">TBD</p>
-<h3 dir="auto">Software</h3>
-<p dir="auto">TBD</p>
-<h3 dir="auto">Summary of installation steps</h3>
-<p dir="auto">TBD</p>
-<h3 dir="auto">Detailed steps</h3>
-<p dir="auto">TBD</p>
-<h2 dir="auto"><strong>How To Use</strong></h2>
-<p dir="auto">TBD</p>
+
 <h2 dir="auto"><strong>Other Information</strong></h2>
 <p dir="auto">n/a</p>
 <h2 dir="auto"><strong>OpenAPI Specification</strong></h2>

@@ -1,4 +1,4 @@
-# JSI LLAC
+# LLAC (LLM Advisor for Compliance)
 
 Powered by
 
@@ -8,14 +8,22 @@ Powered by
 
 <img src="../images/jsi-logo.png" width="220" alt="JSI Logo" />
 
-| Project Links                                                            |
-| ------------------------------------------------------------------------ |
-| **Software GitHub Repository** → JSI LLAC `<in progress>` |
-| **Progress GitHub Project** → `<in progress>`             |
-
 ## **General Description**
 
-LLAC is conceived as a socio-technical assistant that supports users in analysing regulatory obligations and assessing compliance risks in AI systems. LLAC is focused on LLM-powered pipelines for **legal/privacy compliance work** (e.g., GDPR) using **agentic ingestion**, **claim extraction**, and **contextualization** utilities.
+LLAC is an assistant for compliance that supports users in analysing regulatory obligations and assessing compliance for AI systems. LLAC is focused on  **legal/privacy compliance work** (e.g., GDPR) using **agentic ingestion**, **claim extraction**, and **contextualization** utilities. Specifically, LLAC provides traceable and explainabile responses for user queries.
+
+## **Commercial Information**
+
+| Organisation (s) | License Nature | License |
+| ---------------  | -------------- | ------- |
+| Jožef Stefan Institute (JSI) | Open Source | MIT
+
+## **Top Features**
+
+- Modular experimentation layout (claim extraction, contextualization, prompts, utilities). 
+- Legal-oriented artifacts and experiments (e.g., `gdpr.txt`, contextualized GDPR folder).
+- Agentic ingestion + graph/structuring exploration.
+
 
 ## **Architecture**
 
@@ -44,27 +52,38 @@ Repository structure includes (non-exhaustive):
 <!--<img width="1279" height="860" alt="image" src="https://github.com/user-attachments/assets/b05e783b-46e5-4d15-8f7d-0023281e1ba8" />-->
 <img src="../images/llac.png" width="500" alt="LLAC" />
 
-
-## **Commercial Information**
-
-| Organisation (s) | License Nature | License |
-| ---------------  | -------------- | ------- |
-| Jožef Stefan Institute (JSI) | Open Source | MIT
-
-
 ## **Expected KPIs**
 
 | What (Types)            | How (Process)                                                                       | Values                                                                                                                                                                        |
 | ---------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Answer Quality | Benchmark on compliance questions derived from regulatory documents/user evaluation| Retriever Recall@10>50%,   Accuracy > 0.8 |
 
-
-## **Top Features**
-
-- Modular experimentation layout (claim extraction, contextualization, prompts, utilities). 
-- Legal-oriented artifacts and experiments (e.g., `gdpr.txt`, contextualized GDPR folder).
-- Agentic ingestion + graph/structuring exploration.
-
 ## **How To Install**
 
+| Project Links                                                            |
+| ------------------------------------------------------------------------ |
+| **Software GitHub Repository** → JSI LLAC `<in progress>` |
+| **Progress GitHub Project** → `<in progress>`             |
+
+
 For deploy/access please send an email to Inna Novalija (inna.koval@jsi.si)
+
+<!--### Requirements
+
+TBD
+
+### Software
+
+TBD
+
+### Summary of installation steps
+
+TBD
+
+### Detailed steps
+
+TBD
+
+## **How To Use**
+
+TBD-->

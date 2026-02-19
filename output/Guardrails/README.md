@@ -8,11 +8,6 @@ Powered by
 
 <img src="../images/jsi-logo.png" width="200" alt="JSI Logo" />
 
-| Project Links                                                            |
-| ------------------------------------------------------------------------ |
-| **Software GitHub Repository** → JSI Guardrails `<REPO URL TBD HERE>` |
-| **Progress GitHub Project** → `<PROJECT BOARD URL TBD HERE>`          |
-
 ## **General Description**
 
 Tool to guard against misbehaviours by classifying generated content (model).
@@ -22,6 +17,18 @@ Tool to guard against misbehaviours by classifying generated content (model).
 A guardrails model is a dedicated component designed to ensure that a Large Language Model (LLM) behaves safely, reliably, and in alignment with organizsation requirements, policies, and ethical standards. Unlike the core LLM, whose primary function is to generate text or perform reasoning, the guardrails model operates as a protective layer that monitors and constrains the LLM’s outputs and interactions. It takes the form of a classifier model associated with a set of restrictive rules.
 
 Guardrails are necessary to guard against misbehaviours because modern LLMs are highly capable but inherently probabilistic systems: they generate outputs based on patterns learned from data rather than explicit programming. As a result, they can inadvertently produce content that is harmful, biased, or in violation of legal, ethical, or domain-specific requirements. In safety-critical or regulated environments, such as those falling under the EU AI Act, these risks must be mitigated systematically. Guardrails also help ensure responsible use of computational resources by aligning LLM behaviour with an organisation’s intended purposes and policies. This becomes increasingly important as automation workflows expand and LLM-driven agents are chained together, since harmful or unsafe outputs can propagate through multiple steps if not intercepted early.
+
+## **Commercial Information**
+
+| Organisation (s) | License Nature | License |
+| ---------------  | -------------- | ------- |
+| Jožef Stefan Institute (JSI) | Open Source | BSD-2-Clause|
+
+## **Top Features**
+
+- Evaluates LLM inputs and outputs against a predefined policy - policy is defined by deployer as instructions
+- Same guardrails model and underlying LLM can be used  for different purposes with different policies without retraining
+- Trained on a large diverse dataset on a large taxonomy using instruction tuning to follow different policies=
 
 ## **Tool Design**
 
@@ -84,19 +91,12 @@ The Guardrails architecture is designed to train and deploy a safety-aligned LLM
      - multi-label classification (e.g., harm categories based on specific policy types).
      - integration with pipelines requiring multi-turn classification.
 
-## **Component Definition**
+<!--## **Component Definition**
 
-TBD
+TBD-->
 
 ## **Screenshots**
-
 <img src="../images/guardrails.png" width="800" alt="Guardrails" />
-
-## **Commercial Information**
-
-| Organisation (s) | License Nature | License |
-| ---------------  | -------------- | ------- |
-| Jožef Stefan Institute (JSI) | Open Source | BSD-2-Clause|
 
 ## **Expected KPIs**
 
@@ -104,18 +104,16 @@ TBD
 | ---------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Core Safety & Classification Performance KPIs | Recall (Sensitivity), Precision, F1 measure, False negative rate, False positive rate| F1 measure > 0.8 |
 
-
-## **Top Features**
-
-- Evaluates LLM inputs and outputs against a predefined policy - policy is defined by deployer as instructions
-- Same guardrails model and underlying LLM can be used  for different purposes with different policies without retraining
-- Trained on a large diverse dataset on a large taxonomy using instruction tuning to follow different policies=
-
 ## **How To Install**
+
+| Project Links                                                            |
+| ------------------------------------------------------------------------ |
+| **Software GitHub Repository** → JSI Guardrails `<in progress>` |
+| **Progress GitHub Project** → `<in progress>`          |
 
 For deploy/access please send an email to Inna Novalija (inna.koval@jsi.si)
 
-### Requirements
+<!--### Requirements
 
 TBD
 
@@ -133,7 +131,7 @@ TBD
 
 ## **How To Use**
 
-TBD
+TBD-->
 
 ## **Other Information**
 

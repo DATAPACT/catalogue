@@ -8,11 +8,6 @@ Powered by
 
 <img src="../images/jsi-logo.png" width="200" alt="JSI Logo" />
 
-| Project Links                                                            |
-| ------------------------------------------------------------------------ |
-| **Software GitHub Repository** → JSI SPEFTR `<https://github.com/lrei/simple_peft_recipe>` |
-| **Progress GitHub Project** → `<https://github.com/lrei/simple_peft_recipe>`             |
-
 ## **General Description**
 
 SPEFTR is a parameter-efficient fine-tuning pipeline that selects and applies adapters (e.g., LoRA/QLoRA) with quantization to optimize LLMs for domain tasks within the PipelineR.FR.LLM-llm-rag-ops.finetuning stack.
@@ -21,6 +16,22 @@ SPEFTR (Simple Parameter-Efficient Fine-Tuning Recipe) provides a lightweight, r
 
 The repository supports both supervised fine-tuning and reinforcement learning workflows while remaining compatible with the Hugging Face ecosystem (`transformers`, `peft`, `accelerate`, `torch`). The implementation is designed to run efficiently on consumer-grade GPUs.
 
+## **Commercial Information**
+
+| Organisation (s) | License Nature | License |
+| ---------------  | -------------- | ------- |
+| Jožef Stefan Institute (JSI) | Open Source | BSD-2-Clause |
+
+## **Top Features**
+
+- Parameter-efficient training using LoRA
+- Optional QLoRA-style quantization workflows
+- Stable hyperparameter recipe
+- Supervised Fine-Tuning (SFT) support
+- Reinforcement Learning (GRPO) support
+- Adapter hot-swapping for multi-task setups
+- Hugging Face ecosystem compatibility
+- Designed for reproducibility and practical deployment
 
 ## **Architecture**
 
@@ -71,25 +82,12 @@ Key architectural characteristics:
 
 <img src="../images/speftr.png" width="800" alt="SPEFTR" />
 
-
-## **Commercial Information**
-
-| Organisation (s) | License Nature | License |
-| ---------------  | -------------- | ------- |
-| Jožef Stefan Institute (JSI) | Open Source | BSD-2-Clause |
-
-## **Top Features**
-
-- Parameter-efficient training using LoRA
-- Optional QLoRA-style quantization workflows
-- Stable hyperparameter recipe
-- Supervised Fine-Tuning (SFT) support
-- Reinforcement Learning (GRPO) support
-- Adapter hot-swapping for multi-task setups
-- Hugging Face ecosystem compatibility
-- Designed for reproducibility and practical deployment
-
 ## **How To Install**
+
+| Project Links                                                            |
+| ------------------------------------------------------------------------ |
+| **Software GitHub Repository** → JSI SPEFTR `<https://github.com/lrei/simple_peft_recipe>` |
+| **Progress GitHub Project** → `<https://github.com/lrei/simple_peft_recipe>`             |
 
 For deploy/access please send an email to Inna Novalija (inna.koval@jsi.si)
 
@@ -142,7 +140,7 @@ trainer = PESFT(config)
 model, tokenizer = trainer.load_model()
 trainer.train(train_dataset, eval_dataset, formatting_fn)
 trainer.save_model()
-
+```
 
 ## **Other Information**
 

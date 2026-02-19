@@ -1,40 +1,9 @@
-<h1 dir="auto">JSI AI LEGAL ASSISTANT</h1>
+<h1 dir="auto">AI LEGAL ASSISTANT</h1>
 <p dir="auto">Powered by</p>
 
 <p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../images/jsi-logo.png"><img src="../images/jsi-logo.png" width="200" alt="JSI Logo" style="max-width: 100%;"></a></p>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Project Links</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Software GitHub Repository</strong> → JSI ASSISTANT <a href="https://github.com/lrei/legal-AI">lrei/legal-AI</a></td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
 <h2 dir="auto"><strong>General Description</strong></h2>
-<p dir="auto">JSI Assistant tool includes LLM Advisor for Compliance along with Transparency and explainability.<br>
-This codebase implements a Retrieval-Augmented Generation (RAG) assistant focused on EU AI-related regulations. It segments the laws, builds embeddings, retrieves relevant articles, and generates answers while displaying both sources and the LLM response. (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</p>
-<h2 dir="auto"><strong>Architecture</strong></h2>
-<p dir="auto"><strong>High-level flow</strong></p>
-<ol dir="auto">
-<li><strong>Ingestion &amp; Parsing</strong> → Scrape official regulation sites, store per-regulation JSON, split into overlapping passages with metadata (regulation, chapter, article, passage no.). (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
-<li><strong>Embeddings &amp; Storage</strong> → Create passage embeddings (BAAI/bge-small-en), normalize, store metadata in SQLite and vectors in LanceDB. (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
-<li><strong>Retrieval</strong> → Vector similarity search in LanceDB, then re-rank pairs [query, passage] with <code class="notranslate">sentence-transformers/all-MiniLM-L6-v2</code>; merge passages back to full articles. (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
-<li><strong>Application Layer</strong> → FastAPI/Uvicorn web app (public &amp; testing variants) constructs a prompt with retrieved context and calls OpenAI (default GPT-3.5-Turbo); UI shows user query, retrieved articles, prompt, and LLM answer. (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
-</ol>
-<h2 dir="auto"><strong>Component Definition</strong></h2>
-<ul dir="auto">
-<li><code class="notranslate">data/*</code> — per-regulation folders with scrapers and JSON outputs (e.g., <code class="notranslate">parsing_ai_act.py</code>, <code class="notranslate">ai_act.json</code>). (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
-<li><code class="notranslate">embed_store_data.py</code> — merges JSONs, computes embeddings (BAAI/bge-small-en), writes SQLite metadata and LanceDB vectors. (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
-<li><code class="notranslate">retrieving_articles.py</code> — candidate retrieval via cosine similarity + re-ranking with <code class="notranslate">all-MiniLM-L6-v2</code>. (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
-<li><code class="notranslate">app_public.py</code> / <code class="notranslate">app_testing.py</code> — FastAPI apps (default parameters vs. configurable testing). (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
-<li><code class="notranslate">api_script.py</code>, <code class="notranslate">Dockerfile</code>, <code class="notranslate">package_requirements.txt</code>, <code class="notranslate">lancedb_files/*</code>, <code class="notranslate">data/*/*.db</code> — API helpers, containerization, dependencies, vector/SQL stores. (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
-</ul>
-<h2 dir="auto"><strong>Screenshots</strong></h2>
-<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../images/legal.png"><img src="../images/legal.png" width="1200" alt="AI Legal Assistant" style="max-width: 100%;"></a></p>
+<p dir="auto">AI Legal Assistant tool is a Retrieval-Augmented Generation assistant for compliance. This codebase implements a RAG assistant focused on EU AI-related regulations. It segments the laws, builds embeddings, retrieves relevant articles, and generates answers while displaying both sources and the LLM response.</p>
 <h2 dir="auto"><strong>Commercial Information</strong></h2>
 <markdown-accessiblity-table><table role="table">
 <thead>
@@ -52,7 +21,33 @@ This codebase implements a Retrieval-Augmented Generation (RAG) assistant focuse
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
-<p dir="auto">(Repo is MIT-licensed.) (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</p>
+<p dir="auto">(Repo is MIT-licensed.)</p>
+<h2 dir="auto"><strong>Top Features</strong></h2>
+<ul dir="auto">
+<li>Covers four cornerstone EU regulations: <strong>AI Act</strong>, <strong>Data Act</strong>, <strong>Data Governance Act</strong>, <strong>GDPR</strong>.</li>
+<li>Retrieval with <strong>LanceDB</strong> + <strong>SQLite</strong> metadata separation for efficient search &amp; rich display.</li>
+<li><strong>Re-ranking</strong> using <code class="notranslate">all-MiniLM-L6-v2</code> for higher precision answers.</li>
+<li><strong>Two app modes</strong>: public (simple) and testing (configurable model, tokens, temperature, embedding/re-ranker).</li>
+<li><strong>Transparency UX</strong>: shows query, retrieved articles, constructed prompt, and model response.</li>
+</ul>
+<h2 dir="auto"><strong>Architecture</strong></h2>
+<p dir="auto"><strong>High-level flow</strong></p>
+<ol dir="auto">
+<li><strong>Ingestion &amp; Parsing</strong> → Scrape official regulation sites, store per-regulation JSON, split into overlapping passages with metadata (regulation, chapter, article, passage no.).</li>
+<li><strong>Embeddings &amp; Storage</strong> → Create passage embeddings (BAAI/bge-small-en), normalize, store metadata in SQLite and vectors in LanceDB.</li>
+<li><strong>Retrieval</strong> → Vector similarity search in LanceDB, then re-rank pairs [query, passage] with <code class="notranslate">sentence-transformers/all-MiniLM-L6-v2</code>; merge passages back to full articles.</li>
+<li><strong>Application Layer</strong> → FastAPI/Uvicorn web app (public &amp; testing variants) constructs a prompt with retrieved context and calls OpenAI (default GPT-3.5-Turbo); UI shows user query, retrieved articles, prompt, and LLM answer.</li>
+</ol>
+<h2 dir="auto"><strong>Component Definition</strong></h2>
+<ul dir="auto">
+<li><code class="notranslate">data/*</code> — per-regulation folders with scrapers and JSON outputs (e.g., <code class="notranslate">parsing_ai_act.py</code>, <code class="notranslate">ai_act.json</code>).</li>
+<li><code class="notranslate">embed_store_data.py</code> — merges JSONs, computes embeddings (BAAI/bge-small-en), writes SQLite metadata and LanceDB vectors.</li>
+<li><code class="notranslate">retrieving_articles.py</code> — candidate retrieval via cosine similarity + re-ranking with <code class="notranslate">all-MiniLM-L6-v2</code>.</li>
+<li><code class="notranslate">app_public.py</code> / <code class="notranslate">app_testing.py</code> — FastAPI apps (default parameters vs. configurable testing).</li>
+<li><code class="notranslate">api_script.py</code>, <code class="notranslate">Dockerfile</code>, <code class="notranslate">package_requirements.txt</code>, <code class="notranslate">lancedb_files/*</code>, <code class="notranslate">data/*/*.db</code> — API helpers, containerization, dependencies, vector/SQL stores.</li>
+</ul>
+<h2 dir="auto"><strong>Screenshots</strong></h2>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../images/legal.png"><img src="../images/legal.png" width="1200" alt="AI Legal Assistant" style="max-width: 100%;"></a></p>
 <h2 dir="auto"><strong>Expected KPIs</strong></h2>
 <markdown-accessiblity-table><table role="table">
 <thead>
@@ -70,30 +65,34 @@ This codebase implements a Retrieval-Augmented Generation (RAG) assistant focuse
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
-<h2 dir="auto"><strong>Top Features</strong></h2>
-<ul dir="auto">
-<li>Covers four cornerstone EU regulations: <strong>AI Act</strong>, <strong>Data Act</strong>, <strong>Data Governance Act</strong>, <strong>GDPR</strong>. (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
-<li>Retrieval with <strong>LanceDB</strong> + <strong>SQLite</strong> metadata separation for efficient search &amp; rich display. (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
-<li><strong>Re-ranking</strong> using <code class="notranslate">all-MiniLM-L6-v2</code> for higher precision answers. (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
-<li><strong>Two app modes</strong>: public (simple) and testing (configurable model, tokens, temperature, embedding/re-ranker). (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
-<li><strong>Transparency UX</strong>: shows query, retrieved articles, constructed prompt, and model response. (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
-</ul>
 <h2 dir="auto"><strong>How To Install</strong></h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Project Links</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Software GitHub Repository</strong> → JSI ASSISTANT <a href="https://github.com/lrei/legal-AI">lrei/legal-AI</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
 <h3 dir="auto">Requirements</h3>
 <ul dir="auto">
 <li><strong>Python</strong> 3.9+</li>
 <li><strong>OpenAI API key</strong> (required to generate model responses)</li>
-<li>(Optional) <strong>Docker</strong> Desktop for containerized run (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
+<li>(Optional) <strong>Docker</strong> Desktop for containerized run</li>
 </ul>
 <h3 dir="auto">Software</h3>
 <ul dir="auto">
-<li>Clone: <code class="notranslate">git clone https://github.com/lrei/legal-AI</code> (the upstream README shows a clone of the original fork; use this repo URL for JSI). (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
-<li>Install deps: <code class="notranslate">pip install -r package_requirements.txt</code> (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
+<li>Clone: <code class="notranslate">git clone https://github.com/lrei/legal-AI</code> (the upstream README shows a clone of the original fork; use this repo URL for JSI).</li>
+<li>Install deps: <code class="notranslate">pip install -r package_requirements.txt</code></li>
 </ul>
 <h3 dir="auto">Summary of installation steps</h3>
 <ul dir="auto">
 <li><strong>Preferred</strong>: create venv → install requirements → run batch or start Uvicorn.</li>
-<li><strong>Docker</strong>: build image → run container → open <code class="notranslate">http://localhost:8001</code>. (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
+<li><strong>Docker</strong>: build image → run container → open <code class="notranslate">http://localhost:8001</code>.</li>
 </ul>
 <h3 dir="auto">Detailed steps</h3>
 <p dir="auto"><strong>Option A — Local (venv)</strong></p>
@@ -106,19 +105,18 @@ pip install -r package_requirements.txt
 <span class="pl-c1">cd</span> app-public
 python app_public.py
 <span class="pl-c"><span class="pl-c">#</span> then open http://localhost:8001</span></pre></div>
-<p dir="auto">(As in repo, you can also use the provided <code class="notranslate">run_app.bat</code> after pointing it to your absolute path.) (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</p>
+<p dir="auto">(As in repo, you can also use the provided <code class="notranslate">run_app.bat</code> after pointing it to your absolute path.)</p>
 <p dir="auto"><strong>Option B — Docker</strong></p>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c1">cd</span> legal-AI
 docker build --no-cache -t legal-ai-app <span class="pl-c1">.</span>
 docker run -d -p 8001:8001 --name legal-ai-container legal-ai-app
 <span class="pl-c"><span class="pl-c">#</span> then open http://localhost:8001</span></pre></div>
-<p dir="auto">(<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</p>
 <h2 dir="auto"><strong>How To Use</strong></h2>
 <ol dir="auto">
 <li>Open the UI at <code class="notranslate">http://localhost:8001/</code>.</li>
 <li>Enter your legal query and your <strong>OpenAI API key</strong>.</li>
 <li>Submit to see the <strong>retrieved legal articles</strong>, the <strong>constructed prompt</strong>, and the <strong>LLM response</strong>.</li>
-<li>(Testing app) Configure model, temperature, max tokens, and embedding/re-ranker models as needed. (<a href="https://github.com/lrei/legal-AI" title="GitHub - lrei/legal-AI: Legal LLM assistant for EU Artificial Intelligence laws">GitHub</a>)</li>
+<li>(Testing app) Configure model, temperature, max tokens, and embedding/re-ranker models as needed.</li>
 </ol>
 <h2 dir="auto"><strong>Other Information</strong></h2>
 <ul dir="auto">
