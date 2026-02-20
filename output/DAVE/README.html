@@ -35,18 +35,16 @@
 </ul>
 <h3 dir="auto">Installing Docker and Docker Compose</h3>
 <h4 dir="auto">On Linux:</h4>
-<pre lang="bash" class="notranslate"><code class="notranslate">curl -fsSL https://get.docker.com -o get-docker.sh
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
-sudo usermod -aG docker $USER
-</code></pre>
+sudo usermod -aG docker <span class="pl-smi">$USER</span></pre></div>
 <h4 dir="auto">On macOS:</h4>
 <p dir="auto">Download and install <a href="https://docs.docker.com/desktop/mac/install/" rel="nofollow">Docker Desktop for Mac</a></p>
 <h4 dir="auto">On Windows:</h4>
 <p dir="auto">Download and install <a href="https://docs.docker.com/desktop/windows/install/" rel="nofollow">Docker Desktop for Windows</a></p>
 <p dir="auto">Verify installation:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">docker --version
-docker compose version
-</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker --version
+docker compose version</pre></div>
 <h2 dir="auto">Project Structure</h2>
 <pre class="notranslate"><code class="notranslate">DAVE/
 ├── backend/
@@ -70,22 +68,19 @@ docker compose version
 <h3 dir="auto">1. Configure Environment Variables</h3>
 <p dir="auto"><strong>IMPORTANT</strong>: You MUST create a <code class="notranslate">.env</code> file before building the project. Skipping this step will cause build failures.</p>
 <p dir="auto">Copy the sample environment file and configure it:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">cp .env.sample .env
-</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">cp .env.sample .env</pre></div>
 <h4 dir="auto">Quick Start Configuration (Works Out of the Box)</h4>
 <p dir="auto">The <code class="notranslate">.env.sample</code> file has working defaults for local development. For a quick start:</p>
 <p dir="auto"><strong>Option 1: Use Defaults (Fastest)</strong></p>
 <p dir="auto">The <code class="notranslate">.env.sample</code> works as-is for local development. Just copy it:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">cp .env.sample .env
-</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">cp .env.sample .env</pre></div>
 <p dir="auto"><strong>IMPORTANT:</strong> You still need to configure Keycloak after starting the services. See <a href="docs/KEYCLOAK_SETUP.md">Keycloak Setup Guide</a> for details.</p>
 <p dir="auto"><strong>Option 2: Custom Configuration (Recommended for Production)</strong></p>
 <p dir="auto">If you want to customize or prepare for production:</p>
 <ol dir="auto">
 <li>
 <p dir="auto"><strong>Generate and set <code class="notranslate">NEXTAUTH_SECRET</code>:</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">openssl rand -base64 32
-</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">openssl rand -base64 32</pre></div>
 <p dir="auto">Copy the output and replace the value in <code class="notranslate">.env</code></p>
 </li>
 <li>
@@ -832,28 +827,24 @@ docker compose version
 </ol>
 <h4 dir="auto">Example Production Configuration</h4>
 <p dir="auto">For production deployments, your <code class="notranslate">.env</code> should look similar to:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate"># Production example (DO NOT copy these exact values!)
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Production example (DO NOT copy these exact values!)</span>
 NEXTAUTH_SECRET=Kx8vQ2pL9mR3wN7sJ4fY1hT6cV5bA0zE2gU8xD3qW9e=
 NEXTAUTH_URL=https://yourdomain.com/dave/api/auth
 MONGO_ROOT_PASSWORD=SecureRootPass123
 MONGO_PASSWORD=SecureAppPass456
-MONGO=mongodb://usr:SecureAppPass456@mongo:27017/dave?authSource=admin
+MONGO=mongodb://usr:SecureAppPass456@mongo:27017/dave<span class="pl-k">?</span>authSource=admin
 KEYCLOAK_ADMIN_PASSWORD=SecureKeycloakAdmin789
-DOCUMENTS_JWT_SECRET=JWTSecret234567890abcdef
-</code></pre>
+DOCUMENTS_JWT_SECRET=JWTSecret234567890abcdef</pre></div>
 <h3 dir="auto">2. Install Python Dependencies</h3>
 <p dir="auto">From the <strong>root folder</strong> of the project, install the required Python packages:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">pip install -r requirements.txt
-</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">pip install -r requirements.txt</pre></div>
 <p dir="auto">Or using a virtual environment (recommended):</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python -m venv venv
+<span class="pl-c1">source</span> venv/bin/activate  <span class="pl-c"><span class="pl-c">#</span> On Windows: venv\Scripts\activate</span>
+pip install -r requirements.txt</pre></div>
 <h3 dir="auto">3. Start Docker Services</h3>
 <p dir="auto">Launch all services using Docker Compose:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">docker compose up -d
-</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose up -d</pre></div>
 <p dir="auto">This command will:</p>
 <ul dir="auto">
 <li>Build and start PostgreSQL (for Keycloak)</li>
@@ -866,8 +857,7 @@ pip install -r requirements.txt
 <li>Build and start the UI service</li>
 </ul>
 <p dir="auto">Check that all services are running:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">docker compose ps
-</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose ps</pre></div>
 <p dir="auto">Wait for all services to be healthy (especially Elasticsearch and Keycloak, which may take a minute to initialize).</p>
 <h3 dir="auto">4. Configure Keycloak Authentication</h3>
 <p dir="auto">After the services start, you need to configure Keycloak:</p>
@@ -893,20 +883,17 @@ pip install -r requirements.txt
 </li>
 <li>
 <p dir="auto"><strong>Restart the UI service</strong> after updating the <code class="notranslate">.env</code>:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">docker compose restart ui
-</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose restart ui</pre></div>
 </li>
 </ol>
 <p dir="auto"><strong>Alternative:</strong> If you don't want to use Keycloak, set <code class="notranslate">USE_KEYCLOAK=false</code> in <code class="notranslate">.env</code> and use basic authentication (username: <code class="notranslate">admin</code>, password: <code class="notranslate">password</code>).</p>
 <h2 dir="auto">Data Ingestion</h2>
 <h3 dir="auto">5. Prepare Your Documents</h3>
 <p dir="auto">Place your <strong>GateNLP format documents</strong> in the following directory:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">scripts/input_data/
-</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">scripts/input_data/</pre></div>
 <h3 dir="auto">6. Upload Documents to MongoDB</h3>
 <p dir="auto">From the <strong>root folder</strong>, run the MongoDB upload script:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">python scripts/upload_mongo.py
-</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python scripts/upload_mongo.py</pre></div>
 <p dir="auto">This script will:</p>
 <ul dir="auto">
 <li>Read GateNLP documents from <code class="notranslate">scripts/input_data/</code></li>
@@ -915,8 +902,7 @@ pip install -r requirements.txt
 </ul>
 <h3 dir="auto">7. Index Documents in Elasticsearch</h3>
 <p dir="auto">From the <strong>root folder</strong>, run the Elasticsearch indexing script:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">python scripts/insert_elastic.py
-</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python scripts/insert_elastic.py</pre></div>
 <p dir="auto">This script will:</p>
 <ul dir="auto">
 <li>Retrieve documents from MongoDB</li>
@@ -958,9 +944,8 @@ at parseUrl (.../next-auth/utils/parse-url.js:13:16)
 <pre class="notranslate"><code class="notranslate">Attempted import error: 'getStartAndEndIndexForPagination' is not exported from '@/utils/shared'
 </code></pre>
 <p dir="auto"><strong>Solution:</strong> This is fixed in the latest version. Pull the latest changes:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">git pull origin main
-docker compose build --no-cache ui
-</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">git pull origin main
+docker compose build --no-cache ui</pre></div>
 <h3 dir="auto">Cannot Log In to DAVE</h3>
 <p dir="auto"><strong>Error:</strong> Login fails or redirects incorrectly</p>
 <p dir="auto"><strong>Solution:</strong> You need to configure Keycloak first.</p>
@@ -971,26 +956,23 @@ docker compose build --no-cache ui
 <li>See <a href="docs/KEYCLOAK_SETUP.md">Keycloak Setup Guide</a> for detailed instructions</li>
 </ol>
 <p dir="auto"><strong>Alternative:</strong> Disable Keycloak and use basic auth:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate"># In .env file, set:
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> In .env file, set:</span>
 USE_KEYCLOAK=false
 
-# Restart services
+<span class="pl-c"><span class="pl-c">#</span> Restart services</span>
 docker compose restart ui documents
 
-# Log in with:
-# Username: admin
-# Password: password
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> Log in with:</span>
+<span class="pl-c"><span class="pl-c">#</span> Username: admin</span>
+<span class="pl-c"><span class="pl-c">#</span> Password: password</span></pre></div>
 <h3 dir="auto">Services Not Starting</h3>
 <p dir="auto">Check logs for a specific service:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">docker compose logs -f &lt;service_name&gt;
-</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose logs -f <span class="pl-k">&lt;</span>service_name<span class="pl-k">&gt;</span></pre></div>
 <p dir="auto">Example:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">docker compose logs -f ui
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose logs -f ui
 docker compose logs -f es
 docker compose logs -f mongo
-docker compose logs -f keycloak
-</code></pre>
+docker compose logs -f keycloak</pre></div>
 <h3 dir="auto">Elasticsearch Memory Issues</h3>
 <p dir="auto">If Elasticsearch fails to start, you may need to increase Docker's memory allocation:</p>
 <ul dir="auto">
@@ -998,20 +980,18 @@ docker compose logs -f keycloak
 </ul>
 <h3 dir="auto">MongoDB Connection Issues</h3>
 <p dir="auto">Verify MongoDB is running and accepting connections:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate"># Using default password from .env.sample
-docker compose exec mongo mongosh -u root -p dev_root_password_123
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Using default password from .env.sample</span>
+docker compose <span class="pl-c1">exec</span> mongo mongosh -u root -p dev_root_password_123
 
-# Or use your custom password if you changed it
-docker compose exec mongo mongosh -u root -p &lt;YOUR_MONGO_ROOT_PASSWORD&gt;
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> Or use your custom password if you changed it</span>
+docker compose <span class="pl-c1">exec</span> mongo mongosh -u root -p <span class="pl-k">&lt;</span>YOUR_MONGO_ROOT_PASSWORD<span class="pl-k">&gt;</span></pre></div>
 <h3 dir="auto">Python Script Errors</h3>
 <p dir="auto">Ensure you're running scripts from the root folder:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate"># Correct
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Correct</span>
 python scripts/upload_mongo.py
 
-# Incorrect
-cd scripts &amp;&amp; python upload_mongo.py
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> Incorrect</span>
+<span class="pl-c1">cd</span> scripts <span class="pl-k">&amp;&amp;</span> python upload_mongo.py</pre></div>
 <h3 dir="auto">GPU Not Detected</h3>
 <p dir="auto">If you have an NVIDIA GPU but it's not being used:</p>
 <ul dir="auto">
@@ -1020,17 +1000,14 @@ cd scripts &amp;&amp; python upload_mongo.py
 </ul>
 <h2 dir="auto">Stopping Services</h2>
 <p dir="auto">To stop all services:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">docker compose down
-</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose down</pre></div>
 <p dir="auto">To stop and remove all data (volumes):</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">docker compose down -v
-</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose down -v</pre></div>
 <h2 dir="auto">Updating</h2>
 <p dir="auto">To update the services after code changes:</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">docker compose down
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">docker compose down
 docker compose build --no-cache
-docker compose up -d
-</code></pre>
+docker compose up -d</pre></div>
 <h2 dir="auto"><strong>Commercial Information</strong></h2>
 <markdown-accessiblity-table><table role="table">
 <thead>
