@@ -6,7 +6,7 @@ Powered by
   <a href="https://www.ijs.si/"><img src="https://www.ijs.si/ijsw/Rubrike?action=AttachFile&do=get&target=000-modra.jpg" alt="Jožef Stefan Institute (JSI) logo" width="220"></a>
 </p>-->
 
-<img src="../images/jsi-logo.png" width="220" alt="JSI Logo" />
+<img src="./images/jsi-logo.png" width="220" alt="JSI Logo" />
 
 ## **General Description**
 
@@ -50,7 +50,7 @@ Repository structure includes (non-exhaustive):
 ## **Screenshots**
 
 <!--<img width="1279" height="860" alt="image" src="https://github.com/user-attachments/assets/b05e783b-46e5-4d15-8f7d-0023281e1ba8" />-->
-<img src="../images/llac.png" width="500" alt="LLAC" />
+<img src="./images/llac.png" width="500" alt="LLAC" />
 
 ## **Expected KPIs**
 

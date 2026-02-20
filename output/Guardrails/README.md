@@ -6,7 +6,7 @@ Powered by
   <a href="https://www.ijs.si/"><img src="https://www.ijs.si/ijsw/Rubrike?action=AttachFile&do=get&target=000-modra.jpg" alt="Jožef Stefan Institute (JSI) logo" width="220"></a>
 </p>-->
 
-<img src="../images/jsi-logo.png" width="200" alt="JSI Logo" />
+<img src="./images/jsi-logo.png" width="200" alt="JSI Logo" />
 
 ## **General Description**
 
@@ -96,7 +96,7 @@ The Guardrails architecture is designed to train and deploy a safety-aligned LLM
 TBD-->
 
 ## **Screenshots**
-<img src="../images/guardrails.png" width="800" alt="Guardrails" />
+<img src="./images/guardrails.png" width="800" alt="Guardrails" />
 
 ## **Expected KPIs**
 

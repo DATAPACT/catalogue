@@ -6,7 +6,7 @@ Powered by
   <a href="https://www.ijs.si/"><img src="https://www.ijs.si/ijsw/Rubrike?action=AttachFile&do=get&target=000-modra.jpg" alt="Jožef Stefan Institute (JSI) logo" width="220"></a>
 </p>-->
 
-<img src="../images/jsi-logo.png" width="200" alt="JSI Logo" />
+<img src="./images/jsi-logo.png" width="200" alt="JSI Logo" />
 
 ## **General Description**
 
@@ -48,7 +48,7 @@ AI Legal Assistant tool is a Retrieval-Augmented Generation assistant for compli
 
 ## **Screenshots**
 
-<img src="../images/legal.png" width="1200" alt="AI Legal Assistant" />
+<img src="./images/legal.png" width="1200" alt="AI Legal Assistant" />
 
 
 ## **Expected KPIs**
