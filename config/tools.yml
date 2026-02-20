@@ -104,7 +104,7 @@ tools:
     branch: "main"
     readme_path: "docs/README.md"
     docs_root: "docs"
-  - repo: "Minimal-Finite-Covering"
+  - repo: "compresso"
     mainfile: "README.html"
     name: "Compresso" 
     category: "TrustR"
@@ -140,7 +140,7 @@ tools:
     readme_path: "docs/README.md"
     docs_root: "docs"
 #GreenR
-  - repo: "CarbonTracker"
+  - repo: "carbontracker_greenr"
     mainfile: "README.html"
     name: "CarbonTracker"
     category: "GreenR"     
