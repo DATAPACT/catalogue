@@ -2,8 +2,27 @@
 <p dir="auto">Powered by</p>
 <p dir="auto"><a href="https://dips.soton.ac.uk/#home" rel="nofollow"><img src="./images/UniSouthampton.png" alt="UoSLOGO" style="max-width: 100%;"></a></p>
 <h2 dir="auto"><strong>General Description</strong></h2>
-<p dir="auto">This repository contains a django app, which displays the Policy Editor reference UI.<br>
-Allow user-friendly creation and maintenance of ODRL policies (including integration with domain specific ontologies).</p>
+<p dir="auto">This repository contains a django app, which displays the Policy Editor reference UI. Allow user-friendly creation and maintenance of ODRL policies (including integration with domain specific ontologies).</p>
+<h2 dir="auto"><strong>How to Use</strong></h2>
+<p dir="auto">Uploading domain specific ontologies.</p>
+<ul dir="auto">
+<li>This allows you to customise the policies you create with relevant terminology. These ontologies should link to the ODRL terms, and it is advised to use the <a href="https://github.com/DATAPACT/ODRL-DPV_ontology">ODRL and DPV</a> base ontology.</li>
+</ul>
+<p dir="auto">Creating a new policy</p>
+<ul dir="auto">
+<li>You can create a new policy by specifying which dataset (asset) the policy applies to.</li>
+<li>You can then specify a number of rules. Each rule must be either a permission, a prohibition or an obligation.</li>
+<li>For each rule, you can specify, among others:
+<ul dir="auto">
+<li>The Action, that is, what is the action that is being permitted/prohibited/obliged</li>
+<li>The Actor, that is, who will have to follow this rule</li>
+<li>The Purpose, the only allowed purpose for the action</li>
+<li>Any additional constraints, such as until when the rule is valid.</li>
+</ul>
+</li>
+<li>You can then save the policy, download its ODRL representation in a machine processable file.</li>
+<li>You can re-visit and edit saved policies.</li>
+</ul>
 <h2 dir="auto"><strong>Commercial Information</strong></h2>
 <markdown-accessiblity-table><table role="table">
 <thead>
