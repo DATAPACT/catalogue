@@ -37,9 +37,11 @@ Koala UI provides the human-facing interface for semantic enrichment workflows. 
 
 ## **Expected KPIs**
 
-|What (types)|How(Process)|Values|
-|------------|------------|------|
-|Usability and effectiveness of human-in-the-loop validation of enriched datasets|Usability evaluation with domain experts and data stewards using the SUS questionnaire, combined with time-on-task comparison against manual workflows|Koala UI should achieve a mean SUS score of at least 75 across evaluated users, with no more than 25% of individual scores falling below 65. Annotation validation tasks should require at least 30% less time compared to baseline manual workflows|
+| What (types) | How (Process) | Values |
+|--------------|----------------|--------|
+| **Multi-Algorithm Integration** | Validate integration of multiple enrichment engines through backend APIs. Perform end-to-end execution using different engines without modifying the UI layer. | Successful integration and execution of at least 3 enrichment engines: Lion-Linker, Crocodile, and OpenRefine-based reconciliation |
+| **Column Type Classification Support (DPV / NER / NE-LIT)** | Demonstrate column-level classification capabilities using DPV-based labels, NER-based schemas (coarse and fine types), and NE/LIT distinction. Validate outputs on representative tables. | Support configurable column type classification including DPV categories, NER-based types (coarse and fine), and NE vs LIT distinction |
+| **Enriched Table Export** | Validate export of processed tables after linking and review. | 100% of exported tables include canonical entity identifiers and available enrichment metadata (e.g., confidence scores when provided by the linking engine) |
 
 ## **Related Project Links**
 | Project Links |

@@ -1,4 +1,4 @@
-# JSI Guardrails
+# Guardrails
 
 Powered by
 
@@ -102,7 +102,8 @@ TBD-->
 
 | What (Types)            | How (Process)                                                                       | Values                                                                                                                                                                        |
 | ---------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Core Safety & Classification Performance KPIs | Recall (Sensitivity), Precision, F1 measure, False negative rate, False positive rate| F1 measure > 0.8 |
+| Core Safety & Classification Performance KPIs | Recall (Sensitivity), Precision, F1 measure, False negative rate, False positive rate| F1 measure / Accuracy > 0.6 |
+
 
 ## **How To Install**
 

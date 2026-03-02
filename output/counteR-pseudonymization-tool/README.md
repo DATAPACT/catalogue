@@ -41,7 +41,7 @@ This service abstracts the interaction with HashiCorp Vault.
 
 |What (types)|How(Process)|Values|
 |------------|------------|------|
-|Integration of Distributed Ledger Technology (Hyperledger-based) for secure storage of pipeline data and results|	Compare performance across different data sizes and access patterns.| Data integrity maintained with 100% consistency across nodes.|
+|Privacy-preserving text and document pseudonymization with semantic consistency and entity-link preservation. Standalone REST API with batch processing and CSV support. |	Iterative development and integration in DATAPact ecosystem. Refactoring CPS as standalone REST API with batch support. Integration with DAVE and alignment with Keycloak authentication. Implementation of semantic pseudonymization with entity consistency checks. Standalone CSV endpoint for structured document processing. Functional testing in controlled environment, followed by pilot-based validation for TRL7 confirmation. | Pseudonymisation success rate: ≥90% of sensitive fields correctly pseudonymised. |
 
 
 ## **Related Project Links**

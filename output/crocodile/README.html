@@ -45,15 +45,25 @@
 <thead>
 <tr>
 <th>What (types)</th>
-<th>How(Process)</th>
+<th>How (Process)</th>
 <th>Values</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Accuracy and usefulness of automated dataset enrichment and annotation</td>
-<td>Evaluation on representative subsets of DATAPACT datasets, using expert review and comparison against baseline enrichment approaches without Crocodile</td>
-<td>Crocodile-generated annotations should achieve at least 75% agreement with expert-reviewed annotations on evaluated samples, and demonstrate a minimum 10% relative improvement in annotation quality compared to baseline enrichment approaches</td>
+<td><strong>Entity Linking Accuracy (Benchmark Evaluation)</strong></td>
+<td>Evaluate Precision@1 on the published benchmark datasets (Movies, Companies, Spend Network) available on Zenodo (<a href="https://zenodo.org/records/17160156" rel="nofollow">https://zenodo.org/records/17160156</a>).</td>
+<td>Precision@1 ≥ 0.98 on Movies, ≥ 0.98 on Companies, and ≥ 0.56 on Spend Network (SN).</td>
+</tr>
+<tr>
+<td><strong>Performance – Processing Throughput</strong></td>
+<td>Benchmark Crocodile under documented reference infrastructure. Measure total wall-clock time for fixed-size input.</td>
+<td>Process ≥ 100 rows within ≤ 60 seconds (end-to-end, including retrieval and ranking)</td>
+</tr>
+<tr>
+<td><strong>Caching Mechanism &amp; Performance Impact</strong></td>
+<td>Evaluate system behaviour with caching enabled versus disabled on identical benchmark datasets. Measure cache hit ratio and total runtime difference.</td>
+<td>Caching mechanism implemented and documented. Cache hit statistics exposed and positive runtime reduction observed when cache is enabled</td>
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>

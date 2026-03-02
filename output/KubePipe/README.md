@@ -1,7 +1,7 @@
 <div class="tool-header">
   <h1>KubePipe</h1>
   <a href="https://www.uibk.ac.at/">
-    <img src="./docs/images/uibk.jpg" alt="UIBKLogo">
+    <img src="./images/uibk.jpg" alt="UIBKLogo">
   </a>
 </div>
 
@@ -24,7 +24,7 @@ KubePipe is a unified pipeline orchestration platform designed to bridge Kubeflo
 
 ## **Architecture**
 The picture below shows the component in the DATAPACT architecture.
-![KubePipe Architecture](./images/dashboard.png)
+![KubePipe Architecture](./images/architecture.png)
 
 ## **Component Definition**
 KubePipe is a purpose-built solution that streamlines ML pipeline orchestration with integrated compliance and sustainability features. At its core, it leverages Kubeflow Pipelines (KFP v2) and Argo Workflows (v3) as execution backends, abstracting both behind a unified REST API (48 endpoints) and React-based Web UI. The compliance engine analyzes pipeline YAML for 8 GDPR checks (PII anonymization, consent verification, data minimization, pseudonymization, security contexts, audit logging, data retention, access controls) and can auto-inject missing controls. The sustainability engine measures per-run energy consumption using a SOTA model based on Strubell et al. (2019) with actual Kubernetes metrics-server data and region-specific carbon intensity factors, enabling carbon-aware scheduling decisions.
@@ -42,7 +42,7 @@ KubePipe is a purpose-built solution that streamlines ML pipeline orchestration 
 
 | What (Types) | How (Process) | Values |
 |---|---|---|
-| Unified ML pipeline orchestration (KFP + Argo) with GDPR compliance auto-injection, consent management, and carbon-aware sustainability tracking | Analyzes pipeline YAML for 8 GDPR checks, auto-injects missing controls; measures per-run energy using SOTA model (Strubell et al. 2019) with real K8s metrics + regional carbon intensity; gates execution on consent status | Compliance: 0–100 score (≥90 Excellent, <40 Critical). Energy: per-run kWh + kg CO₂. Standards: ISO 23894, Green Software Foundation. API: 48 endpoints. |
+| Unified ML pipeline orchestration (KFP + Argo) with GDPR compliance checks and auto-injection,  and carbon-aware sustainability tracking | Analyzes pipeline YAML for 8 GDPR checks, auto-injects missing controls; measures per-run energy using SOTA model (Strubell et al. 2019) with real K8s metrics + regional carbon intensity; gates execution on consent status | Compliance: 0–100 score (≥90 Excellent, <40 Critical). Energy: per-run kWh + kg CO₂. Standards: ISO 23894, Green Software Foundation. API: 48 endpoints. |
 
 ## **Related Project Links**
 

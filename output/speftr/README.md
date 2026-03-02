@@ -1,4 +1,4 @@
-# JSI SPEFTR: Simple-Parameter-Efficient-Fine-Tuning-Recipe
+# SPEFTR: Simple-Parameter-Efficient-Fine-Tuning-Recipe
 
 Powered by
 
@@ -75,7 +75,7 @@ Key architectural characteristics:
 
 | What (Types)            | How (Process)                                                                       | Values                                                                                                                                                                        |
 | ---------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Task performance KPIs (would show if recipe works) | Primary task metrics - classification (accuracy/F1)| Accuracy > 0.7 |
+| Task performance KPIs (would show if recipe works) | Primary task metrics - classification (accuracy/F1)| Performance Retention % > 0.9. Acuracy >= 0.6 |
 
 
 ## **Screenshots**

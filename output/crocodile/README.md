@@ -34,9 +34,11 @@ n/a
 
 ## **Expected KPIs**
 
-|What (types)|How(Process)|Values|
-|------------|------------|------|
-|Accuracy and usefulness of automated dataset enrichment and annotation|Evaluation on representative subsets of DATAPACT datasets, using expert review and comparison against baseline enrichment approaches without Crocodile|Crocodile-generated annotations should achieve at least 75% agreement with expert-reviewed annotations on evaluated samples, and demonstrate a minimum 10% relative improvement in annotation quality compared to baseline enrichment approaches|
+| What (types) | How (Process) | Values |
+|--------------|----------------|--------|
+| **Entity Linking Accuracy (Benchmark Evaluation)** | Evaluate Precision@1 on the published benchmark datasets (Movies, Companies, Spend Network) available on Zenodo (https://zenodo.org/records/17160156). | Precision@1 ≥ 0.98 on Movies, ≥ 0.98 on Companies, and ≥ 0.56 on Spend Network (SN). |
+| **Performance – Processing Throughput** | Benchmark Crocodile under documented reference infrastructure. Measure total wall-clock time for fixed-size input. | Process ≥ 100 rows within ≤ 60 seconds (end-to-end, including retrieval and ranking) |
+| **Caching Mechanism & Performance Impact** | Evaluate system behaviour with caching enabled versus disabled on identical benchmark datasets. Measure cache hit ratio and total runtime difference. | Caching mechanism implemented and documented. Cache hit statistics exposed and positive runtime reduction observed when cache is enabled |
 
 ## **Related Project Links**
 | Project Links |

@@ -34,9 +34,11 @@ n/a
 
 ## **Expected KPIs**
 
-|What (types)|How(Process)|Values|
-|------------|------------|------|
-|Effectiveness of contextual entity linking and ambiguity resolution in tabular data|Expert validation of entity linking results on ambiguous cases, comparing LLM-assisted ranking with non-LLM baseline ranking on representative table samples|Lion-Linker should rank the expert-preferred entity as top-1 in at least 75% of evaluated cases, and show a minimum 10% improvement in disambiguation accuracy compared to non-LLM ranking approaches. Additionally, the correct entity should appear within the top-5 candidates in at least 90% of evaluated cases|
+| What (types) | How (Process) | Values |
+|--------------|----------------|--------|
+| **Multi-Retriever Support** | Integration validation through end-to-end execution using different candidate retrieval services without modifying the ranking logic. Validation includes successful linking runs using each retriever backend. | Support for at least 3 retrieval backends: LamAPI, Wikidata Lookup API, and Wikidata SPARQL endpoint |
+| **Multi-Ontology & Entity Type Support** | Demonstrated entity linking experiments using different ontology or semantic schemas. Validation includes configurable ontology selection and output aligned with ontology identifiers (e.g., URI, QID). | Support for at least 3 semantic targets such as: **schema.org** (general semantic vocabulary), **DPV / DPV-AI** (privacy and AI domain ontology), and **NER-derived type schema** with both coarse categories (e.g., Person, Organization, Location) and fine-grained entity types |
+| **Explainability & Confidence Output** | Structured output validation ensuring that each linking decision includes explanation metadata and a numeric confidence score. | 100% of predictions include: selected entity, ranked candidate list (top-k), explanation of the selection, and confidence score |
 
 ## **Related Project Links**
 | Project Links |
