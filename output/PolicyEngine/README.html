@@ -44,9 +44,13 @@
 </thead>
 <tbody>
 <tr>
-<td>1) Policy management expressiveness: ability to represent data processing regulations in a machine processable form. 2) Policy-based Data Access Control Accuracy</td>
-<td>1) analysis of an existing large (&gt;100) corpus of data sharing/data processing agreements 2) Experiments over at least two policies, asking the pilots to express (in machine processable form, through our tool's interface) a sample (min 20 each) of( access requests (evenly distributed as requests to be permitted, and to be denied).</td>
-<td>1) Ability to move &gt;15% of contractual clauses and privacy policies in an average agreement to machine-processable form. 2) High accuracy (&gt;90%) in predicting the correct access control response </td>
+<td>1) Support Policy Comparison 2) Support different policy evaluation semantics (see paper) and complex language features (such as obligations, duties, remedies, consequence) 3) Data Usage Policy Evaluation Scalability 4) Policy Comparison Scalability</td>
+<td>1) fully fledged comparison of policies, supporting all common ODRL features (85% of features, see KPI for policy editor) 2) experiments comparing different semantics and features  3) and 4) experiments with synthetic data: policies and states of the world</td>
+<td>1) at least two semantics and two complex features 2) support of ODRL 2.2 (ODRL Lite and Full ODRL) and main semantics from Jaime et al. Evaluation and Comparison Semantics for ODRL, 2025  3) and 4) support &gt;20  policies of average size (&gt;5 rules per policy), evaluated over states of the world from different users  </td>
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
+<p dir="auto">Progress towards KPIs:</p>
+<ul dir="auto">
+<li>04/03/2026: 1) Implemented "refinements" and "constraints" on policy comparison engine 2) the engine currently supports ODRL lite semantics with permissions and prohibitions 3) and 4) we developed synthetic policy and state of the world generation capability</li>
+</ul>

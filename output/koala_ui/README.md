@@ -1,7 +1,7 @@
 <div class="tool-header">
   <h1>Koala UI</h1>
   <a href="https://www.sintef.no/">
-    <img src="./images/sintef_logo.svg" alt="SINTEF logo" width="220">
+    <img src="./images/Powered-by-SINTEF-01.png" alt="SINTEF logo" width="300">
   </a>
 </div>
 
