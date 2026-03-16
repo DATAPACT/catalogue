@@ -54,3 +54,14 @@ n/a
 ## **Additional Links**
 This repository implements the minimal finite covering problem and its application, and is the official source code for paper "[Is Adversarial Training with Compressed Datasets Effective?](https://arxiv.org/abs/2402.05675)" (Chen & Selvan. 2025).
 
+## Compresso -> POT 
+ 
+Pareto Optimal Tradeoff (POT) is a tool built on top of the Compresso toolset that add features to consider also fairness, and identify solutions that balance fairness, robustness, and quality requirements in the dataset. [Ongoing research](https://arxiv.org/abs/2602.23192) is steering methodology development to operationalize resource efficiency (by quantization or pruning) while maintaining algorithmic fairness of models.
+~                                                 
+## **Expected KPIs for POT**
+The evaluation framework quantifies the trade-off between efficiency, performance and fairness of models.
+
+| Optimization Objective | | Target Benchmark |
+| :--- | :--- | :--- |
+|Trade-off between efficiency (model capacity), performance (ex: accuracy), and fairness| Accuracy, efficiency (resource consumption), and fairness	| Reduction in resource consumption by 50% with < 10% drop in fairness metrics like accuracy gap|
+

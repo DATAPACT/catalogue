@@ -49,3 +49,24 @@
 <p dir="auto">n/a</p>
 <h2 dir="auto"><strong>Additional Links</strong></h2>
 <p dir="auto">This repository implements the minimal finite covering problem and its application, and is the official source code for paper "<a href="https://arxiv.org/abs/2402.05675" rel="nofollow">Is Adversarial Training with Compressed Datasets Effective?</a>" (Chen &amp; Selvan. 2025).</p>
+<h2 dir="auto">Compresso -&gt; POT</h2>
+<p dir="auto">Pareto Optimal Tradeoff (POT) is a tool built on top of the Compresso toolset that add features to consider also fairness, and identify solutions that balance fairness, robustness, and quality requirements in the dataset. <a href="https://arxiv.org/abs/2602.23192" rel="nofollow">Ongoing research</a> is steering methodology development to operationalize resource efficiency (by quantization or pruning) while maintaining algorithmic fairness of models.<br>
+~</p>
+<h2 dir="auto"><strong>Expected KPIs for POT</strong></h2>
+<p dir="auto">The evaluation framework quantifies the trade-off between efficiency, performance and fairness of models.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="left">Optimization Objective</th>
+<th align="left"></th>
+<th align="left">Target Benchmark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Trade-off between efficiency (model capacity), performance (ex: accuracy), and fairness</td>
+<td align="left">Accuracy, efficiency (resource consumption), and fairness</td>
+<td align="left">Reduction in resource consumption by 50% with &lt; 10% drop in fairness metrics like accuracy gap</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
