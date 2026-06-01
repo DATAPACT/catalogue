@@ -45,9 +45,12 @@ inLUMEN's core functionality is provided by LLM-powered agents that serve as hel
 
 |What (types)|How(Process)|Values|
 |------------|------------|------|
-|Workflow steps generated accurately when full pipeline descriptions are given|	User Evaluation| >80%|
-|Avg. time from design handoff to first executable/valid workflow| System logging | <5 minutes|
-|Workflow execution success rate of generated YAML > 80% in simulated environment|	Integration test success| >80%|
+|Accuracy|	Benchmark on (partly synthetic) datasets by comparing agent-generated pipelines (Argo Workflows YAML format) to existing pipelines (Argo Workflows YAML format).| Cosine similarity >= 0.8|
+|Usability| User Evaluation via Questionnaire about Usability/Ease of Use involving partners| Mean SUS score of at least 80 across representative participants from relevant use cases.|
+|Deployment Success Rate|	Record response from deployment tools after providing deployment files. | >90% of generated pipeline designs executable|
+|*Ability to perform compliance-by-design |*Modify non-compliant (mutated) pipelines so that they become compliant by providing legal analysis from LexAlign tool. Results validation done by human experts.|Expert-confirmed successful refinement for >90% of mutations.| 
+
+(*combined with LexAlign mutation testing) 
 
 ## **Related Project Links**
 | Project Links |
@@ -79,7 +82,7 @@ Common values you may change include:
 - `FRONTEND_PORT`, `MINIO_API_PORT`, `NEO4J_API_PORT`, `LLM_API_PORT`
 - `NEO4J_HTTP_PORT`, `NEO4J_BOLT_PORT`, `MINIO_S3_PORT`, `MINIO_CONSOLE_PORT`
 - `NEO4J_AUTH`, `MINIO_ROOT_USER`, `MINIO_ROOT_PASSWORD`
-- `API_AUTH_TOKEN` for the public API and Swagger/OpenAPI documentation
+- `API_AUTH_TOKEN` for the public API and Swagger/OpenAPI documentation when Keycloak auth is disabled
 - `AUTH_ENABLED` plus the Keycloak values when enabling authentication
 
 For Keycloak SSO, set `AUTH_ENABLED=true` and configure `KEYCLOAK_JWKS_URL`, `KEYCLOAK_ISSUER`, and `KEYCLOAK_AUDIENCE` in the root `.env`. For a local Keycloak on port `8081`, the default frontend client values are `VITE_KEYCLOAK_URL=http://localhost:8081`, `VITE_KEYCLOAK_REALM=inlumen`, and `VITE_KEYCLOAK_CLIENT_ID=inlumen-frontend`. The same frontend still supports the embedded toolbox contract: when loaded in an iframe it waits for an `SSO_TOKEN` postMessage and infers the toolbox parent origin, so `VITE_TOOLBOX_ORIGIN` is not normally needed; it remains supported in `frontend/.env` only as a fallback for deployments that hide iframe referrers. Standalone frontend setups can also keep using `VITE_AUTH_ENABLED` and `VITE_*_API_URL` in `frontend/.env`; Docker Compose derives those values from the root `.env` unless explicitly overridden.
@@ -134,7 +137,7 @@ LLM agents use OpenAI-compatible Chat Completions endpoints. Configure OpenRoute
 
 The public API is served by the connection analytics service on `LLM_API_PORT`, which is `5002` by default.
 
-Required public API environment variable:
+Required public API environment variable when `AUTH_ENABLED=false`:
 
 ```
 API_AUTH_TOKEN=change-me-local-token
@@ -147,46 +150,52 @@ Local URLs:
 - Health check: `http://localhost:5002/health`
 - Readiness check: `http://localhost:5002/ready`
 
-Swagger UI is enabled by default. Open `http://localhost:5002/docs`, enter the token from `API_AUTH_TOKEN`, then use the Swagger `Authorize` button or the pre-filled bearer auth to run live requests.
+Swagger UI is enabled by default. Open `http://localhost:5002/docs`, enter a bearer token, then use the Swagger `Authorize` button or the pre-filled bearer auth to run live requests.
 
-Authentication uses a static bearer token:
+When `AUTH_ENABLED=false`, authentication uses a static bearer token:
 
 ```
 Authorization: Bearer <API_AUTH_TOKEN>
 ```
 
-`/health` and `/ready` are public. The OpenAPI JSON and all `/api/v1/*` endpoints require the bearer token. Invalid or missing tokens return `401` or `403`; validation errors return `400` or `422`; missing resources return `404`.
+When `AUTH_ENABLED=true`, authentication uses Keycloak access tokens:
+
+```
+Authorization: Bearer <KEYCLOAK_JWT>
+```
+
+The API validates Keycloak JWTs with `KEYCLOAK_JWKS_URL`, checks `KEYCLOAK_ISSUER` when configured, and accepts `KEYCLOAK_AUDIENCE` matches from the token `aud`, `azp`, or `client_id` claims. `/health` and `/ready` are public. The OpenAPI JSON and all `/api/v1/*` endpoints require the bearer token. Invalid or missing tokens return `401` or `403`; validation errors return `400` or `422`; missing resources return `404`.
 
 Example requests:
 
 ```
 curl http://localhost:5002/health
 
-curl -H "Authorization: Bearer $API_AUTH_TOKEN" \
+curl -H "Authorization: Bearer $API_AUTH_TOKEN_OR_KEYCLOAK_JWT" \
   http://localhost:5002/openapi.json
 
-curl -H "Authorization: Bearer $API_AUTH_TOKEN" \
+curl -H "Authorization: Bearer $API_AUTH_TOKEN_OR_KEYCLOAK_JWT" \
   http://localhost:5002/api/v1/pipelines
 
 curl -X POST http://localhost:5002/api/v1/pipelines \
-  -H "Authorization: Bearer $API_AUTH_TOKEN" \
+  -H "Authorization: Bearer $API_AUTH_TOKEN_OR_KEYCLOAK_JWT" \
   -H "Content-Type: application/json" \
   -d '{"name":"Remote patient monitoring","description":"Integration-ready pipeline"}'
 
-curl -H "Authorization: Bearer $API_AUTH_TOKEN" \
+curl -H "Authorization: Bearer $API_AUTH_TOKEN_OR_KEYCLOAK_JWT" \
   "http://localhost:5002/api/v1/workflows?include_download_urls=true"
 
-curl -H "Authorization: Bearer $API_AUTH_TOKEN" \
+curl -H "Authorization: Bearer $API_AUTH_TOKEN_OR_KEYCLOAK_JWT" \
   http://localhost:5002/api/v1/pipelines/pipeline-123/artifacts/dockerfiles
 
-curl -H "Authorization: Bearer $API_AUTH_TOKEN" \
+curl -H "Authorization: Bearer $API_AUTH_TOKEN_OR_KEYCLOAK_JWT" \
   http://localhost:5002/api/v1/pipelines/pipeline-123/artifacts/argo-workflow.yaml
 ```
 
 Available public endpoint groups:
 
 - `Pipelines`: create, list, fetch, and list versions for the current design pipeline
-- `Artifacts`: generate Dockerfiles and Argo Workflow YAML for a pipeline or pipeline version
+- `Artifacts`: generate Dockerfiles with the configured LLM, then assemble Argo Workflow YAML deterministically from the pipeline graph and Dockerfile metadata
 - `Workflows`: list available workflow metadata, associated pipeline IDs, version metadata, and temporary MinIO signed access URLs when files are available
 - `Health`: public liveness and readiness checks
 

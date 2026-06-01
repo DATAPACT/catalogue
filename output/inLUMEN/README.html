@@ -42,22 +42,28 @@
 </thead>
 <tbody>
 <tr>
-<td>Workflow steps generated accurately when full pipeline descriptions are given</td>
-<td>User Evaluation</td>
-<td>&gt;80%</td>
+<td>Accuracy</td>
+<td>Benchmark on (partly synthetic) datasets by comparing agent-generated pipelines (Argo Workflows YAML format) to existing pipelines (Argo Workflows YAML format).</td>
+<td>Cosine similarity &gt;= 0.8</td>
 </tr>
 <tr>
-<td>Avg. time from design handoff to first executable/valid workflow</td>
-<td>System logging</td>
-<td>&lt;5 minutes</td>
+<td>Usability</td>
+<td>User Evaluation via Questionnaire about Usability/Ease of Use involving partners</td>
+<td>Mean SUS score of at least 80 across representative participants from relevant use cases.</td>
 </tr>
 <tr>
-<td>Workflow execution success rate of generated YAML &gt; 80% in simulated environment</td>
-<td>Integration test success</td>
-<td>&gt;80%</td>
+<td>Deployment Success Rate</td>
+<td>Record response from deployment tools after providing deployment files.</td>
+<td>&gt;90% of generated pipeline designs executable</td>
+</tr>
+<tr>
+<td>*Ability to perform compliance-by-design</td>
+<td>*Modify non-compliant (mutated) pipelines so that they become compliant by providing legal analysis from LexAlign tool. Results validation done by human experts.</td>
+<td>Expert-confirmed successful refinement for &gt;90% of mutations.</td>
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
+<p dir="auto">(*combined with LexAlign mutation testing)</p>
 <h2 dir="auto"><strong>Related Project Links</strong></h2>
 <markdown-accessiblity-table><table role="table">
 <thead>
@@ -93,7 +99,7 @@
 <li><code class="notranslate">FRONTEND_PORT</code>, <code class="notranslate">MINIO_API_PORT</code>, <code class="notranslate">NEO4J_API_PORT</code>, <code class="notranslate">LLM_API_PORT</code></li>
 <li><code class="notranslate">NEO4J_HTTP_PORT</code>, <code class="notranslate">NEO4J_BOLT_PORT</code>, <code class="notranslate">MINIO_S3_PORT</code>, <code class="notranslate">MINIO_CONSOLE_PORT</code></li>
 <li><code class="notranslate">NEO4J_AUTH</code>, <code class="notranslate">MINIO_ROOT_USER</code>, <code class="notranslate">MINIO_ROOT_PASSWORD</code></li>
-<li><code class="notranslate">API_AUTH_TOKEN</code> for the public API and Swagger/OpenAPI documentation</li>
+<li><code class="notranslate">API_AUTH_TOKEN</code> for the public API and Swagger/OpenAPI documentation when Keycloak auth is disabled</li>
 <li><code class="notranslate">AUTH_ENABLED</code> plus the Keycloak values when enabling authentication</li>
 </ul>
 <p dir="auto">For Keycloak SSO, set <code class="notranslate">AUTH_ENABLED=true</code> and configure <code class="notranslate">KEYCLOAK_JWKS_URL</code>, <code class="notranslate">KEYCLOAK_ISSUER</code>, and <code class="notranslate">KEYCLOAK_AUDIENCE</code> in the root <code class="notranslate">.env</code>. For a local Keycloak on port <code class="notranslate">8081</code>, the default frontend client values are <code class="notranslate">VITE_KEYCLOAK_URL=http://localhost:8081</code>, <code class="notranslate">VITE_KEYCLOAK_REALM=inlumen</code>, and <code class="notranslate">VITE_KEYCLOAK_CLIENT_ID=inlumen-frontend</code>. The same frontend still supports the embedded toolbox contract: when loaded in an iframe it waits for an <code class="notranslate">SSO_TOKEN</code> postMessage and infers the toolbox parent origin, so <code class="notranslate">VITE_TOOLBOX_ORIGIN</code> is not normally needed; it remains supported in <code class="notranslate">frontend/.env</code> only as a fallback for deployments that hide iframe referrers. Standalone frontend setups can also keep using <code class="notranslate">VITE_AUTH_ENABLED</code> and <code class="notranslate">VITE_*_API_URL</code> in <code class="notranslate">frontend/.env</code>; Docker Compose derives those values from the root <code class="notranslate">.env</code> unless explicitly overridden.</p>
@@ -133,7 +139,7 @@ The compose setup also exposes the internal APIs at the configured <code class="
 <p dir="auto">LLM agents use OpenAI-compatible Chat Completions endpoints. Configure OpenRouter, Ollama Cloud, or a custom on-prem endpoint in the dialog window or through the root <code class="notranslate">.env</code> file.</p>
 <h2 dir="auto"><strong>Public API and Swagger</strong></h2>
 <p dir="auto">The public API is served by the connection analytics service on <code class="notranslate">LLM_API_PORT</code>, which is <code class="notranslate">5002</code> by default.</p>
-<p dir="auto">Required public API environment variable:</p>
+<p dir="auto">Required public API environment variable when <code class="notranslate">AUTH_ENABLED=false</code>:</p>
 <pre class="notranslate"><code class="notranslate">API_AUTH_TOKEN=change-me-local-token
 </code></pre>
 <p dir="auto">Local URLs:</p>
@@ -143,38 +149,41 @@ The compose setup also exposes the internal APIs at the configured <code class="
 <li>Health check: <code class="notranslate">http://localhost:5002/health</code></li>
 <li>Readiness check: <code class="notranslate">http://localhost:5002/ready</code></li>
 </ul>
-<p dir="auto">Swagger UI is enabled by default. Open <code class="notranslate">http://localhost:5002/docs</code>, enter the token from <code class="notranslate">API_AUTH_TOKEN</code>, then use the Swagger <code class="notranslate">Authorize</code> button or the pre-filled bearer auth to run live requests.</p>
-<p dir="auto">Authentication uses a static bearer token:</p>
+<p dir="auto">Swagger UI is enabled by default. Open <code class="notranslate">http://localhost:5002/docs</code>, enter a bearer token, then use the Swagger <code class="notranslate">Authorize</code> button or the pre-filled bearer auth to run live requests.</p>
+<p dir="auto">When <code class="notranslate">AUTH_ENABLED=false</code>, authentication uses a static bearer token:</p>
 <pre class="notranslate"><code class="notranslate">Authorization: Bearer &lt;API_AUTH_TOKEN&gt;
 </code></pre>
-<p dir="auto"><code class="notranslate">/health</code> and <code class="notranslate">/ready</code> are public. The OpenAPI JSON and all <code class="notranslate">/api/v1/*</code> endpoints require the bearer token. Invalid or missing tokens return <code class="notranslate">401</code> or <code class="notranslate">403</code>; validation errors return <code class="notranslate">400</code> or <code class="notranslate">422</code>; missing resources return <code class="notranslate">404</code>.</p>
+<p dir="auto">When <code class="notranslate">AUTH_ENABLED=true</code>, authentication uses Keycloak access tokens:</p>
+<pre class="notranslate"><code class="notranslate">Authorization: Bearer &lt;KEYCLOAK_JWT&gt;
+</code></pre>
+<p dir="auto">The API validates Keycloak JWTs with <code class="notranslate">KEYCLOAK_JWKS_URL</code>, checks <code class="notranslate">KEYCLOAK_ISSUER</code> when configured, and accepts <code class="notranslate">KEYCLOAK_AUDIENCE</code> matches from the token <code class="notranslate">aud</code>, <code class="notranslate">azp</code>, or <code class="notranslate">client_id</code> claims. <code class="notranslate">/health</code> and <code class="notranslate">/ready</code> are public. The OpenAPI JSON and all <code class="notranslate">/api/v1/*</code> endpoints require the bearer token. Invalid or missing tokens return <code class="notranslate">401</code> or <code class="notranslate">403</code>; validation errors return <code class="notranslate">400</code> or <code class="notranslate">422</code>; missing resources return <code class="notranslate">404</code>.</p>
 <p dir="auto">Example requests:</p>
 <pre class="notranslate"><code class="notranslate">curl http://localhost:5002/health
 
-curl -H "Authorization: Bearer $API_AUTH_TOKEN" \
+curl -H "Authorization: Bearer $API_AUTH_TOKEN_OR_KEYCLOAK_JWT" \
   http://localhost:5002/openapi.json
 
-curl -H "Authorization: Bearer $API_AUTH_TOKEN" \
+curl -H "Authorization: Bearer $API_AUTH_TOKEN_OR_KEYCLOAK_JWT" \
   http://localhost:5002/api/v1/pipelines
 
 curl -X POST http://localhost:5002/api/v1/pipelines \
-  -H "Authorization: Bearer $API_AUTH_TOKEN" \
+  -H "Authorization: Bearer $API_AUTH_TOKEN_OR_KEYCLOAK_JWT" \
   -H "Content-Type: application/json" \
   -d '{"name":"Remote patient monitoring","description":"Integration-ready pipeline"}'
 
-curl -H "Authorization: Bearer $API_AUTH_TOKEN" \
+curl -H "Authorization: Bearer $API_AUTH_TOKEN_OR_KEYCLOAK_JWT" \
   "http://localhost:5002/api/v1/workflows?include_download_urls=true"
 
-curl -H "Authorization: Bearer $API_AUTH_TOKEN" \
+curl -H "Authorization: Bearer $API_AUTH_TOKEN_OR_KEYCLOAK_JWT" \
   http://localhost:5002/api/v1/pipelines/pipeline-123/artifacts/dockerfiles
 
-curl -H "Authorization: Bearer $API_AUTH_TOKEN" \
+curl -H "Authorization: Bearer $API_AUTH_TOKEN_OR_KEYCLOAK_JWT" \
   http://localhost:5002/api/v1/pipelines/pipeline-123/artifacts/argo-workflow.yaml
 </code></pre>
 <p dir="auto">Available public endpoint groups:</p>
 <ul dir="auto">
 <li><code class="notranslate">Pipelines</code>: create, list, fetch, and list versions for the current design pipeline</li>
-<li><code class="notranslate">Artifacts</code>: generate Dockerfiles and Argo Workflow YAML for a pipeline or pipeline version</li>
+<li><code class="notranslate">Artifacts</code>: generate Dockerfiles with the configured LLM, then assemble Argo Workflow YAML deterministically from the pipeline graph and Dockerfile metadata</li>
 <li><code class="notranslate">Workflows</code>: list available workflow metadata, associated pipeline IDs, version metadata, and temporary MinIO signed access URLs when files are available</li>
 <li><code class="notranslate">Health</code>: public liveness and readiness checks</li>
 </ul>
