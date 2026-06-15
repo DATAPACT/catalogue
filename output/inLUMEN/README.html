@@ -94,10 +94,11 @@
 <p dir="auto">Step 1: Clone this repository on your computer.</p>
 <p dir="auto">Step 2: Navigate to the cloned project directory.</p>
 <p dir="auto">Step 3: Optional but recommended: copy <code class="notranslate">.env.example</code> to <code class="notranslate">.env</code> and adjust only the values you need.</p>
-<p dir="auto">The Docker setup derives CORS, frontend API URLs, Neo4J URI, and MinIO endpoint from the Compose service names, ports, and credential values, so you do not need separate <code class="notranslate">CORS_ALLOWED_ORIGIN</code>, <code class="notranslate">NEO4J_URI</code>, <code class="notranslate">MINIO_ENDPOINT</code>, or <code class="notranslate">VITE_*_API_URL</code> entries for normal use.</p>
+<p dir="auto">The Docker setup derives frontend API URLs, Neo4J URI, and MinIO endpoint from the Compose service names, ports, and credential values, so you do not need separate <code class="notranslate">NEO4J_URI</code>, <code class="notranslate">MINIO_ENDPOINT</code>, or <code class="notranslate">VITE_*_API_URL</code> entries for normal local use. The backend sends permissive CORS headers by default.</p>
 <p dir="auto">Common values you may change include:</p>
 <ul dir="auto">
 <li><code class="notranslate">FRONTEND_PORT</code>, <code class="notranslate">INLUMEN_API_PORT</code></li>
+<li><code class="notranslate">INLUMEN_API_PUBLIC_URL</code> when the browser frontend needs to call a separate deployed backend URL</li>
 <li><code class="notranslate">NEO4J_AUTH</code>, <code class="notranslate">MINIO_ROOT_USER</code>, <code class="notranslate">MINIO_ROOT_PASSWORD</code></li>
 <li><code class="notranslate">API_AUTH_TOKEN</code> for the gateway API and Swagger/OpenAPI documentation when Keycloak auth is disabled</li>
 <li><code class="notranslate">AUTH_ENABLED</code> plus the Keycloak values when enabling authentication</li>
@@ -110,6 +111,16 @@
 <p dir="auto">For deployment/production-like runs, use the production compose file. It exposes only the frontend and backend gateway on the host; Neo4J and MinIO stay private on the Compose network:</p>
 <pre class="notranslate"><code class="notranslate">docker compose -f docker-compose-prod.yml up --build
 </code></pre>
+<p dir="auto">For a deployment where the browser frontend calls a separately deployed backend URL, configure the root <code class="notranslate">.env</code> before building:</p>
+<pre class="notranslate"><code class="notranslate">INLUMEN_API_PUBLIC_URL=https://api.inlumen.example.com
+</code></pre>
+<p dir="auto"><code class="notranslate">INLUMEN_API_PUBLIC_URL</code> is passed to the Vite frontend as <code class="notranslate">VITE_INLUMEN_API_URL</code>, so browser requests go to the deployed backend instead of guessing from the frontend hostname. Use a full URL such as <code class="notranslate">https://api.inlumen.example.com</code>; for local testing, shorthand values such as <code class="notranslate">localhost:5001</code> are normalized with the current browser protocol.</p>
+<p dir="auto">You can verify the backend CORS preflight before opening the frontend:</p>
+<pre class="notranslate"><code class="notranslate">curl -i -X OPTIONS "$INLUMEN_API_PUBLIC_URL/health" \
+  -H "Origin: https://inlumen.example.com" \
+  -H "Access-Control-Request-Method: GET"
+</code></pre>
+<p dir="auto">The response should include <code class="notranslate">Access-Control-Allow-Origin: *</code>.</p>
 <p dir="auto">Step 5: Wait for the stack to finish starting. The root compose file now:</p>
 <ul dir="auto">
 <li>starts Neo4J, MinIO, the backend gateway, and the frontend together</li>
