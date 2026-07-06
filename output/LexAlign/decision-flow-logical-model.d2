@@ -1,0 +1,269 @@
+# Source diagram for docs/decision-flow-logical-model.html.
+# Render with:
+#   d2 --layout dagre --pad 32 docs/decision-flow-logical-model.d2 docs/images/decision-flow-logical-model.svg
+
+direction: down
+
+authoring: {
+  label: "Authoring model"
+
+  DecisionFlow: {
+    shape: class
+    code: string
+    versionPolicy: string
+    startPoint: DecisionPoint
+  }
+
+  DecisionPoint: {
+    shape: class
+    id: string
+    question: string
+    answerShape: string
+    selectionMode: string
+    selectionRule: TransitionSelectionRule
+  }
+
+  EvaluationPolicy: {
+    shape: class
+    defaultMethod: EvaluationMethod
+    allowedMethods: "EvaluationMethod[]"
+    "humanAllowed = true": ""
+  }
+
+  AnswerOption: {
+    shape: class
+    id: string
+    "label": string
+    valueType: string
+    claimText: string
+    claimEffects: "ClaimEffectBinding[]"
+  }
+
+  Transition: {
+    shape: class
+    id: string
+    target: DecisionPoint
+    pathEffects: "Effect[]"
+    priority: number
+  }
+
+  TransitionSelectionRule: {
+    shape: class
+    mode: string
+    strategy: string
+    minLikelihood: number
+    tieBreak: string
+    maxSelections: number
+  }
+}
+
+evidence_and_methods: {
+  label: "Evidence and evaluation methods"
+
+  EvidenceContext: {
+    shape: class
+    userFacts: object
+    pipelineEvidence: object
+    legalContext: object
+  }
+
+  ConcreteFact: {
+    shape: class
+    key: string
+    valueType: string
+    source: string
+    confirmationState: string
+  }
+
+  EvaluationMethod: {
+    shape: class
+    mode: string
+    tracePolicy: string
+    certaintyPolicy: string
+  }
+
+  AgentEvaluation: {
+    shape: class
+    evidencePack: EvidenceContext
+    promptPolicy: string
+    answerClaimResults: "ClaimEvaluation[]"
+  }
+
+  HumanEvaluation: {
+    shape: class
+    reviewer: string
+    manualAnswer: object
+    rationale: string
+  }
+
+  DeterministicRule: {
+    shape: class
+    expression: string
+    inputPolicy: string
+    nullPolicy: string
+  }
+
+  AnswerClaim: {
+    shape: class
+    id: string
+    option: AnswerOption
+    claim: string
+    expectedValue: object
+    method: EvaluationMethod
+  }
+
+  ClaimEvaluation: {
+    shape: class
+    truthValue: string
+    accepted: boolean
+    likelihood: number
+    confidence: number
+    evidenceRefs: "string[]"
+    rationale: string
+  }
+}
+
+transition_reasoning: {
+  label: "Transition reasoning"
+
+  Predicate: {
+    shape: class
+    operator: string
+    inputs: "AnswerClaim[]"
+    missingPolicy: string
+  }
+
+  TransitionHypothesis: {
+    shape: class
+    id: string
+    transition: Transition
+    answerClaims: "AnswerClaim[]"
+    scoringRule: TransitionScoringRule
+    threshold: number
+  }
+
+  TransitionScoringRule: {
+    shape: class
+    predicate: Predicate
+    aggregationPolicy: string
+    missingPolicy: string
+    scoreFunction: string
+  }
+
+  TransitionScore: {
+    shape: class
+    likelihood: number
+    certainty: number
+    selected: boolean
+    rationale: string
+    computedFrom: "ClaimEvaluation[]"
+  }
+
+  ClaimEffectBinding: {
+    shape: class
+    source: AnswerOption
+    trigger: string
+    minCertainty: number
+    emits: Effect
+  }
+
+  Effect: {
+    shape: class
+    kind: string
+    value: string
+    source: string
+    provenancePolicy: string
+  }
+}
+
+runtime_and_release: {
+  label: "Runtime and release"
+
+  PublishedVersion: {
+    shape: class
+    version: string
+    schema: object
+    compiledFlow: ExecutableFlow
+  }
+
+  ExecutableFlow: {
+    shape: class
+    runtimeQuestions: "object[]"
+    compiledTransitions: "object[]"
+    compiledClaimEffects: "ClaimEffectBinding[]"
+    sourceVersion: PublishedVersion
+  }
+
+  FlowRun: {
+    shape: class
+    status: string
+    selectedTransition: Transition
+    appliedClaimEffects: "ClaimEffectBinding[]"
+    selectedMethods: "EvaluationMethod[]"
+    "startedAt/finishedAt": datetime
+  }
+
+  FlowState: {
+    shape: class
+    statuses: "string[]"
+    obligations: "string[]"
+    "warnings/branches": "object[]"
+  }
+
+  AuditTrace: {
+    shape: class
+    claimEvaluations: "ClaimEvaluation[]"
+    transitionScores: "TransitionScore[]"
+    selectionReason: string
+    selectedTransition: Transition
+    emittedEffects: "Effect[]"
+    provenance: object
+  }
+
+  ManualResolutionSession: {
+    shape: class
+    humanReviewer: string
+    manualAnswers: "object[]"
+    rationale: string
+  }
+}
+
+authoring.DecisionFlow -> authoring.DecisionPoint: owns
+authoring.DecisionFlow -> runtime_and_release.PublishedVersion: publishes
+authoring.DecisionPoint -> authoring.EvaluationPolicy: uses
+authoring.DecisionPoint -> authoring.AnswerOption: options
+authoring.DecisionPoint -> authoring.Transition: outgoing
+authoring.DecisionPoint -> authoring.TransitionSelectionRule: "selects with"
+
+authoring.EvaluationPolicy -> evidence_and_methods.EvaluationMethod: allows
+evidence_and_methods.AgentEvaluation -> evidence_and_methods.EvaluationMethod: extends
+evidence_and_methods.HumanEvaluation -> evidence_and_methods.EvaluationMethod: extends
+evidence_and_methods.DeterministicRule -> evidence_and_methods.EvaluationMethod: extends
+evidence_and_methods.ConcreteFact -> evidence_and_methods.DeterministicRule: inputs
+
+authoring.AnswerOption -> evidence_and_methods.AnswerClaim: formulates
+authoring.AnswerOption -> transition_reasoning.ClaimEffectBinding: declares
+evidence_and_methods.EvidenceContext -> evidence_and_methods.AnswerClaim: "evidence for"
+evidence_and_methods.EvaluationMethod -> evidence_and_methods.ClaimEvaluation: resolves
+evidence_and_methods.AnswerClaim -> evidence_and_methods.ClaimEvaluation: "evaluated as"
+transition_reasoning.ClaimEffectBinding -> transition_reasoning.Effect: emits
+
+authoring.Transition -> transition_reasoning.TransitionHypothesis: has
+authoring.Transition -> transition_reasoning.Effect: "path effects"
+transition_reasoning.TransitionHypothesis -> evidence_and_methods.AnswerClaim: aggregates
+transition_reasoning.TransitionHypothesis -> transition_reasoning.TransitionScoringRule: "scores with"
+transition_reasoning.TransitionScoringRule -> transition_reasoning.Predicate: "evaluates"
+transition_reasoning.TransitionScoringRule -> evidence_and_methods.ClaimEvaluation: inputs
+transition_reasoning.TransitionScoringRule -> transition_reasoning.TransitionScore: computes
+authoring.TransitionSelectionRule -> transition_reasoning.TransitionScore: ranks
+transition_reasoning.TransitionScore -> authoring.Transition: "selected transition"
+
+runtime_and_release.PublishedVersion -> runtime_and_release.ExecutableFlow: compiles
+runtime_and_release.ExecutableFlow -> runtime_and_release.FlowRun: executes
+runtime_and_release.FlowRun -> runtime_and_release.FlowState: updates
+runtime_and_release.FlowRun -> runtime_and_release.AuditTrace: records
+runtime_and_release.FlowRun -> transition_reasoning.ClaimEffectBinding: applies
+runtime_and_release.ManualResolutionSession -> runtime_and_release.FlowRun: "manual path"
+runtime_and_release.AuditTrace -> evidence_and_methods.ClaimEvaluation: includes
+runtime_and_release.AuditTrace -> transition_reasoning.TransitionScore: includes
+runtime_and_release.AuditTrace -> transition_reasoning.Effect: includes

@@ -1,0 +1,416 @@
+LexAlign decision flow conceptual model
+=======================================
+
+This schema describes the decision-flow model as represented in this repo. It is
+grounded in:
+
+- platform/compliance_analyses/models.py
+- platform/compliance_analyses/flow_authoring.py
+- platform/compliance_analyses/serializers.py
+- platform/compliance_analyses/views.py
+- frontend/src/lib/types/flow.ts
+- agentic-evaluator/app/utility/question.py
+- agentic-evaluator/app/utility/lex_align.py
+- agentic-evaluator/app/utility/state_object.py
+- agentic-evaluator/app/utility/action_schema.py
+- platform/compliance_analyses/seed/*.jsonl
+
+Conceptual summary
+------------------
+
+A decision flow in LexAlign has two shapes:
+
+1. Authoring graph
+   A tenant-owned ComplianceFlow made from nodes, alternatives, and ordered
+   edges. This is what the flow editor stores and validates.
+
+2. Runtime question flow
+   A compiled AgenticFlow definition made from Question payloads. This is what
+   the evaluator traverses against a fact object, producing statuses,
+   obligations, warnings, and provenance.
+
+The bridge between the two shapes is publishing:
+
+ComplianceFlow draft
+  -> validate_flow_payload(...)
+  -> compile_flow_to_runtime_definition(...)
+  -> RegulationFlow definition_file
+  -> ComplianceFlowSnapshot
+  -> RegulationFlowRun / StateObject / report
+
+Object-oriented schema
+----------------------
+
+class ComplianceFlow {
+  id: int
+  owner_subject: string
+  code: string
+  name: string
+  description: text
+  status: FlowStatus = draft | published | archived
+  start_node_id: string
+  latest_published_version: int
+  created_at: datetime
+  updated_at: datetime
+
+  nodes: FlowNode[0..*]
+  edges: FlowEdge[0..*]
+  snapshots: ComplianceFlowSnapshot[0..*]
+
+  invariant unique(owner_subject, code)
+  invariant start_node_id references one FlowNode.node_id
+}
+
+class FlowNode {
+  id: int
+  flow: ComplianceFlow
+  node_id: string
+  node_type: NodeType = single_select | multi_select | info | end
+  question: text
+  hint: text?
+  is_required: boolean
+  regulatory_context: LegalReference[]
+  fact_context: FactReference[]
+  ui_position_x: float
+  ui_position_y: float
+
+  alternatives: NodeAlternative[0..*]
+  outgoing_edges: FlowEdge[0..*]
+
+  invariant unique(flow, node_id)
+  invariant single_select and multi_select nodes have alternatives
+  invariant single_select, multi_select, and info nodes have a transition edge
+  note info nodes without alternatives compile to a boolean "continue" answer
+}
+
+class NodeAlternative {
+  id: int
+  node: FlowNode
+  alt_id: string
+  label: string
+  description: text
+  alt_type: AlternativeType = boolean | string | number
+
+  invariant unique(node, alt_id)
+}
+
+class FlowEdge {
+  id: int
+  flow: ComplianceFlow
+  edge_id: string
+  source_node: FlowNode
+  target_node_id: string?  // FlowNode.node_id, "END", or null
+  priority: int
+  condition: EdgeCondition
+  actions: EdgeActions
+
+  invariant unique(flow, edge_id)
+  invariant source_node belongs to flow
+  invariant target_node_id is null, "END", or a node in flow
+  invariant priority >= 0
+}
+
+class EdgeCondition {
+  kind: "always"
+}
+
+class CompoundEdgeCondition extends EdgeCondition {
+  kind: "all" | "any"
+  clauses: EdgeClause[1..*]
+}
+
+class EdgeClause {
+  kind:
+    selected_any |
+    selected_all |
+    status_true |
+    answer_true |
+    not
+}
+
+class SelectedAnswersClause extends EdgeClause {
+  kind: "selected_any" | "selected_all"
+  answer_ids: string[1..*]  // alt_id values on the source node
+}
+
+class StatusTrueClause extends EdgeClause {
+  kind: "status_true"
+  status_key: string        // key in StateObject.statuses
+}
+
+class AnswerTrueClause extends EdgeClause {
+  kind: "answer_true"
+  node_id: string
+  answer_id: string
+}
+
+class NotClause extends EdgeClause {
+  kind: "not"
+  clause: EdgeClause
+}
+
+class EdgeActions {
+  set_status_true: string[0..*]
+  add_obligations: string[0..*]
+}
+
+class ComplianceFlowSnapshot {
+  id: int
+  flow: ComplianceFlow
+  version: int
+  schema_json: object       // immutable authoring payload
+  created_by_subject: string
+  published_at: datetime
+  runtime_regulation_flow: RegulationFlow?
+
+  invariant unique(flow, version)
+}
+
+class AgenticFlow {
+  id: int
+  code: string
+  name: string
+  description: text
+  owner_subject: string
+  definition_format: "jsonl" | "json"
+  definition_file: file
+  created_at: datetime
+  updated_at: datetime
+
+  questions: Question[0..*] // loaded from definition_file
+}
+
+class DerivationFlow extends AgenticFlow {
+  // Derives a fact object from analysis context, user facts, and pipeline
+  // evidence before regulatory analysis.
+}
+
+class RegulationFlow extends AgenticFlow {
+  derivation_flows: DerivationFlow[0..*]
+  snapshots: ComplianceFlowSnapshot[0..*]
+}
+
+class CustomFlow extends AgenticFlow {
+}
+
+class Question {
+  question_id: string
+  question: string
+  hint: string?
+  source: (int|string)[]              // legacy legal source refs
+  legal_refs: LegalReferenceMap?
+  alternatives: QuestionSchema
+  radio: boolean                      // true means single-select behavior
+  instructions: RoutingInstruction[]
+  routing_mode: string?               // deterministic_v1 uses parser
+  fact_context: FactReference[]?
+  precomputed_legal_info: string?
+  precomputed_legal_info_meta: object?
+  precomputed_legal_info_blocks: object[]?
+  precomputed_fact_object_selector: object?
+  precomputed_fact_object_selector_meta: object?
+  trusted_answer_rule: object?
+  flow_code: string?
+  flow_name: string?
+}
+
+class QuestionSchema {
+  type: "object"
+  title: "question_schema"
+  properties: Map<answer_key, AnswerProperty>
+  required: answer_key[]
+}
+
+class AnswerProperty {
+  type: "boolean" | "string" | "number"
+  title: string
+  description: string?
+}
+
+class RoutingInstruction {
+  condition_expression: string
+  effects: RuntimeEffect[0..*]
+  next_question: question_id | "END"
+
+  textual form:
+    <condition> -> 'st:<status>' + 'ob:<obligation>' + 'id:<question_id>'
+
+  condition language:
+    answer_key
+    answer_key AND answer_key
+    answer_key OR answer_key
+    NOT answer_key
+    True
+    else
+    sys:<status_key>
+    sys:<question_id>.<answer_id>
+}
+
+class RuntimeEffect {
+  kind: "status" | "obligation" | "next_question"
+  value: string
+}
+
+class AgenticFlowRun {
+  id: int
+  analysis: ComplianceAnalysis
+  flow: AgenticFlow
+  status: queued | running | completed | failed | cancelled
+  triggered_at: datetime
+  started_at: datetime?
+  finished_at: datetime?
+  evaluator_request_id: string
+  request_payload: object
+  result_payload: object
+  error: text
+}
+
+class DerivationFlowRun extends AgenticFlowRun {
+  fact_object: object
+  state_object: StateObject
+}
+
+class RegulationFlowRun extends AgenticFlowRun {
+  state_object: StateObject
+  derivation_runs: DerivationFlowRun[0..*]
+}
+
+class StateObject {
+  statuses: Map<string, boolean>
+  obligations: Map<string, string>
+  provenance: Map<question_id, ProvenanceEntry>
+  warnings: Map<question_id, string>
+  branched_runs: Map<question_id, BranchEntry[]>
+}
+
+class ProvenanceEntry {
+  question: string
+  response: object
+  action_out: Action
+  effects: string[]
+  response_meta: object?
+}
+
+class Action {
+  instruction_chosen: string
+  add_obligation: string[]
+  change_status: string[]
+  next_question: string
+  explination: string          // exact runtime field spelling
+}
+
+class BranchEntry {
+  state: StateObject
+  response: object
+  done: boolean
+}
+
+class ComplianceAnalysis {
+  id: int
+  owner_subject: string
+  name: string
+  simpipe_project_id: string
+  simpipe_dry_run_id: string
+  workflow_template_file: file?
+
+  user_input: ComplianceAnalysisUserInput?
+  pipeline: DataPipeline?
+  flow_runs: AgenticFlowRun[0..*]
+}
+
+class ComplianceAnalysisUserInput {
+  analysis: ComplianceAnalysis
+  entity_types: string[]
+  modifications: string[]
+  scope_facts_criteria: string[]
+  exclusions_criteria: string[]
+  product_integration_booleans: boolean[]
+  confirmed_flags: boolean[]
+  qa_assistant_state: object
+}
+
+class DataPipeline {
+  analysis: ComplianceAnalysis
+  steps: PipelineStep[0..*]
+  assets: DataPipelineAsset[0..*]
+}
+
+Associations
+------------
+
+ComplianceFlow 1 -- 0..* FlowNode
+ComplianceFlow 1 -- 0..* FlowEdge
+ComplianceFlow 1 -- 0..* ComplianceFlowSnapshot
+FlowNode 1 -- 0..* NodeAlternative
+FlowNode 1 -- 0..* FlowEdge : source_node / outgoing_edges
+FlowEdge 0..1 --> FlowNode : target_node_id string reference
+ComplianceFlowSnapshot 0..1 --> RegulationFlow : runtime_regulation_flow
+
+AgenticFlow <|-- DerivationFlow
+AgenticFlow <|-- RegulationFlow
+AgenticFlow <|-- CustomFlow
+RegulationFlow 0..* -- 0..* DerivationFlow
+
+ComplianceAnalysis 1 -- 0..* AgenticFlowRun
+AgenticFlow 1 -- 0..* AgenticFlowRun
+AgenticFlowRun <|-- DerivationFlowRun
+AgenticFlowRun <|-- RegulationFlowRun
+RegulationFlowRun 0..* -- 0..* DerivationFlowRun
+DerivationFlowRun 1 --> FactObject
+RegulationFlowRun 1 --> StateObject
+
+Validation rules
+----------------
+
+- A flow must have at least one node.
+- start_node_id is required and must refer to an existing node.
+- Supported node types are single_select, multi_select, info, and end.
+- single_select and multi_select nodes must include alternatives.
+- Alternative ids must be unique within a node.
+- Edge ids must be unique within a flow.
+- Edge source_node_id must exist.
+- Edge target_node_id may be null, "END", or an existing node id.
+- Edge priority must be a non-negative integer.
+- A single_select, multi_select, or info node must have at least one transition
+  edge.
+- selected_any and selected_all clauses reference alternatives on the source
+  node.
+- answer_true clauses reference an existing node and alternative.
+- status_true clauses reference a status key.
+- not clauses wrap exactly one nested clause.
+
+Execution semantics
+-------------------
+
+1. The platform selects a DerivationFlow or RegulationFlow for a
+   ComplianceAnalysis.
+2. The evaluator loads flow questions from the AgenticFlow definition_file.
+3. Evaluation starts at an explicit start_id or the first question.
+4. Each Question is answered either by a trusted_answer_rule or an LLM workflow.
+5. The answer is normalized to the QuestionSchema.
+6. The action resolver chooses the first matching RoutingInstruction. For
+   deterministic_v1, LexAlign parses the instructions directly.
+7. Action effects update StateObject.statuses and StateObject.obligations.
+8. A ProvenanceEntry records question, response, selected action, effects, and
+   response metadata.
+9. The next question is followed until "END" or warning accumulation stops the
+   main path.
+10. If a radio question returns multiple true answers, LexAlign creates
+    branched_runs, evaluates the additional branches, and merges StateObjects.
+
+Key terms
+---------
+
+- ComplianceFlow: editable graph used by the flow authoring UI.
+- FlowNode: decision, information, or terminal node in the authoring graph.
+- NodeAlternative: answer option or answer field on a node.
+- FlowEdge: conditional transition and/or effect from a source node.
+- EdgeCondition: structured authoring condition compiled into instruction text.
+- EdgeActions: side effects that set statuses or add obligations.
+- ComplianceFlowSnapshot: immutable published graph payload.
+- AgenticFlow: executable persisted flow definition.
+- DerivationFlow: runtime flow that produces a fact object.
+- RegulationFlow: runtime flow that evaluates the fact object.
+- Question: executable runtime decision unit.
+- StateObject: execution memory and report substrate.
+- ProvenanceEntry: auditable trace of a question answer and resulting action.

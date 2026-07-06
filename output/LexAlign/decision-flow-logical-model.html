@@ -1,0 +1,1523 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LexAlign Decision Flow Logical Model</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5b6876;
+      --page: #f4f7fa;
+      --surface: #ffffff;
+      --line: #ccd6df;
+      --deep: #26394f;
+      --blue: #cfe3f8;
+      --green: #d9efe1;
+      --gold: #f7e8bd;
+      --rose: #f4d8d6;
+      --violet: #e7ddf6;
+      --cyan: #d7eef2;
+      --shadow: 0 14px 36px rgba(23, 32, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--page);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    header {
+      background: var(--deep);
+      color: #ffffff;
+      padding: 42px 28px 34px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .header-inner,
+    main {
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 12px;
+      font-size: 36px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 16px;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 880px;
+      margin-bottom: 0;
+      color: #dce8f4;
+      font-size: 17px;
+    }
+
+    main {
+      padding: 28px 24px 56px;
+    }
+
+    section {
+      margin-top: 26px;
+    }
+
+    .band {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .statement {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.8fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .definition {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--deep);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .definition p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .truths {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .truths li {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f9fbfd;
+      padding: 12px 14px;
+      color: #344254;
+    }
+
+    .diagram-scroll {
+      max-height: min(78vh, 920px);
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 12px;
+      cursor: grab;
+      overscroll-behavior: contain;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .diagram-scroll.is-panning {
+      cursor: grabbing;
+    }
+
+    .diagram-viewer {
+      display: grid;
+      gap: 12px;
+    }
+
+    .diagram-viewer:fullscreen {
+      width: 100vw;
+      height: 100vh;
+      background: var(--page);
+      padding: 16px;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .diagram-viewer:fullscreen .diagram-scroll {
+      max-height: none;
+      min-height: 0;
+    }
+
+    .diagram-viewer.is-expanded {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      width: 100vw;
+      height: 100vh;
+      background: var(--page);
+      padding: 16px;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    body.diagram-viewer-open {
+      overflow: hidden;
+    }
+
+    .diagram-viewer.is-expanded .diagram-scroll {
+      max-height: none;
+      min-height: 0;
+    }
+
+    .diagram-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .diagram-button {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--deep);
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+      padding: 10px 12px;
+    }
+
+    .diagram-button:hover {
+      border-color: #8fa4b8;
+      background: #f8fafc;
+    }
+
+    .diagram-button:focus-visible {
+      outline: 3px solid rgba(38, 57, 79, 0.24);
+      outline-offset: 2px;
+    }
+
+    .diagram-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    .oo-diagram {
+      display: block;
+      min-width: 3200px;
+      width: 100%;
+      height: auto;
+    }
+
+    .model-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .object {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      min-height: 100%;
+    }
+
+    .object.blue .object-head {
+      background: var(--blue);
+    }
+
+    .object.green .object-head {
+      background: var(--green);
+    }
+
+    .object.gold .object-head {
+      background: var(--gold);
+    }
+
+    .object.rose .object-head {
+      background: var(--rose);
+    }
+
+    .object.violet .object-head {
+      background: var(--violet);
+    }
+
+    .object.cyan .object-head {
+      background: var(--cyan);
+    }
+
+    .object-head {
+      border-bottom: 1px solid var(--line);
+      padding: 11px 13px;
+    }
+
+    .object-head code {
+      font-size: 14px;
+      font-weight: 760;
+    }
+
+    .object-body {
+      padding: 13px;
+    }
+
+    .object-body p {
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .object-body ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #344254;
+      font-size: 13px;
+    }
+
+    .object-body li {
+      margin: 5px 0;
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    .stage {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 14px;
+      min-height: 132px;
+    }
+
+    .stage:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -11px;
+      width: 10px;
+      height: 2px;
+      background: var(--line);
+    }
+
+    .stage strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .stage span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .rules-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .rules-table th,
+    .rules-table td {
+      border-bottom: 1px solid var(--line);
+      padding: 11px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .rules-table th {
+      background: #e8eef4;
+      color: #253548;
+    }
+
+    .rules-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .notation {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    pre {
+      margin: 0;
+      padding: 16px;
+      overflow-x: auto;
+      color: #e8edf3;
+      background: #111827;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .mapping {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .map-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfe;
+      padding: 14px;
+    }
+
+    .map-card h3 {
+      margin-bottom: 8px;
+    }
+
+    .map-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 1040px) {
+      .statement,
+      .model-grid,
+      .pipeline,
+      .notation,
+      .mapping {
+        grid-template-columns: 1fr;
+      }
+
+      .stage:not(:last-child)::after {
+        top: auto;
+        right: auto;
+        bottom: -8px;
+        left: 24px;
+        width: 2px;
+        height: 8px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 32px 20px 28px;
+      }
+
+      main {
+        padding: 22px 16px 44px;
+      }
+
+      h1 {
+        font-size: 29px;
+      }
+
+      .oo-diagram {
+        min-width: 2600px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <h1>LexAlign Decision Flow Logical Model</h1>
+      <p class="subtitle">
+        A domain-level view of decision flows as policies that ask evidence-backed
+        questions, distinguish agent judgment, human resolution, and deterministic
+        calculation, evaluate alternative-level hypotheses, emit effects, and
+        preserve an audit trace.
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <section class="statement" aria-label="Model statement">
+      <div class="definition">
+        <h2>Core Idea</h2>
+        <p>
+          A decision flow is a versioned decision specification. It describes
+          what must be asked, what evidence can answer it, which rules choose the
+          next step, and which compliance conclusions are accumulated during a
+          run. The implementation has authoring classes and runtime payloads,
+          but logically the flow is one decision model moving through different
+          representations. The recommended disambiguation is to make evaluation
+          method a property of each decision point, so agent judgment, human
+          resolution, and deterministic calculation remain separate
+          answer-production strategies inside the same flow. Trusted or
+          confirmed facts are input-source policies for deterministic rules,
+          not a separate evaluation method. Every
+          decision point should also allow explicit human resolution, so a
+          lawyer or other accountable reviewer can manually resolve a flow
+          without changing the flow semantics. Resolution itself is
+          claim-based: each answer option formulates an answer claim, those
+          claims are evaluated first, and each outgoing transition is
+          represented as a transition hypothesis that aggregates the relevant
+          claims. The next decision is selected by calculating which transition
+          hypothesis is true enough, or, for an
+          exclusive decision, which one is most likely to be true. Effects can
+          be attached either to answer options whose derived claims are
+          accepted or to selected transitions, so a classification like provider
+          can emit its own status or obligation even when several options share
+          the same route.
+        </p>
+      </div>
+      <ul class="truths" aria-label="Model truths">
+        <li>A flow is authored as a graph but executed as a question program.</li>
+        <li>Decision points declare their default evaluation method and allowed alternatives.</li>
+        <li>Every decision point supports direct human resolution as an alternative path.</li>
+        <li>Some points default to agent judgment and some to deterministic calculation over concrete facts.</li>
+        <li>Answer options formulate answer claims that are evaluated before any transition is chosen.</li>
+        <li>Each outgoing transition is a transition hypothesis over those claims.</li>
+        <li>Exclusive decisions select the most likely transition hypothesis; non-exclusive decisions may select every eligible transition above threshold.</li>
+        <li>Rule-based claim evaluations produce deterministic certainty; agent evaluations may produce partial certainty.</li>
+        <li>Answer options may emit claim-level compliance effects when their derived claims are accepted.</li>
+        <li>Selected transitions route to the next decision and may emit path-level compliance effects.</li>
+        <li>Runs produce traceable state, not just a terminal answer.</li>
+      </ul>
+    </section>
+
+    <section class="band" id="class-relationship-overview">
+      <h2>Class Relationship Overview</h2>
+      <div class="diagram-viewer" data-diagram-viewer>
+        <div class="diagram-toolbar" aria-label="Diagram controls">
+          <button class="diagram-button" type="button" data-diagram-fullscreen>Full screen</button>
+          <button class="diagram-button" type="button" data-diagram-reset>Reset view</button>
+        </div>
+        <div
+          class="diagram-scroll"
+          aria-label="Object-oriented class relationship diagram"
+          data-diagram-scroll
+          tabindex="0"
+        >
+          <!-- Rendered from docs/decision-flow-logical-model.d2. -->
+          <img
+            class="oo-diagram"
+            src="images/decision-flow-logical-model.svg"
+            alt="D2-rendered class diagram for the decision flow logical model, grouped into authoring, evidence and evaluation methods, transition reasoning, and runtime and release areas."
+            draggable="false"
+          >
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <h2>Logical Objects</h2>
+      <div class="model-grid">
+        <article class="object blue">
+          <div class="object-head"><code>class DecisionFlow</code></div>
+          <div class="object-body">
+            <p>The aggregate root for a policy-like decision model.</p>
+            <ul>
+              <li>Owns the start point and all decision points.</li>
+              <li>Defines the legal and factual scope of the flow.</li>
+              <li>Is versioned before it can be executed.</li>
+              <li>Corresponds mainly to <code>ComplianceFlow</code>.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object green">
+          <div class="object-head"><code>class DecisionPoint</code></div>
+          <div class="object-body">
+            <p>A question-shaped branching point in the reasoning process.</p>
+            <ul>
+              <li>Defines the answer options that can be inspected as answer claims.</li>
+              <li>Defines the outgoing decision transitions that can be selected next.</li>
+              <li>Declares a default method plus allowed alternatives.</li>
+              <li>Always permits explicit human resolution for manual flow completion.</li>
+              <li>Chooses among transition hypotheses using its selection rule.</li>
+              <li>May be single-choice, multi-choice, informational, or terminal.</li>
+              <li>Corresponds mainly to <code>FlowNode</code> and runtime <code>Question</code>.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object cyan">
+          <div class="object-head"><code>class EvaluationMethod</code></div>
+          <div class="object-body">
+            <p>The declared method for evaluating answer claims at a decision point.</p>
+            <ul>
+              <li><code>agent_judgment</code>: interpret messy evidence and legal meaning.</li>
+              <li><code>human_resolution</code>: let a human answer the point directly.</li>
+              <li><code>deterministic_rule</code>: compute over typed concrete values, including confirmed or derived facts.</li>
+              <li>Keeps machine judgment, human judgment, and calculable policy logic separate.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object rose">
+          <div class="object-head"><code>class EvaluationPolicy</code></div>
+          <div class="object-body">
+            <p>The evaluation-method configuration attached to each decision point.</p>
+            <ul>
+              <li>Defines the default method used in unattended execution.</li>
+              <li>Lists allowed alternatives for assisted or manual execution.</li>
+              <li>Requires <code>human_resolution</code> as an allowed alternative.</li>
+              <li>Can require rationale, evidence review, or role checks for manual answers.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object gold">
+          <div class="object-head"><code>class AnswerOption</code></div>
+          <div class="object-body">
+            <p>A possible answer value exposed by a decision point.</p>
+            <ul>
+              <li>Provides the natural-language and schema basis for an answer claim.</li>
+              <li>Has a label and answer value type.</li>
+              <li>May represent a boolean claim, enum choice, number, or string value.</li>
+              <li>Produces an <code>AnswerClaim</code> before pathing.</li>
+              <li>May declare option-level effects that apply when the option's derived claim is accepted.</li>
+              <li>Can be resolved by deterministic rules, agent judgment, or humans.</li>
+              <li>Corresponds mainly to <code>NodeAlternative</code>.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object rose">
+          <div class="object-head"><code>class AnswerClaim</code></div>
+          <div class="object-body">
+            <p>The claim formulated from one answer option.</p>
+            <ul>
+              <li>States what would need to be true for the option to be accepted.</li>
+              <li>Binds the answer option to evidence selectors and an evaluation method.</li>
+              <li>Inherits its effect semantics from the answer option that formulated it.</li>
+              <li>Is evaluated before any transition hypothesis is scored.</li>
+              <li>Examples: "provider is true", "none is true", "employee count exceeds threshold".</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object violet">
+          <div class="object-head"><code>class ClaimEvaluation</code></div>
+          <div class="object-body">
+            <p>The evaluation result for one answer claim.</p>
+            <ul>
+              <li>Contains truth value, likelihood, confidence, rationale, and evidence references.</li>
+              <li>May come from deterministic calculation, agent judgment, or human resolution.</li>
+              <li>Can remain unresolved without forcing the whole decision point to fail.</li>
+              <li>Allows the run to apply the source option's effect bindings when the claim is accepted by the decision policy.</li>
+              <li>Feeds one or more transition hypotheses.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object cyan">
+          <div class="object-head"><code>class TransitionHypothesis</code></div>
+          <div class="object-body">
+            <p>The main hypothesis for one possible outgoing transition.</p>
+            <ul>
+              <li>Represents the proposition that a specific transition should fire.</li>
+              <li>Aggregates the answer claims it depends on.</li>
+              <li>May represent any, all, none, exactly-one, threshold, or custom logic.</li>
+              <li>Is evaluated before the transition selection rule chooses the next step.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object cyan">
+          <div class="object-head"><code>class TransitionScoringRule</code></div>
+          <div class="object-body">
+            <p>The calculation that turns answer claim evaluations into a transition score.</p>
+            <ul>
+              <li>Consumes the evaluated answer claims referenced by a transition hypothesis.</li>
+              <li>Owns the predicate that defines the transition hypothesis condition.</li>
+              <li>Applies the predicate plus scoring, aggregation, and missing-value policies.</li>
+              <li>Produces a likelihood/certainty value for the candidate transition.</li>
+              <li>Separates evidence evaluation from transition selection.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object violet">
+          <div class="object-head"><code>class TransitionScore</code></div>
+          <div class="object-body">
+            <p>The scored result for one candidate transition hypothesis.</p>
+            <ul>
+              <li>Contains truth value, likelihood, certainty, rationale, and selected flag.</li>
+              <li>Can be deterministic when all underlying inputs are deterministic.</li>
+              <li>Can remain probabilistic when agentic answer claims are involved.</li>
+              <li>Is ranked by the transition selection rule.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object blue">
+          <div class="object-head"><code>class TransitionSelectionRule</code></div>
+          <div class="object-body">
+            <p>The rule for choosing which scored transition hypotheses fire.</p>
+            <ul>
+              <li>Defines whether the decision is exclusive or non-exclusive.</li>
+              <li>For exclusive decisions, selects the most likely hypothesis above any required threshold.</li>
+              <li>For non-exclusive decisions, can select every hypothesis above threshold.</li>
+              <li>Defines tie-break, priority, escalation, and unresolved policies.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object blue">
+          <div class="object-head"><code>class AgentEvaluation</code></div>
+          <div class="object-body">
+            <p>An evaluation method for questions that need interpretation or synthesis.</p>
+            <ul>
+              <li>Uses legal text, fact-object excerpts, pipeline evidence, and context.</li>
+              <li>Evaluates each answer claim separately where transition hypotheses depend on them.</li>
+              <li>Returns confidence, likelihood, rationale, and evidence references for each considered answer claim.</li>
+              <li>Is appropriate for semantic classification and ambiguous evidence.</li>
+              <li>Should not hide arithmetic, threshold checks, or concrete comparisons.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object violet">
+          <div class="object-head"><code>class HumanEvaluation</code></div>
+          <div class="object-body">
+            <p>An evaluation method for explicit, direct human answers to decision points.</p>
+            <ul>
+              <li>Presents the same question, answer schema, evidence pack, and legal context.</li>
+              <li>Records reviewer identity or role, answer, rationale, and timestamp.</li>
+              <li>Can be selected before any agent runs, or used to replace an automated answer.</li>
+              <li>Lets a lawyer manually resolve a specific flow while preserving normal routing.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object green">
+          <div class="object-head"><code>class DeterministicRule</code></div>
+          <div class="object-body">
+            <p>An evaluation method for concrete values with stable calculation semantics.</p>
+            <ul>
+              <li>Consumes typed facts such as number, date, enum, boolean, or string.</li>
+              <li>May consume facts that passed a confirmation, derivation-consensus, or source-trust policy.</li>
+              <li>Evaluates comparators, thresholds, ranges, set membership, or formulas.</li>
+              <li>Produces certain answer claim evaluations when required inputs are present.</li>
+              <li>Requires explicit unit, missing-value, and precision policies where relevant.</li>
+              <li>Can produce deterministic transition scores when all inputs are deterministic.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object gold">
+          <div class="object-head"><code>class ConcreteFact</code></div>
+          <div class="object-body">
+            <p>A typed value that deterministic rules can evaluate safely.</p>
+            <ul>
+              <li>Has a stable key, value type, source, and confidence or confirmation state.</li>
+              <li>May carry units, currency, time zone, or measurement basis.</li>
+              <li>Is trusted only when the evaluation method's input policy accepts its source and confirmation state.</li>
+              <li>Separates data extraction from deterministic decision calculation.</li>
+              <li>Can come from user input, derived facts, or pipeline metadata.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object rose">
+          <div class="object-head"><code>class Transition</code></div>
+          <div class="object-body">
+            <p>A candidate outgoing path from one decision point to the next.</p>
+            <ul>
+              <li>Owns one transition hypothesis saying when this transition should fire.</li>
+              <li>Has a target decision point or terminal target.</li>
+              <li>May carry path-level effects that apply when the transition is selected.</li>
+              <li>Can be ranked by priority when selection scores tie.</li>
+              <li>Corresponds mainly to <code>FlowEdge</code>.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object violet">
+          <div class="object-head"><code>class Predicate</code></div>
+          <div class="object-body">
+            <p>A logical expression evaluated by transition scoring rules.</p>
+            <ul>
+              <li>Defines the condition that a transition scoring rule evaluates.</li>
+              <li>Defines how answer claim evaluations fold into a transition score.</li>
+              <li>Checks previously emitted statuses.</li>
+              <li>Checks prior question answers.</li>
+              <li>Supports none, any, all, exactly-one, threshold, and not composition.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object gold">
+          <div class="object-head"><code>class ClaimEffectBinding</code></div>
+          <div class="object-body">
+            <p>The association between an answer option and a durable effect.</p>
+            <ul>
+              <li>Is authored on an answer option, not on the derived answer claim.</li>
+              <li>Applies when the option's derived claim is accepted or selected, not merely when it is considered.</li>
+              <li>Can add a status, obligation, warning, or branch without changing the route.</li>
+              <li>Example: accepting <code>provider</code> emits <code>st:provider</code> and <code>ob:AI Literacy</code>.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object cyan">
+          <div class="object-head"><code>class Effect</code></div>
+          <div class="object-body">
+            <p>A durable consequence of an answer option whose derived claim is accepted, or of a selected transition.</p>
+            <ul>
+              <li>Sets a status such as high-risk, provider, or out-of-scope.</li>
+              <li>Adds an obligation such as AI Literacy or Transparency.</li>
+              <li>Can be option-level for classifications or path-level for routing consequences.</li>
+              <li>Does not itself select the next decision point; transition selection owns the target.</li>
+              <li>Compiles to <code>st:</code> and <code>ob:</code> tokens; legacy instructions may also encode <code>id:</code> targets.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object blue">
+          <div class="object-head"><code>class EvidenceContext</code></div>
+          <div class="object-body">
+            <p>The material available to answer questions and justify them.</p>
+            <ul>
+              <li>Includes confirmed user regulatory context.</li>
+              <li>Includes derived fact objects from pipeline analysis.</li>
+              <li>Includes selected pipeline metadata and artifacts.</li>
+              <li>Includes legal references attached to decision points.</li>
+              <li>Is inspected per answer claim when agent judgment is used.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object green">
+          <div class="object-head"><code>class ExecutableFlow</code></div>
+          <div class="object-body">
+            <p>The compiled question program consumed by the evaluator.</p>
+            <ul>
+              <li>Represents the same logical flow as ordered questions.</li>
+              <li>Stores compiled transitions and claim effect bindings as instruction lines.</li>
+              <li>May be a derivation flow or a regulatory flow.</li>
+              <li>Corresponds mainly to <code>AgenticFlow</code>.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object gold">
+          <div class="object-head"><code>class FlowRun</code></div>
+          <div class="object-body">
+            <p>One execution of an executable flow against evidence.</p>
+            <ul>
+              <li>Tracks queued, running, completed, failed, or cancelled status.</li>
+              <li>Consumes a flow definition and workspace evidence.</li>
+              <li>Produces flow state and reportable outputs.</li>
+              <li>Corresponds mainly to <code>AgenticFlowRun</code>.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object blue">
+          <div class="object-head"><code>class ManualResolutionSession</code></div>
+          <div class="object-body">
+            <p>A human-driven execution of a decision flow.</p>
+            <ul>
+              <li>Walks a human reviewer through each reached decision point.</li>
+              <li>Uses human answer claim evaluations or transition selections instead of agent-produced ones.</li>
+              <li>Still evaluates predicates, option-level claim effects, path effects, and next-step routing normally.</li>
+              <li>Produces the same flow state and trace shape as automated runs.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object rose">
+          <div class="object-head"><code>class FlowState</code></div>
+          <div class="object-body">
+            <p>The accumulated memory of the run.</p>
+            <ul>
+              <li>Contains statuses, obligations, warnings, and branches.</li>
+              <li>Is updated by effects from answer options whose derived claims are accepted and from selected transitions.</li>
+              <li>Is merged when radio answers branch.</li>
+              <li>Leaves detailed claim evaluations and transition scores to the trace.</li>
+              <li>Corresponds mainly to <code>StateObject</code>.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object violet">
+          <div class="object-head"><code>class AuditTrace</code></div>
+          <div class="object-body">
+            <p>The audit trail explaining how the state was produced.</p>
+            <ul>
+              <li>Records the question asked and answer selected.</li>
+              <li>Records claim evaluations and transition scores.</li>
+              <li>Records the selection reason and which transition was chosen.</li>
+              <li>Records emitted effects, their source option or transition, and evidence metadata.</li>
+              <li>Corresponds mainly to provenance entries.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="object cyan">
+          <div class="object-head"><code>class PublishedVersion</code></div>
+          <div class="object-body">
+            <p>An immutable release of a decision specification.</p>
+            <ul>
+              <li>Freezes the authoring model as schema JSON.</li>
+              <li>Links that version to an executable flow.</li>
+              <li>Allows reports to point back to the model that produced them.</li>
+              <li>Corresponds mainly to <code>ComplianceFlowSnapshot</code>.</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="band">
+      <h2>Disambiguating Decision Modes</h2>
+      <table class="rules-table">
+        <thead>
+          <tr>
+            <th>Mode</th>
+            <th>Use When</th>
+            <th>Inputs</th>
+            <th>Required Trace</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>agent_judgment</code></td>
+            <td>The truth of an answer claim depends on interpreting legal concepts, natural-language evidence, design intent, or incomplete pipeline context.</td>
+            <td>One answer claim, legal references, evidence excerpts, fact-object selectors, question hint, and allowed answer schema.</td>
+            <td>Answer claim truth judgment, likelihood, confidence, rationale, evidence references, model source, and any warning.</td>
+          </tr>
+          <tr>
+            <td><code>human_resolution</code></td>
+            <td>A human explicitly evaluates answer claims or selects a transition hypothesis, either as the chosen primary method or as an alternative to an agent-produced answer.</td>
+            <td>Evidence pack, legal context, answer claims, transition hypotheses, optional automated recommendation, reviewer role, and resolution instructions.</td>
+            <td>Reviewer identity or role, timestamp, answer claim or transition decision, rationale, evidence reviewed, and override metadata if applicable.</td>
+          </tr>
+          <tr>
+            <td><code>deterministic_rule</code></td>
+            <td>An answer claim can be computed from concrete values with no interpretive discretion, including values already confirmed by the user or derived by a trusted pipeline step.</td>
+            <td>Typed facts, source or confirmation policy, units, operators, thresholds, null policy, precision policy, answer mapping, fallback policy, and formula version.</td>
+            <td>Input values, source and confirmation state, normalized values, evaluated expression, certain result, fallback reason if unresolved, and rule version.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="band">
+      <h2>Trusted Fact Position</h2>
+      <p class="note">
+        Conceptually, <code>trusted_fact</code> does not need to be a first-class
+        evaluation method. Its current behavior is equivalent to a
+        <code>deterministic_rule</code> whose inputs are limited to facts that
+        satisfy a trust policy, such as confirmed user input, derivation
+        consensus, schema compatibility, and conflict-free source metadata.
+        If the trusted input is present, the rule maps it to an answer with
+        deterministic certainty; if the input is missing, conflicted, or shaped
+        incorrectly, the rule is unresolved and falls back to workflow or human
+        resolution.
+      </p>
+      <p class="note">
+        The existing implementation name <code>trusted_answer_rule</code> is
+        therefore best treated as legacy/current wiring for deterministic rules
+        over trusted evidence, not as a separate logical evaluation method.
+      </p>
+    </section>
+
+    <section class="band">
+      <h2>Claim-Based Selection</h2>
+      <table class="rules-table">
+        <thead>
+          <tr>
+            <th>Phase</th>
+            <th>Logical Operation</th>
+            <th>Example for "Which transition should fire?"</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Formulate answer claims</td>
+            <td>Turn each answer option into an option-level answer claim that can be evaluated independently.</td>
+            <td><code>claim_A: option A is true</code>; <code>claim_B: option B is true</code>; <code>claim_none: none is true</code>.</td>
+          </tr>
+          <tr>
+            <td>Evaluate answer claims</td>
+            <td>Resolve each relevant answer claim against evidence using its selected method.</td>
+            <td>Each answer option receives a truth value plus likelihood, confidence, rationale, and evidence references.</td>
+          </tr>
+          <tr>
+            <td>Apply claim effects</td>
+            <td>For answer options whose derived claims are accepted, apply any option-level claim effect bindings before or alongside path selection.</td>
+            <td><code>claim_provider</code> emits <code>st:provider</code> and <code>ob:AI Literacy</code> even if it shares a transition with other provider-like claims.</td>
+          </tr>
+          <tr>
+            <td>Score transition hypotheses</td>
+            <td>Each outgoing transition has one transition hypothesis that aggregates the relevant answer claim evaluations.</td>
+            <td><code>TH_to_R2 = any(claim_A, claim_B)</code>; <code>TH_to_END = claim_none</code>.</td>
+          </tr>
+          <tr>
+            <td>Select transition</td>
+            <td>Apply the decision point's selection rule to scored transition hypotheses.</td>
+            <td>Exclusive decisions choose the most likely eligible transition; non-exclusive decisions may choose every transition above threshold.</td>
+          </tr>
+          <tr>
+            <td>Apply path effects</td>
+            <td>For selected transitions, apply any path-level effects attached to the transition.</td>
+            <td>The selected transition can still emit shared routing consequences such as <code>st:in_scope</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="band">
+      <h2>Certainty Semantics</h2>
+      <table class="rules-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Claim Result</th>
+            <th>Transition Score</th>
+            <th>Pathing Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>deterministic_rule</code></td>
+            <td>True or false with 100% certainty when required concrete values are present and any source-trust policy is satisfied.</td>
+            <td>Aggregation is exact when every referenced answer claim is deterministic and present.</td>
+            <td>Deterministic pathing.</td>
+          </tr>
+          <tr>
+            <td><code>agent_judgment</code></td>
+            <td>True, false, or unresolved with confidence based on available pipeline evidence.</td>
+            <td>Transition likelihood is derived from the confidence of the answer claims it depends on; more-likely-than-not defaults to likelihood above 0.5.</td>
+            <td>Probabilistic pathing or escalation when certainty is insufficient.</td>
+          </tr>
+          <tr>
+            <td><code>human_resolution</code></td>
+            <td>Human asserted true or false, optionally informed by agent recommendations.</td>
+            <td>Transition score reflects the human-evaluated answer claims or directly selected transition.</td>
+            <td>Accountable manual pathing.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="band">
+      <h2>Lifecycle</h2>
+      <div class="pipeline" aria-label="Decision flow lifecycle">
+        <div class="stage">
+          <strong>Specify</strong>
+          <span>Model decision points, answer options, answer claims, claim effect bindings, transition hypotheses, selection rule, evaluation policy, legal context, fact context, and path effects.</span>
+        </div>
+        <div class="stage">
+          <strong>Validate</strong>
+          <span>Check that the graph has a start point, valid targets, valid answer claim references, valid effect bindings, transition coverage, selection rule, and evaluation-method requirements.</span>
+        </div>
+        <div class="stage">
+          <strong>Publish</strong>
+          <span>Freeze a version and compile it into the executable question representation.</span>
+        </div>
+        <div class="stage">
+          <strong>Evaluate</strong>
+          <span>Evaluate answer claims, apply option-level claim effects for accepted claims, aggregate claims into transition hypotheses, then select the next transition and apply its path effects.</span>
+        </div>
+        <div class="stage">
+          <strong>Report</strong>
+          <span>Expose statuses, obligations, warnings, and provenance as the compliance result.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <h2>Manual Resolution Path</h2>
+      <table class="rules-table">
+        <thead>
+          <tr>
+            <th>Step</th>
+            <th>Human-Resolved Semantics</th>
+            <th>What Stays Shared</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Present decision</td>
+            <td>The human reviewer sees the same decision point, allowed answers, legal context, fact context, and evidence pack.</td>
+            <td>The authored decision point and answer schema.</td>
+          </tr>
+          <tr>
+            <td>Resolve answer</td>
+            <td>The human evaluates answer claims or selects a transition hypothesis directly and records a rationale. An agent recommendation may be shown, but is not required.</td>
+            <td>The answer claim evaluations and transition selection are normalized to the same runtime question schema.</td>
+          </tr>
+          <tr>
+            <td>Apply flow logic</td>
+            <td>The system applies option-level claim effects for accepted claims, then evaluates transition predicates against the human answer and current state.</td>
+            <td>The same predicates, claim effect bindings, path effects, priorities, and target routing.</td>
+          </tr>
+          <tr>
+            <td>Record trace</td>
+            <td>The provenance marks the answer source as human resolution and records reviewer role or identity, timestamp, rationale, and evidence reviewed.</td>
+            <td>The same flow state, obligations, statuses, warnings, and report format.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="band">
+      <h2>Decision Semantics</h2>
+      <table class="rules-table">
+        <thead>
+          <tr>
+            <th>Concept</th>
+            <th>Logical Meaning</th>
+            <th>Runtime Shape</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>selected_any</code></td>
+            <td>A transition hypothesis is true when at least one referenced answer claim is true.</td>
+            <td><code>TH: any(claim_a, claim_b)</code></td>
+          </tr>
+          <tr>
+            <td><code>selected_all</code></td>
+            <td>A transition hypothesis is true when every referenced answer claim is true.</td>
+            <td><code>TH: all(claim_a, claim_b)</code></td>
+          </tr>
+          <tr>
+            <td><code>selected_none</code></td>
+            <td>A transition hypothesis is true when none of the referenced answer claims is true.</td>
+            <td><code>TH: none(claim_a, claim_b)</code></td>
+          </tr>
+          <tr>
+            <td><code>transition_likelihood</code></td>
+            <td>The likelihood assigned to a transition hypothesis after aggregating its answer claim evaluations.</td>
+            <td><code>TH_to_R2.likelihood = 0..1</code></td>
+          </tr>
+          <tr>
+            <td><code>status_true</code></td>
+            <td>A prior rule has already established a durable classification.</td>
+            <td><code>sys:high_risk</code></td>
+          </tr>
+          <tr>
+            <td><code>answer_true</code></td>
+            <td>A previous decision point produced a specific answer.</td>
+            <td><code>sys:E1.provider</code></td>
+          </tr>
+          <tr>
+            <td><code>not</code></td>
+            <td>The nested predicate must not hold.</td>
+            <td><code>NOT (...)</code></td>
+          </tr>
+          <tr>
+            <td><code>effect</code></td>
+            <td>An answer option whose derived claim is accepted, or a selected transition, mutates the decision state through its effects.</td>
+            <td><code>st:provider</code>, <code>ob:AI Literacy</code></td>
+          </tr>
+          <tr>
+            <td><code>claim_effect</code></td>
+            <td>An effect binding attached to an answer option fires when that option's derived claim is accepted.</td>
+            <td><code>claim_provider =&gt; ob:AI Literacy</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="band">
+      <h2>Evaluation Method Selection</h2>
+      <table class="rules-table">
+        <thead>
+          <tr>
+            <th>Question to Ask</th>
+            <th>Preferred Method</th>
+            <th>Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Can the answer be derived by comparing typed values, dates, counts, durations, enum membership, or booleans?</td>
+            <td><code>deterministic_rule</code></td>
+            <td>Calculation is reproducible and should not consume agent judgment.</td>
+          </tr>
+          <tr>
+            <td>Is the value already confirmed by the user or produced by a trusted derivation run?</td>
+            <td><code>deterministic_rule</code></td>
+            <td>The flow should reuse authoritative structured facts through a deterministic mapping before asking an agent.</td>
+          </tr>
+          <tr>
+            <td>Does the answer require interpreting purpose, legal category, risk meaning, evidence sufficiency, or text-heavy artifacts?</td>
+            <td><code>agent_judgment</code></td>
+            <td>Evaluate each answer claim against the available pipeline evidence and carry confidence into transition likelihood.</td>
+          </tr>
+          <tr>
+            <td>Should a lawyer or domain expert resolve the flow manually instead of relying on an agent?</td>
+            <td><code>human_resolution</code></td>
+            <td>Every decision point should support this as an explicit alternative to agentic resolution.</td>
+          </tr>
+          <tr>
+            <td>Is an automated answer low-confidence, disputed, incomplete, or in conflict with another source?</td>
+            <td><code>human_resolution</code></td>
+            <td>Human resolution is the escalation path for unresolved ambiguity and conflicting evidence.</td>
+          </tr>
+          <tr>
+            <td>Does an agent first need to extract a value, after which the decision is numeric or exact?</td>
+            <td><code>agent_judgment</code> then <code>deterministic_rule</code></td>
+            <td>Separate extraction from decision: the agent proposes or derives the fact; the rule performs the final comparison.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="band">
+      <h2>Object-Oriented Notation</h2>
+      <div class="notation">
+        <pre><code>class DecisionFlow {
+  owns DecisionPoint[*]
+  starts_at DecisionPoint
+  publishes PublishedVersion[*]
+
+  invariant every non-terminal point can route onward
+  invariant every predicate references known answers or state
+}
+
+class DecisionPoint {
+  has AnswerOption[*]
+  has Transition[*]
+  has LegalContext[*]
+  has FactContext[*]
+  has EvaluationPolicy
+  has TransitionSelectionRule
+
+  responsibility evaluate answer claims and select transition hypotheses
+}
+
+class EvaluationPolicy {
+  default_method: EvaluationMethod
+  allowed_methods: Set&lt;EvaluationMethod&gt;
+
+  invariant human_resolution is always allowed
+}
+
+abstract class EvaluationMethod {
+  mode: agent_judgment | human_resolution | deterministic_rule
+}
+
+class AgentEvaluation extends EvaluationMethod {
+  requires evidence excerpts, allowed answers, rationale
+}
+
+class HumanEvaluation extends EvaluationMethod {
+  requires evidence pack, reviewer role, answer, rationale
+}
+
+class DeterministicRule extends EvaluationMethod {
+  requires typed facts, expression, units, source-trust policy, null policy
+}
+
+class AnswerOption {
+  formulates AnswerClaim
+  has ClaimEffectBinding[*]
+  value_type: boolean | string | number | enum
+}
+
+class AnswerClaim {
+  option: AnswerOption
+  claim: Proposition
+  method: EvaluationMethod
+  evidence_scope: EvidenceSelector[*]
+}
+
+class ClaimEvaluation {
+  claim: AnswerClaim
+  method: EvaluationMethod
+  truth_value: true | false | unresolved
+  accepted: boolean
+  likelihood: 0..1
+  confidence: 0..1
+  evidence_refs: EvidenceRef[*]
+}
+
+class ClaimEffectBinding {
+  source: AnswerOption
+  emits Effect
+  trigger: claim_accepted
+  min_certainty: 0..1?
+
+  invariant claim effect does not choose a transition target
+}
+
+class Effect {
+  kind: status | obligation | warning | branch
+  value: string
+  source: ClaimEffectBinding | Transition
+  provenance_policy: source_option | source_transition
+}
+
+class Transition {
+  has TransitionHypothesis
+  path_effects: Effect[*]
+  targets DecisionPoint | END
+  priority: integer
+}
+
+class TransitionHypothesis {
+  transition: Transition
+  aggregates AnswerClaim[*]
+  uses TransitionScoringRule
+}
+
+class TransitionScoringRule {
+  predicate: Predicate
+  aggregation_policy: deterministic | probabilistic | human_asserted
+  missing_policy: unresolved | false | ignore | escalate
+}
+
+class TransitionScore {
+  hypothesis: TransitionHypothesis
+  truth_value: true | false | unresolved
+  likelihood: 0..1
+  certainty: 0..1
+}
+
+class TransitionSelectionRule {
+  mode: exclusive | non_exclusive
+  strategy: most_likely | all_above_threshold | first_certain | human_selected
+  min_likelihood: 0..1
+  tie_break: priority | escalate | human_resolution
+
+  responsibility select transition hypotheses from scored candidates
+}</code></pre>
+
+        <pre><code>class ExecutableFlow {
+  contains RuntimeQuestion[*]
+  compiled_claim_effects: ClaimEffectBinding[*]
+  derived_from PublishedVersion?
+}
+
+class FlowRun {
+  executes ExecutableFlow
+  reads EvidenceContext
+  applies selected EvaluationMethod per DecisionPoint
+  produces ClaimEvaluation[*]
+  applies ClaimEffectBinding[*]
+  produces TransitionScore[*]
+  selects Transition[*]
+  produces FlowState
+  produces AuditTrace
+}
+
+class ManualResolutionSession extends FlowRun {
+  selected_method: human_resolution
+  reviewer: HumanActor
+}
+
+class FlowState {
+  statuses: Set&lt;Status&gt;
+  obligations: Set&lt;Obligation&gt;
+  warnings: Set&lt;Warning&gt;
+  branches: Set&lt;Branch&gt;
+}</code></pre>
+      </div>
+    </section>
+
+    <section class="band">
+      <h2>Logical to Implementation Mapping</h2>
+      <div class="mapping">
+        <div class="map-card">
+          <h3>Specification Layer</h3>
+          <p>
+            <code>DecisionFlow</code>, <code>DecisionPoint</code>,
+            <code>EvaluationPolicy</code>, <code>EvaluationMethod</code>,
+            <code>AnswerOption</code>, <code>AnswerClaim</code>,
+            <code>ClaimEffectBinding</code>,
+            <code>TransitionHypothesis</code>, <code>Transition</code>,
+            and <code>TransitionSelectionRule</code> map to the flow
+            authoring models and frontend flow types. The current physical
+            implementation stores these mostly as <code>FlowNode</code>,
+            <code>NodeAlternative</code>, <code>FlowEdge</code>, edge
+            conditions, and edge actions; the logical model makes the
+            answer claim, option-level claim effect, and transition scoring layers
+            explicit.
+          </p>
+        </div>
+        <div class="map-card">
+          <h3>Executable Layer</h3>
+          <p>
+            <code>ExecutableFlow</code>, runtime questions, compiled
+            transition expressions, and compiled claim effect bindings map to
+            <code>AgenticFlow</code>, <code>DerivationFlow</code>,
+            <code>RegulationFlow</code>, and the JSON or JSONL definitions.
+          </p>
+        </div>
+        <div class="map-card">
+          <h3>Evaluation Layer</h3>
+          <p>
+            <code>FlowRun</code>, <code>FlowState</code>, and
+            <code>AuditTrace</code> map to flow runs, <code>StateObject</code>,
+            provenance, warnings, obligations, and statuses. The trace should
+            show whether each answer claim came from an agent, a human
+            reviewer, or a deterministic rule, and it should preserve any
+            trusted-source metadata plus the transition scores and
+            selection calculation that produced the selected transition. It
+            should also preserve whether each emitted effect came from a source
+            answer option or from a selected transition.
+          </p>
+        </div>
+        <div class="map-card">
+          <h3>Evidence Layer</h3>
+          <p>
+            <code>EvidenceContext</code> maps to confirmed regulatory user input,
+            derived fact objects, pipeline artifacts, legal references,
+            legacy <code>trusted_answer_rule</code> metadata, and fact-object
+            selectors.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const viewer = document.querySelector("[data-diagram-viewer]");
+      const scrollArea = document.querySelector("[data-diagram-scroll]");
+      const fullscreenButton = document.querySelector("[data-diagram-fullscreen]");
+      const resetButton = document.querySelector("[data-diagram-reset]");
+
+      if (!viewer || !scrollArea || !fullscreenButton || !resetButton) {
+        return;
+      }
+
+      let activePointerId = null;
+      let startX = 0;
+      let startY = 0;
+      let startScrollLeft = 0;
+      let startScrollTop = 0;
+
+      const isExpanded = () =>
+        document.fullscreenElement === viewer || viewer.classList.contains("is-expanded");
+
+      const updateFullscreenButton = () => {
+        const expanded = isExpanded();
+        fullscreenButton.textContent = expanded ? "Exit full screen" : "Full screen";
+        fullscreenButton.setAttribute("aria-pressed", String(expanded));
+      };
+
+      const enterFallbackFullscreen = () => {
+        viewer.classList.add("is-expanded");
+        document.body.classList.add("diagram-viewer-open");
+        scrollArea.focus({ preventScroll: true });
+        updateFullscreenButton();
+      };
+
+      const clearFallbackFullscreen = () => {
+        viewer.classList.remove("is-expanded");
+        document.body.classList.remove("diagram-viewer-open");
+        updateFullscreenButton();
+      };
+
+      fullscreenButton.addEventListener("click", async () => {
+        try {
+          if (document.fullscreenElement === viewer) {
+            await document.exitFullscreen();
+          } else if (viewer.classList.contains("is-expanded")) {
+            clearFallbackFullscreen();
+          } else if (document.fullscreenEnabled && viewer.requestFullscreen) {
+            await viewer.requestFullscreen();
+            if (document.fullscreenElement === viewer) {
+              clearFallbackFullscreen();
+              scrollArea.focus({ preventScroll: true });
+            } else {
+              enterFallbackFullscreen();
+            }
+          } else {
+            enterFallbackFullscreen();
+          }
+        } catch {
+          enterFallbackFullscreen();
+          updateFullscreenButton();
+        }
+      });
+
+      document.addEventListener("fullscreenchange", () => {
+        if (document.fullscreenElement === viewer) {
+          clearFallbackFullscreen();
+        } else {
+          updateFullscreenButton();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && viewer.classList.contains("is-expanded")) {
+          clearFallbackFullscreen();
+        }
+      });
+
+      updateFullscreenButton();
+
+      resetButton.addEventListener("click", () => {
+        scrollArea.scrollTo({ left: 0, top: 0, behavior: "smooth" });
+        scrollArea.focus({ preventScroll: true });
+      });
+
+      scrollArea.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0 || activePointerId !== null) {
+          return;
+        }
+
+        activePointerId = event.pointerId;
+        startX = event.clientX;
+        startY = event.clientY;
+        startScrollLeft = scrollArea.scrollLeft;
+        startScrollTop = scrollArea.scrollTop;
+        scrollArea.classList.add("is-panning");
+        scrollArea.setPointerCapture(activePointerId);
+        event.preventDefault();
+      });
+
+      scrollArea.addEventListener("pointermove", (event) => {
+        if (event.pointerId !== activePointerId) {
+          return;
+        }
+
+        scrollArea.scrollLeft = startScrollLeft - (event.clientX - startX);
+        scrollArea.scrollTop = startScrollTop - (event.clientY - startY);
+        event.preventDefault();
+      });
+
+      const stopPanning = (event) => {
+        if (event.pointerId !== activePointerId) {
+          return;
+        }
+
+        if (scrollArea.hasPointerCapture(activePointerId)) {
+          scrollArea.releasePointerCapture(activePointerId);
+        }
+        activePointerId = null;
+        scrollArea.classList.remove("is-panning");
+      };
+
+      scrollArea.addEventListener("pointerup", stopPanning);
+      scrollArea.addEventListener("pointercancel", stopPanning);
+      scrollArea.addEventListener("lostpointercapture", () => {
+        activePointerId = null;
+        scrollArea.classList.remove("is-panning");
+      });
+    })();
+  </script>
+</body>
+</html>

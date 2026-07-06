@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LexAlign Decision Flow Schema</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1f2933;
+      --muted: #5f6f82;
+      --line: #c9d3df;
+      --page: #f6f8fb;
+      --panel: #ffffff;
+      --authoring: #d7e9ff;
+      --runtime: #dcf3e2;
+      --state: #fff0c7;
+      --context: #ece3ff;
+      --accent: #225c9f;
+      --shadow: 0 10px 28px rgba(31, 41, 51, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--page);
+      line-height: 1.5;
+    }
+
+    header {
+      padding: 48px 32px 28px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    main {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 28px 24px 56px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    h1 {
+      max-width: 980px;
+      margin: 0 auto;
+      font-size: 36px;
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 980px;
+      margin: 14px auto 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    section {
+      margin-top: 28px;
+    }
+
+    .band {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .lead-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .flow-step {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--accent);
+      border-radius: 8px;
+      padding: 16px;
+      min-height: 124px;
+    }
+
+    .flow-step h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .flow-step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .swatch {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1px solid var(--line);
+    }
+
+    .schema-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(220px, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .group {
+      display: grid;
+      gap: 14px;
+    }
+
+    .group-title {
+      font-size: 14px;
+      font-weight: 760;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0;
+      margin-bottom: 2px;
+    }
+
+    .class-card {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(31, 41, 51, 0.05);
+    }
+
+    .class-card.authoring .class-head {
+      background: var(--authoring);
+    }
+
+    .class-card.runtime .class-head {
+      background: var(--runtime);
+    }
+
+    .class-card.state .class-head {
+      background: var(--state);
+    }
+
+    .class-card.context .class-head {
+      background: var(--context);
+    }
+
+    .class-head {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 14px;
+      font-weight: 760;
+    }
+
+    .class-body {
+      padding: 10px 12px 12px;
+    }
+
+    .class-body ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .class-body li {
+      margin: 4px 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      color: #334155;
+    }
+
+    .relationship-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    .relationship-table th,
+    .relationship-table td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .relationship-table th {
+      background: #e9eef5;
+      font-weight: 720;
+    }
+
+    .relationship-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    code,
+    pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    pre {
+      margin: 12px 0 0;
+      overflow-x: auto;
+      background: #0f172a;
+      color: #e5edf8;
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .rules {
+      columns: 2 320px;
+      column-gap: 32px;
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .rules li {
+      break-inside: avoid;
+      margin-bottom: 8px;
+    }
+
+    .source-list {
+      margin: 12px 0 0;
+      padding-left: 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 980px) {
+      h1 {
+        font-size: 30px;
+      }
+
+      .lead-grid,
+      .schema-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>LexAlign Decision Flow Schema</h1>
+    <p class="subtitle">
+      Object-oriented view of how editable decision graphs become executable
+      question flows, and how each run records state, obligations, warnings,
+      and provenance.
+    </p>
+  </header>
+
+  <main>
+    <section class="lead-grid" aria-label="Conceptual flow">
+      <article class="flow-step">
+        <h3>1. Author</h3>
+        <p>
+          A tenant-owned <code>ComplianceFlow</code> stores editable nodes,
+          alternatives, ordered edges, conditions, actions, and a start node.
+        </p>
+      </article>
+      <article class="flow-step">
+        <h3>2. Publish</h3>
+        <p>
+          Validation checks graph consistency, then publishing compiles the graph
+          into a runtime <code>RegulationFlow</code> and immutable snapshot.
+        </p>
+      </article>
+      <article class="flow-step">
+        <h3>3. Execute</h3>
+        <p>
+          The evaluator traverses <code>Question</code> payloads against a fact
+          object and accumulates a <code>StateObject</code> for reports.
+        </p>
+      </article>
+    </section>
+
+    <section class="band">
+      <h2>Class Model</h2>
+      <div class="legend" aria-label="Legend">
+        <span><span class="swatch" style="background: var(--authoring)"></span>Authoring graph</span>
+        <span><span class="swatch" style="background: var(--runtime)"></span>Runtime flow</span>
+        <span><span class="swatch" style="background: var(--state)"></span>Execution state</span>
+        <span><span class="swatch" style="background: var(--context)"></span>Workspace context</span>
+      </div>
+
+      <div class="schema-grid" style="margin-top: 18px">
+        <div class="group">
+          <div class="group-title">Authoring graph</div>
+          <article class="class-card authoring">
+            <div class="class-head">class ComplianceFlow</div>
+            <div class="class-body">
+              <ul>
+                <li>owner_subject: string</li>
+                <li>code: string</li>
+                <li>status: draft | published | archived</li>
+                <li>start_node_id: string</li>
+                <li>nodes: FlowNode[*]</li>
+                <li>edges: FlowEdge[*]</li>
+                <li>snapshots: ComplianceFlowSnapshot[*]</li>
+              </ul>
+            </div>
+          </article>
+          <article class="class-card authoring">
+            <div class="class-head">class FlowNode</div>
+            <div class="class-body">
+              <ul>
+                <li>node_id: string</li>
+                <li>node_type: single_select | multi_select | info | end</li>
+                <li>question: text</li>
+                <li>hint: text?</li>
+                <li>regulatory_context: LegalReference[]</li>
+                <li>fact_context: FactReference[]</li>
+                <li>alternatives: NodeAlternative[*]</li>
+                <li>info with no alternatives compiles to continue</li>
+              </ul>
+            </div>
+          </article>
+          <article class="class-card authoring">
+            <div class="class-head">class NodeAlternative</div>
+            <div class="class-body">
+              <ul>
+                <li>alt_id: string</li>
+                <li>label: string</li>
+                <li>description: text</li>
+                <li>alt_type: boolean | string | number</li>
+              </ul>
+            </div>
+          </article>
+          <article class="class-card authoring">
+            <div class="class-head">class FlowEdge</div>
+            <div class="class-body">
+              <ul>
+                <li>edge_id: string</li>
+                <li>source_node: FlowNode</li>
+                <li>target_node_id: string? | END</li>
+                <li>priority: int</li>
+                <li>condition: EdgeCondition</li>
+                <li>actions: EdgeActions</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <div class="group">
+          <div class="group-title">Conditions and effects</div>
+          <article class="class-card authoring">
+            <div class="class-head">class EdgeCondition</div>
+            <div class="class-body">
+              <ul>
+                <li>kind: always | all | any</li>
+                <li>clauses: EdgeClause[*]</li>
+              </ul>
+            </div>
+          </article>
+          <article class="class-card authoring">
+            <div class="class-head">class EdgeClause</div>
+            <div class="class-body">
+              <ul>
+                <li>selected_any(answer_ids)</li>
+                <li>selected_all(answer_ids)</li>
+                <li>status_true(status_key)</li>
+                <li>answer_true(node_id, answer_id)</li>
+                <li>not(clause)</li>
+              </ul>
+            </div>
+          </article>
+          <article class="class-card authoring">
+            <div class="class-head">class EdgeActions</div>
+            <div class="class-body">
+              <ul>
+                <li>set_status_true: string[]</li>
+                <li>add_obligations: string[]</li>
+              </ul>
+            </div>
+          </article>
+          <article class="class-card authoring">
+            <div class="class-head">class ComplianceFlowSnapshot</div>
+            <div class="class-body">
+              <ul>
+                <li>version: int</li>
+                <li>schema_json: object</li>
+                <li>created_by_subject: string</li>
+                <li>runtime_regulation_flow: RegulationFlow?</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <div class="group">
+          <div class="group-title">Runtime flow</div>
+          <article class="class-card runtime">
+            <div class="class-head">class AgenticFlow</div>
+            <div class="class-body">
+              <ul>
+                <li>code: string</li>
+                <li>name: string</li>
+                <li>owner_subject: string</li>
+                <li>definition_format: json | jsonl</li>
+                <li>definition_file: file</li>
+                <li>questions: Question[*]</li>
+              </ul>
+            </div>
+          </article>
+          <article class="class-card runtime">
+            <div class="class-head">class DerivationFlow extends AgenticFlow</div>
+            <div class="class-body">
+              <ul>
+                <li>produces: fact_object</li>
+                <li>produces: StateObject</li>
+              </ul>
+            </div>
+          </article>
+          <article class="class-card runtime">
+            <div class="class-head">class RegulationFlow extends AgenticFlow</div>
+            <div class="class-body">
+              <ul>
+                <li>derivation_flows: DerivationFlow[*]</li>
+                <li>consumes: fact_object</li>
+                <li>produces: StateObject</li>
+              </ul>
+            </div>
+          </article>
+          <article class="class-card runtime">
+            <div class="class-head">class Question</div>
+            <div class="class-body">
+              <ul>
+                <li>question_id: string</li>
+                <li>alternatives: QuestionSchema</li>
+                <li>radio: boolean</li>
+                <li>instructions: RoutingInstruction[]</li>
+                <li>routing_mode: deterministic_v1?</li>
+                <li>trusted_answer_rule: object?</li>
+              </ul>
+            </div>
+          </article>
+          <article class="class-card runtime">
+            <div class="class-head">class RoutingInstruction</div>
+            <div class="class-body">
+              <ul>
+                <li>condition: answer keys, AND, OR, NOT</li>
+                <li>condition: True | else</li>
+                <li>condition: sys:status</li>
+                <li>condition: sys:question.answer</li>
+                <li>effects: st:status | ob:obligation | id:next</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <div class="group">
+          <div class="group-title">Execution and context</div>
+          <article class="class-card state">
+            <div class="class-head">class AgenticFlowRun</div>
+            <div class="class-body">
+              <ul>
+                <li>analysis: ComplianceAnalysis</li>
+                <li>flow: AgenticFlow</li>
+                <li>status: queued | running | completed | failed | cancelled</li>
+                <li>request_payload: object</li>
+                <li>result_payload: object</li>
+              </ul>
+            </div>
+          </article>
+          <article class="class-card state">
+            <div class="class-head">class StateObject</div>
+            <div class="class-body">
+              <ul>
+                <li>statuses: Map&lt;string, boolean&gt;</li>
+                <li>obligations: Map&lt;string, string&gt;</li>
+                <li>provenance: Map&lt;question_id, ProvenanceEntry&gt;</li>
+                <li>warnings: Map&lt;question_id, string&gt;</li>
+                <li>branched_runs: Map&lt;question_id, BranchEntry[]&gt;</li>
+              </ul>
+            </div>
+          </article>
+          <article class="class-card state">
+            <div class="class-head">class ProvenanceEntry</div>
+            <div class="class-body">
+              <ul>
+                <li>question: string</li>
+                <li>response: object</li>
+                <li>action_out: Action</li>
+                <li>effects: string[]</li>
+                <li>response_meta: object?</li>
+              </ul>
+            </div>
+          </article>
+          <article class="class-card state">
+            <div class="class-head">class Action</div>
+            <div class="class-body">
+              <ul>
+                <li>instruction_chosen: string</li>
+                <li>add_obligation: string[]</li>
+                <li>change_status: string[]</li>
+                <li>next_question: string</li>
+                <li>explination: string</li>
+              </ul>
+            </div>
+          </article>
+          <article class="class-card context">
+            <div class="class-head">class ComplianceAnalysis</div>
+            <div class="class-body">
+              <ul>
+                <li>owner_subject: string</li>
+                <li>user_input: ComplianceAnalysisUserInput?</li>
+                <li>pipeline: DataPipeline?</li>
+                <li>flow_runs: AgenticFlowRun[*]</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <h2>Core Associations</h2>
+      <table class="relationship-table">
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>Relationship</th>
+            <th>Target</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>ComplianceFlow</code></td>
+            <td>1 has 0..*</td>
+            <td><code>FlowNode</code>, <code>FlowEdge</code>, <code>ComplianceFlowSnapshot</code></td>
+          </tr>
+          <tr>
+            <td><code>FlowNode</code></td>
+            <td>1 has 0..*</td>
+            <td><code>NodeAlternative</code> and outgoing <code>FlowEdge</code></td>
+          </tr>
+          <tr>
+            <td><code>FlowEdge</code></td>
+            <td>references by id</td>
+            <td>source <code>FlowNode</code> and optional target <code>FlowNode</code> or <code>END</code></td>
+          </tr>
+          <tr>
+            <td><code>ComplianceFlowSnapshot</code></td>
+            <td>links published graph to</td>
+            <td><code>RegulationFlow</code></td>
+          </tr>
+          <tr>
+            <td><code>AgenticFlow</code></td>
+            <td>base class for</td>
+            <td><code>DerivationFlow</code>, <code>RegulationFlow</code>, <code>CustomFlow</code></td>
+          </tr>
+          <tr>
+            <td><code>RegulationFlowRun</code></td>
+            <td>may consume 0..*</td>
+            <td><code>DerivationFlowRun</code> fact objects</td>
+          </tr>
+          <tr>
+            <td><code>AgenticFlowRun</code></td>
+            <td>belongs to</td>
+            <td><code>ComplianceAnalysis</code> and one <code>AgenticFlow</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="band">
+      <h2>Publishing Transform</h2>
+      <pre><code>ComplianceFlow draft
+  -> validate_flow_payload(payload)
+  -> compile_flow_to_runtime_definition(payload)
+  -> RegulationFlow.definition_file with { questions: [...] }
+  -> ComplianceFlowSnapshot.schema_json
+  -> selectable runtime RegulationFlow</code></pre>
+      <pre><code>FlowEdge(condition, actions, target_node_id)
+  -> RoutingInstruction line
+  -> "&lt;condition&gt; -> 'st:&lt;status&gt;' + 'ob:&lt;obligation&gt;' + 'id:&lt;next&gt;'"</code></pre>
+    </section>
+
+    <section class="band">
+      <h2>Execution Semantics</h2>
+      <ol class="rules">
+        <li>The platform starts a selected <code>DerivationFlow</code> or <code>RegulationFlow</code> for a workspace.</li>
+        <li>The evaluator loads runtime <code>Question</code> objects from <code>definition_file</code>.</li>
+        <li>Each question is answered from trusted rules or an LLM workflow.</li>
+        <li>Answers are normalized to the question schema.</li>
+        <li>The action resolver picks the first matching routing instruction.</li>
+        <li>Effects update <code>StateObject.statuses</code> and <code>StateObject.obligations</code>.</li>
+        <li>Provenance records the response, action, effects, and response metadata.</li>
+        <li>Traversal follows <code>next_question</code> until <code>END</code> or warning accumulation.</li>
+        <li>Multi-true radio answers create branches that are evaluated and merged.</li>
+      </ol>
+    </section>
+
+    <section class="band">
+      <h2>Validation Rules</h2>
+      <ul class="rules">
+        <li>A flow must include nodes and a valid <code>start_node_id</code>.</li>
+        <li>Node types are <code>single_select</code>, <code>multi_select</code>, <code>info</code>, and <code>end</code>.</li>
+        <li>Decision nodes require alternatives.</li>
+        <li>Node ids, alternative ids per node, and edge ids per flow are unique.</li>
+        <li>Edges require known sources and valid targets or <code>END</code>.</li>
+        <li>Edge priority must be a non-negative integer.</li>
+        <li>Non-terminal authoring nodes require at least one transition edge.</li>
+        <li>Condition clauses must reference known alternatives, nodes, or status keys.</li>
+      </ul>
+    </section>
+
+    <section class="band">
+      <h2>Source Files</h2>
+      <ul class="source-list">
+        <li><code>platform/compliance_analyses/models.py</code></li>
+        <li><code>platform/compliance_analyses/flow_authoring.py</code></li>
+        <li><code>platform/compliance_analyses/serializers.py</code></li>
+        <li><code>platform/compliance_analyses/views.py</code></li>
+        <li><code>frontend/src/lib/types/flow.ts</code></li>
+        <li><code>agentic-evaluator/app/utility/question.py</code></li>
+        <li><code>agentic-evaluator/app/utility/lex_align.py</code></li>
+        <li><code>agentic-evaluator/app/utility/state_object.py</code></li>
+        <li><code>agentic-evaluator/app/utility/action_schema.py</code></li>
+        <li><code>platform/compliance_analyses/seed/*.jsonl</code></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
