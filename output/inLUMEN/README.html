@@ -131,7 +131,41 @@
 <li>connects the LLM agents to the OpenAI-compatible endpoint selected in the UI</li>
 <li>is set up to behave consistently on macOS and Windows through Docker Desktop</li>
 </ul>
-<p dir="auto">Step 6: Configure an LLM provider from the UI. Open <code class="notranslate">http://localhost:8080</code>, choose Settings, and create an LLM configuration with provider, base URL, model, and API key. The backend does not read LLM provider, endpoint, model, or API key values from <code class="notranslate">.env</code>.</p>
+<p dir="auto">Step 6: Configure an LLM provider from the UI. Open <code class="notranslate">http://localhost:8080</code>, choose Settings, and create an LLM configuration with provider, base URL, general model, Code Generation Model, and API key. Coding reuses the same provider, base URL, and API key while selecting its model from the separate Code Generation Model field.</p>
+<h3 dir="auto">Code generation service</h3>
+<div class="markdown-alert markdown-alert-important" dir="auto"><p class="markdown-alert-title" dir="auto"><svg data-component="Octicon" class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p><p dir="auto">Code generation requires both this inLUMEN application and the separate<br>
+<a href="https://github.com/aliduabubakari/inlumen-codegen-service">inlumen-codegen-service</a><br>
+to be running. Starting inLUMEN alone does not provide code generation.</p>
+</div>
+<p dir="auto">The companion repository is a separate backend-to-backend service; the browser<br>
+never calls it directly. Start it separately and point the inLUMEN backend<br>
+container at its endpoint. For a local setup, use the host-published port:</p>
+<pre lang="text" class="notranslate"><code class="notranslate"># inLUMEN/.env
+INLUMEN_CODEGEN_SERVICE_URL=http://host.docker.internal:8010
+INLUMEN_CODEGEN_SERVICE_API_KEY=&lt;same value as CODEGEN_SERVICE_API_KEY&gt;
+</code></pre>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> ../inlumen-codegen-service</span>
+cp .env.example .env
+docker compose up --build --wait -d
+
+<span class="pl-c"><span class="pl-c">#</span> ../inLUMEN</span>
+docker compose up --build -d</pre></div>
+<p dir="auto">For local caller-owned LLM configuration, set<br>
+<code class="notranslate">CODEGEN_ALLOW_REQUEST_LLM_CONFIG=true</code> in the codegen <code class="notranslate">.env</code>. The model,<br>
+provider URL, and API key selected in the inLUMEN Settings dialog are forwarded<br>
+through the backend; the provider key is moved to the <code class="notranslate">X-LLM-API-Key</code> request<br>
+header and is not included in the JSON sent to codegen. The coding request uses<br>
+the separate Code Generation Model field from that same Settings configuration.</p>
+<p dir="auto">Codegen can later be deployed independently without frontend changes. Set:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">INLUMEN_CODEGEN_SERVICE_URL=https://codegen.example.com
+INLUMEN_CODEGEN_SERVICE_API_KEY=&lt;deployed service token&gt;
+</code></pre>
+<p dir="auto">Use HTTPS for any non-local endpoint. A remote deployment can own its provider<br>
+configuration by keeping <code class="notranslate">CODEGEN_ALLOW_REQUEST_LLM_CONFIG=false</code> and setting<br>
+<code class="notranslate">CODEGEN_LLM_MODEL</code>, <code class="notranslate">CODEGEN_LLM_BASE_URL</code>, and its provider key on the<br>
+codegen service. In that mode, codegen ignores caller-supplied provider options.<br>
+The codegen service currently keeps async run state in memory, so deploy one<br>
+replica and avoid restarts during an active generation run.</p>
 <p dir="auto">For OpenRouter, use your OpenRouter API key after adding the provider key in OpenRouter settings. Short model aliases such as <code class="notranslate">gpt-oss-120b</code> are accepted by inLUMEN and normalized before the request is sent.</p>
 <p dir="auto">You can also use Ollama Cloud with base URL <code class="notranslate">https://ollama.com/v1</code> and an Ollama Cloud model such as <code class="notranslate">gpt-oss:120b</code>. For a custom on-prem service, select Custom / On premise and enter the OpenAI-compatible base URL, API key, and model name exposed by that service.</p>
 <p dir="auto">For the best macOS/Windows experience:</p>
@@ -148,6 +182,33 @@
 <p dir="auto">The frontend talks only to the inLUMEN backend gateway API on <code class="notranslate">INLUMEN_API_PORT</code>. That gateway owns graph and file orchestration through internal backend modules and keeps Neo4J and MinIO implementation details out of the browser and CLI contract. The frontend and CLI should use only <code class="notranslate">INLUMEN_API_PORT</code>.<br>
 LLM configuration metadata is also saved through the gateway by default (<code class="notranslate">VITE_ENABLE_REMOTE_CHATBOT_CONFIG_SYNC=true</code>); user-provided API keys remain browser-local and are never stored by the backend.</p>
 <p dir="auto">LLM agents use OpenAI-compatible Chat Completions endpoints. Configure OpenRouter, Ollama Cloud, or a custom on-prem endpoint in the Settings dialog. The backend rejects LLM requests that do not include a browser-supplied LLM configuration.</p>
+<h3 dir="auto">Bring your own node scripts</h3>
+<p dir="auto">Dagster deployment generation accepts files from any external source through the<br>
+normal node <strong>Upload Files</strong> control. The simple node-file rule is:</p>
+<ol dir="auto">
+<li>Attach <code class="notranslate">main.py</code>.</li>
+<li>Attach <code class="notranslate">requirements.txt</code> only when the script needs third-party packages.</li>
+<li>Attach each real input file to the first node that reads it.</li>
+</ol>
+<p dir="auto">At runtime, the node's attachments and upstream outputs are placed in the<br>
+script's working directory. Ordinary scripts can read files such as <code class="notranslate">input.csv</code><br>
+and write result files there. inLUMEN automatically passes new or changed files<br>
+to the next node and creates all Dagster packaging. No Dagster code, manifest, or<br>
+Dockerfile is required from the user.</p>
+<p dir="auto">The <strong>Generate Runtime Scripts</strong> action reuses the high-level prompt that created<br>
+the pipeline. Users can either select <strong>Generate and attach</strong>, or select<br>
+<strong>Copy prompt</strong> and paste the ready-made request into any external AI. Both paths<br>
+produce the same simple node files. The external AI is asked to return code only;<br>
+input data always comes from the user. Its response includes an input upload map<br>
+with the correct node ID for each input. Bundle generation also catches clear<br>
+cases where an input was attached to a later node instead of its first consumer.<br>
+Clearly malformed or placeholder inputs<br>
+(for example a text placeholder renamed to <code class="notranslate">.wav</code>) are rejected before a bundle<br>
+is generated.</p>
+<p dir="auto">Node scripts must be finite, non-interactive batch programs. The generated<br>
+Dagster runtime disables keyboard input and stops a node after 300 seconds by<br>
+default instead of leaving a run stuck indefinitely. Set<br>
+<code class="notranslate">INLUMEN_NODE_TIMEOUT_SECONDS</code> when starting the bundle to change that limit.</p>
 <p dir="auto">API key handling:</p>
 <ul dir="auto">
 <li>Provider API keys are entered only in the UI, kept in browser localStorage so they survive refreshes, browser restarts, and container restarts, sent to the backend only inside the specific LLM request payload, and are not saved by the backend <code class="notranslate">/api/chatbot-configs</code> endpoints.</li>
