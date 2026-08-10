@@ -31,8 +31,22 @@
 <h2 dir="auto"><strong>Screenshots</strong></h2>
 <p dir="auto">[<a target="_blank" rel="noopener noreferrer" href="./images/dashboard.png"><img src="./images/dashboard.png" alt="Dashboard" style="max-width: 100%;"></a>]</p>
 <h2 dir="auto"><strong>Commercial Information</strong></h2>
-<p dir="auto">| Organisation (s) | License Nature | License |<br>
-| SINTEF | Open Source | TBD |</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Organisation (s)</th>
+<th>License Nature</th>
+<th>License</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SINTEF</td>
+<td>Open Source</td>
+<td><a href="../LICENSE">Apache License 2.0</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
 <h2 dir="auto"><strong>Expected KPIs</strong></h2>
 <markdown-accessiblity-table><table role="table">
 <thead>
@@ -82,6 +96,23 @@
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
+<h2 dir="auto"><strong>Development and test suite</strong></h2>
+<p dir="auto">The consolidated regression suite covers backend units and gateway APIs,<br>
+deployment bundle validation, frontend graph and configuration behavior,<br>
+frontend lint/type/build checks, and both Docker Compose configurations.</p>
+<p dir="auto">Install the test dependencies from the repository root:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Python 3.11 or newer</span>
+python -m pip install -r requirements-test.txt
+npm ci --prefix frontend</pre></div>
+<p dir="auto">Run every check with one command:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python scripts/run_tests.py</pre></div>
+<p dir="auto">During development, run a smaller part of the suite by selecting a component:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python scripts/run_tests.py --component backend
+python scripts/run_tests.py --component deployment-validation
+python scripts/run_tests.py --component frontend
+python scripts/run_tests.py --component compose</pre></div>
+<p dir="auto">The same component checks run automatically for pushes to <code class="notranslate">main</code> and for pull<br>
+requests through GitHub Actions.</p>
 <h2 dir="auto"><strong>How To Install</strong></h2>
 <p dir="auto">Tool is provided as a service.</p>
 <h3 dir="auto">Detailed steps</h3>
@@ -209,6 +240,13 @@ is generated.</p>
 Dagster runtime disables keyboard input and stops a node after 300 seconds by<br>
 default instead of leaving a run stuck indefinitely. Set<br>
 <code class="notranslate">INLUMEN_NODE_TIMEOUT_SECONDS</code> when starting the bundle to change that limit.</p>
+<p dir="auto">For registry-reviewed heavyweight models, exported Dagster bundles generate a<br>
+separate model-prefetch service. It acquires the pinned revision before the code<br>
+service starts, records a SHA-256 manifest in a persistent Docker volume, and<br>
+mounts that volume read-only for node execution. The isolated Dagster code<br>
+service then runs with Hugging Face and Transformers offline modes enabled, so a<br>
+pipeline run cannot stall on a model-hub download. Set <code class="notranslate">HF_TOKEN</code> in the shell<br>
+that launches <code class="notranslate">docker compose up</code>; it is used only by model prefetch.</p>
 <p dir="auto">API key handling:</p>
 <ul dir="auto">
 <li>Provider API keys are entered only in the UI, kept in browser localStorage so they survive refreshes, browser restarts, and container restarts, sent to the backend only inside the specific LLM request payload, and are not saved by the backend <code class="notranslate">/api/chatbot-configs</code> endpoints.</li>

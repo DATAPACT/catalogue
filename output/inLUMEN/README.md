@@ -46,7 +46,8 @@ inLUMEN's core functionality is provided by LLM-powered agents that serve as hel
 ## **Commercial Information**
 
 | Organisation (s) | License Nature | License |
-| SINTEF | Open Source | TBD |
+|------------------|----------------|---------|
+| SINTEF | Open Source | [Apache License 2.0](../LICENSE) |
 
 ## **Expected KPIs**
 
@@ -64,6 +65,38 @@ inLUMEN's core functionality is provided by LLM-powered agents that serve as hel
 | ------------- | 	
 | Software GitHub Repository --> MADT4BC/LUMEN software <https://github.com/SINTEF-9012/madt-neodash> |
 | Software GitHub Repository --> inSwitch software <https://github.com/INTEND-Project/inSwitch> |
+
+## **Development and test suite**
+
+The consolidated regression suite covers backend units and gateway APIs,
+deployment bundle validation, frontend graph and configuration behavior,
+frontend lint/type/build checks, and both Docker Compose configurations.
+
+Install the test dependencies from the repository root:
+
+```bash
+# Python 3.11 or newer
+python -m pip install -r requirements-test.txt
+npm ci --prefix frontend
+```
+
+Run every check with one command:
+
+```bash
+python scripts/run_tests.py
+```
+
+During development, run a smaller part of the suite by selecting a component:
+
+```bash
+python scripts/run_tests.py --component backend
+python scripts/run_tests.py --component deployment-validation
+python scripts/run_tests.py --component frontend
+python scripts/run_tests.py --component compose
+```
+
+The same component checks run automatically for pushes to `main` and for pull
+requests through GitHub Actions.
 
 ## **How To Install**
 Tool is provided as a service.
@@ -236,6 +269,14 @@ Node scripts must be finite, non-interactive batch programs. The generated
 Dagster runtime disables keyboard input and stops a node after 300 seconds by
 default instead of leaving a run stuck indefinitely. Set
 `INLUMEN_NODE_TIMEOUT_SECONDS` when starting the bundle to change that limit.
+
+For registry-reviewed heavyweight models, exported Dagster bundles generate a
+separate model-prefetch service. It acquires the pinned revision before the code
+service starts, records a SHA-256 manifest in a persistent Docker volume, and
+mounts that volume read-only for node execution. The isolated Dagster code
+service then runs with Hugging Face and Transformers offline modes enabled, so a
+pipeline run cannot stall on a model-hub download. Set `HF_TOKEN` in the shell
+that launches `docker compose up`; it is used only by model prefetch.
 
 API key handling:
 - Provider API keys are entered only in the UI, kept in browser localStorage so they survive refreshes, browser restarts, and container restarts, sent to the backend only inside the specific LLM request payload, and are not saved by the backend `/api/chatbot-configs` endpoints.
