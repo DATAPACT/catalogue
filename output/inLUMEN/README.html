@@ -8,7 +8,7 @@
 <p dir="auto"><strong>inLUMEN</strong> is a DATAPACT tool that evolves traditional AI/ML/data pipeline design tools into AI agent-driven co-design environments. The story begins with simple visions (or intents) and context provided by the user.</p>
 <p dir="auto">In DATAPACT, the <strong>intent</strong> translates to the pipeline goal: both in terms of structure, use and compliance goals. The <strong>context</strong> is the input data, code snippets, artifacts, constraints/rules/requirements, and resources.</p>
 <p dir="auto">The user remains in control of the design, however supported by dedidated agents whose role is to make these visions come to life. inLUMEN materializes their intents by generating the pipeline steps as a directed graph, and gives recommandations on compliance-strengthening design choices.</p>
-<p dir="auto">Additionally, it generates deployment artifacts such as containers and workflow blueprints needed to simulate/run the pipeline. Provenance is given via tracking reports on decisions taken by the user and agents during the design process.</p>
+<p dir="auto">Additionally, it generates deployment artifacts such as containers and workflow blueprints for external execution targets. inLUMEN designs, validates, and exports pipelines; it does not execute them. Provenance is given via tracking reports on decisions taken by the user and agents during the design process.</p>
 <h2 dir="auto"><strong>Related Compliance aspects</strong></h2>
 <ul dir="auto">
 <li>Compliance by design</li>
@@ -20,16 +20,103 @@
 <li>Deployment Artifact Generation (Dockerfiles, YAML)</li>
 <li>Agentic AI Backend (agents assist with compliance-strenghtening design refinements)</li>
 </ul>
+<h2 dir="auto"><strong>Pipeline component model</strong></h2>
+<p dir="auto">The graph has exactly five structural node kinds. This small set is intended to<br>
+remain stable:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Kind</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">source</code></td>
+<td>Adapt an external system into logical pipeline data.</td>
+</tr>
+<tr>
+<td><code class="notranslate">task</code></td>
+<td>Process, transform, validate, or analyze data.</td>
+</tr>
+<tr>
+<td><code class="notranslate">destination</code></td>
+<td>Write or publish results outside the pipeline.</td>
+</tr>
+<tr>
+<td><code class="notranslate">flow</code></td>
+<td>Model conditions and parallel maps.</td>
+</tr>
+<tr>
+<td><code class="notranslate">subpipeline</code></td>
+<td>Reuse another pipeline as one composable component.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The initial Flow template catalog contains Condition and Parallel Map. Wait,<br>
+Retry, and Human Approval remain planned templates and do not require new graph<br>
+kinds when introduced.</p>
+<h3 dir="auto">Using Flow components</h3>
+<p dir="auto">A Flow component changes routing or scheduling; it does not transform the value.<br>
+New Flow components start as a Condition rather than as an ambiguous generic<br>
+node.</p>
+<pre lang="text" class="notranslate"><code class="notranslate">Validate records -&gt; Condition -&gt; when_true  -&gt; Train model
+                              -&gt; when_false -&gt; Quarantine report
+</code></pre>
+<p dir="auto">A Condition receives one <code class="notranslate">value</code>, evaluates its <code class="notranslate">expression</code>, and forwards the<br>
+value through exactly one named output. Expressions use <code class="notranslate">value</code> or a field path<br>
+and a literal comparison, for example <code class="notranslate">value.score &gt;= 0.8</code> or<br>
+<code class="notranslate">value.status == "valid"</code>. The <code class="notranslate">when_true</code> branch is required; <code class="notranslate">when_false</code> is<br>
+optional when false values can be discarded.</p>
+<pre lang="text" class="notranslate"><code class="notranslate">List documents -&gt; Parallel Map (items -&gt; item) -&gt; Process one document
+</code></pre>
+<p dir="auto">A Parallel Map receives an array through <code class="notranslate">items</code>. The branch connected to<br>
+<code class="notranslate">item</code> is scheduled once for each element. <code class="notranslate">max_concurrency</code> limits simultaneous<br>
+item runs, while <code class="notranslate">failure_policy</code> chooses whether one failed item stops the<br>
+remaining work or allows the other items to continue.</p>
+<p dir="auto">Definitions such as File, PostgreSQL, Data Cleaning, OCR, Speech-to-Text,<br>
+Embeddings, LLM, Report, or Kafka are templates built on these kinds; they are<br>
+not new graph types. The hierarchy is:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">Pipeline component -&gt; Template -&gt; Implementation
+</code></pre>
+<p dir="auto">A task template can be implemented by Python (the default), SQL, a container,<br>
+an existing Git repository, REST API, shell, or a future runtime without changing<br>
+the graph. Generated code is another supported implementation source. Source and<br>
+destination templates are adapters: downstream tasks consume<br>
+logical values such as <code class="notranslate">Table</code>, <code class="notranslate">Stream&lt;Message&gt;</code>, or <code class="notranslate">Collection&lt;Document&gt;</code><br>
+rather than depending on the external technology.</p>
+<p dir="auto">Every node stores explicit input and output ports. Compact canvas mode keeps port<br>
+contracts out of the way; Advanced mode shows their names and logical data types.<br>
+Static parameters belong in the node inspector and are never represented as<br>
+configuration nodes. Configuration is graph data only when another node produces<br>
+it dynamically through a port. Credential-like parameters such as API keys,<br>
+tokens, client secrets, and passwords are masked by default in the inspector;<br>
+each field can be marked secret and revealed locally with its eye control.</p>
+<p dir="auto">Legacy <code class="notranslate">input</code>, <code class="notranslate">action</code>, <code class="notranslate">sink</code>, <code class="notranslate">output</code>, <code class="notranslate">config</code>, <code class="notranslate">storage</code>, <code class="notranslate">api</code>, and <code class="notranslate">custom</code><br>
+values are normalized at the persistence boundary into the five structural kinds<br>
+so existing saved graphs remain loadable.</p>
+<p dir="auto">The canonical Pipeline IR is JSON: nodes contain their structural kind, template,<br>
+implementation metadata, parameters, explicit ports, and project-file references;<br>
+edges identify both endpoint nodes and port IDs. This JSON contract drives version<br>
+storage, project import/export, agent context, and deployment generation. Executable<br>
+bundles add an engine-neutral <code class="notranslate">inlumen.run-spec@1</code>; the Dagster project (including<br>
+Docker Compose) and optional Argo Workflow are adapters derived from that contract.<br>
+YAML is not an internal representation and the canvas deliberately accepts<br>
+JSON project imports only; generated YAML remains export-only.</p>
+<p dir="auto">The normative V2 export schemas are published in<br>
+<a href="../contracts/v2/README.md"><code class="notranslate">contracts/v2</code></a>. The architecture, format choices,<br>
+compatibility rules, and current-surface inventory are recorded in<br>
+<a href="./adr/0001-export-output-contracts.md">ADR 0001</a>.</p>
 <h2 dir="auto"><strong>Architecture</strong></h2>
 <p dir="auto">The picture below shows the component in the DATAPACT architecture.</p>
 <p dir="auto"><a target="_blank" rel="noopener noreferrer" href="./images/component-image.png"><img src="./images/component-image.png" alt="Component Diagram" style="max-width: 100%;"></a></p>
-<p dir="auto">The current local deployment uses a simple gateway architecture. Frontend and CLI clients call only the backend gateway API; Neo4j, MinIO, and the OpenAI-compatible LLM provider remain behind the backend boundary.</p>
-<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="./images/current-architecture.svg"><img src="./images/current-architecture.svg" alt="Current inLUMEN Architecture" style="max-width: 100%;"></a></p>
+<p dir="auto">The current deployment uses a gateway architecture. Frontend and CLI/API clients call only the backend gateway API. The backend owns access to Neo4j and MinIO and brokers code generation and deployment validation through one private codegen service. Configured OpenRouter, Ollama Cloud, or custom OpenAI-compatible LLM providers remain external services reached through the backend/codegen boundary.</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="./images/current-architecture.png"><img src="./images/current-architecture.png" alt="Current inLUMEN Architecture" style="max-width: 100%;"></a></p>
 <h2 dir="auto"><strong>Component Definition</strong></h2>
 <p dir="auto">inLUMEN's core functionality is provided by LLM-powered agents that serve as helpful assistants in pipeline design, translating high-level business-level intents to pure AI/data pipeline design choices. inLUMEN agents reason on user intents and context, draw pipeline steps, and give recommandations according to compliance insights provided by the user or via tool integrations. They can also support deployment artitfact generation, making pipelines deployable. The chat dialog window enables human-machine interactions to co-design pipelines. inLUMEN integrates with external DATAPACT tools through public workflow and artifact APIs.</p>
-<p dir="auto">[<a target="_blank" rel="noopener noreferrer" href="./images/conceptual_diagram_datapact_lumen.png"><img src="./images/conceptual_diagram_datapact_lumen.png" alt="inLUMEN Architecture" style="max-width: 100%;"></a>]</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="./images/conceptual_diagram_datapact_lumen.png"><img src="./images/conceptual_diagram_datapact_lumen.png" alt="inLUMEN Architecture" style="max-width: 100%;"></a></p>
 <h2 dir="auto"><strong>Screenshots</strong></h2>
-<p dir="auto">[<a target="_blank" rel="noopener noreferrer" href="./images/dashboard.png"><img src="./images/dashboard.png" alt="Dashboard" style="max-width: 100%;"></a>]</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="./images/inlumen-editor.jpg"><img src="./images/inlumen-editor.jpg" alt="inLUMEN pipeline editor" style="max-width: 100%;"></a></p>
 <h2 dir="auto"><strong>Commercial Information</strong></h2>
 <markdown-accessiblity-table><table role="table">
 <thead>
@@ -108,7 +195,7 @@ npm ci --prefix frontend</pre></div>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python scripts/run_tests.py</pre></div>
 <p dir="auto">During development, run a smaller part of the suite by selecting a component:</p>
 <div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">python scripts/run_tests.py --component backend
-python scripts/run_tests.py --component deployment-validation
+python scripts/run_tests.py --component codegen
 python scripts/run_tests.py --component frontend
 python scripts/run_tests.py --component compose</pre></div>
 <p dir="auto">The same component checks run automatically for pushes to <code class="notranslate">main</code> and for pull<br>
@@ -124,18 +211,11 @@ requests through GitHub Actions.</p>
 <p dir="auto">The custom version for DATAPACT is still under development. To try the current stable version, follow the installation steps below:</p>
 <p dir="auto">Step 1: Clone this repository on your computer.</p>
 <p dir="auto">Step 2: Navigate to the cloned project directory.</p>
-<p dir="auto">Step 3: Optional but recommended: copy <code class="notranslate">.env.example</code> to <code class="notranslate">.env</code> and adjust only the values you need.</p>
+<p dir="auto">Step 3: Copy <code class="notranslate">.env.example</code> to <code class="notranslate">.env</code>, set the public backend URL, and replace the two token placeholders. Static-token authentication is enabled by default; uncomment the Keycloak block and set <code class="notranslate">AUTH_ENABLED=true</code> when deploying with Keycloak. The same <code class="notranslate">.env</code> file is used by both the development and production Compose stacks. Neo4J, MinIO, and codegen routing remain private and use Compose-owned defaults.</p>
 <p dir="auto">The Docker setup derives frontend API URLs, Neo4J URI, and MinIO endpoint from the Compose service names, ports, and credential values, so you do not need separate <code class="notranslate">NEO4J_URI</code>, <code class="notranslate">MINIO_ENDPOINT</code>, or <code class="notranslate">VITE_*_API_URL</code> entries for normal local use. The backend sends permissive CORS headers by default.</p>
-<p dir="auto">Common values you may change include:</p>
-<ul dir="auto">
-<li><code class="notranslate">FRONTEND_PORT</code>, <code class="notranslate">INLUMEN_API_PORT</code></li>
-<li><code class="notranslate">INLUMEN_API_PUBLIC_URL</code> when the browser frontend needs to call a separate deployed backend URL</li>
-<li><code class="notranslate">NEO4J_AUTH</code>, <code class="notranslate">MINIO_ROOT_USER</code>, <code class="notranslate">MINIO_ROOT_PASSWORD</code></li>
-<li><code class="notranslate">NEO4J_MEM_LIMIT</code>, <code class="notranslate">NEO4J_HEAP_INITIAL_SIZE</code>, <code class="notranslate">NEO4J_HEAP_MAX_SIZE</code>, and <code class="notranslate">NEO4J_PAGECACHE_SIZE</code> if Docker Desktop has limited memory available</li>
-<li><code class="notranslate">API_AUTH_TOKEN</code> for the gateway API and Swagger/OpenAPI documentation when Keycloak auth is disabled</li>
-<li><code class="notranslate">AUTH_ENABLED</code> plus the Keycloak values when enabling authentication</li>
-</ul>
-<p dir="auto">For Keycloak SSO, set <code class="notranslate">AUTH_ENABLED=true</code> and configure <code class="notranslate">KEYCLOAK_JWKS_URL</code>, <code class="notranslate">KEYCLOAK_ISSUER</code>, and <code class="notranslate">KEYCLOAK_AUDIENCE</code> in the root <code class="notranslate">.env</code>. For a local Keycloak on port <code class="notranslate">8081</code>, the default frontend client values are <code class="notranslate">VITE_KEYCLOAK_URL=http://localhost:8081</code>, <code class="notranslate">VITE_KEYCLOAK_REALM=inlumen</code>, and <code class="notranslate">VITE_KEYCLOAK_CLIENT_ID=inlumen-frontend</code>. The same frontend still supports the embedded toolbox contract: when loaded in an iframe it waits for an <code class="notranslate">SSO_TOKEN</code> postMessage and infers the toolbox parent origin, so <code class="notranslate">VITE_TOOLBOX_ORIGIN</code> is not normally needed; it remains supported in <code class="notranslate">frontend/.env</code> only as a fallback for deployments that hide iframe referrers. Standalone frontend setups can also keep using <code class="notranslate">VITE_AUTH_ENABLED</code> and <code class="notranslate">VITE_INLUMEN_API_URL</code> in <code class="notranslate">frontend/.env</code>; Docker Compose derives those values from the root <code class="notranslate">.env</code> unless explicitly overridden.</p>
+<p dir="auto">The sample contains the public backend URL and API tokens, with Keycloak configuration ready as a commented optional block. Shared frontend/backend ports and development-only inspection ports are also included as commented overrides. Compose provides their defaults together with memory, Neo4J and MinIO credentials, internal service URLs, storage paths, timeouts, and development watchers.</p>
+<p dir="auto">The browser uses <code class="notranslate">INLUMEN_API_PUBLIC_URL</code>. The backend reaches codegen privately as <code class="notranslate">http://codegen:8010</code>, including when the Compose project runs on a VM behind Cloudflare; the frontend never calls codegen directly.</p>
+<p dir="auto">Set <code class="notranslate">AUTH_ENABLED=false</code> for local static-token authentication or keep it <code class="notranslate">true</code> for Keycloak. Advanced deployments can still override any Compose variable directly; for example, a separately hosted codegen service can set <code class="notranslate">INLUMEN_CODEGEN_SERVICE_URL</code>.</p>
 <p dir="auto">Step 4: Run the following command to build the docker containers:</p>
 <pre class="notranslate"><code class="notranslate">docker compose up --build
 </code></pre>
@@ -155,49 +235,47 @@ requests through GitHub Actions.</p>
 <p dir="auto">The response should include <code class="notranslate">Access-Control-Allow-Origin: *</code>.</p>
 <p dir="auto">Step 5: Wait for the stack to finish starting. The root compose file now:</p>
 <ul dir="auto">
-<li>starts Neo4J, MinIO, the backend gateway, and the frontend together</li>
+<li>starts Neo4J, MinIO, codegen, the backend gateway, and the frontend together</li>
 <li>builds the <code class="notranslate">backend</code> service from the Python source under <code class="notranslate">backend/</code></li>
 <li>mounts the frontend and backend source folders for development</li>
 <li>keeps graph and object storage logic inside the backend gateway instead of exposing adapter services</li>
 <li>connects the LLM agents to the OpenAI-compatible endpoint selected in the UI</li>
 <li>is set up to behave consistently on macOS and Windows through Docker Desktop</li>
 </ul>
-<p dir="auto">Step 6: Configure an LLM provider from the UI. Open <code class="notranslate">http://localhost:8080</code>, choose Settings, and create an LLM configuration with provider, base URL, general model, Code Generation Model, and API key. Coding reuses the same provider, base URL, and API key while selecting its model from the separate Code Generation Model field.</p>
+<p dir="auto">Step 6: Configure an LLM provider from the UI only if you use the Chat workspace. Code generation and deployment export do not use that provider, model, or API key.</p>
 <h3 dir="auto">Code generation service</h3>
-<div class="markdown-alert markdown-alert-important" dir="auto"><p class="markdown-alert-title" dir="auto"><svg data-component="Octicon" class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p><p dir="auto">Code generation requires both this inLUMEN application and the separate<br>
-<a href="https://github.com/aliduabubakari/inlumen-codegen-service">inlumen-codegen-service</a><br>
-to be running. Starting inLUMEN alone does not provide code generation.</p>
-</div>
-<p dir="auto">The companion repository is a separate backend-to-backend service; the browser<br>
-never calls it directly. Start it separately and point the inLUMEN backend<br>
-container at its endpoint. For a local setup, use the host-published port:</p>
-<pre lang="text" class="notranslate"><code class="notranslate"># inLUMEN/.env
-INLUMEN_CODEGEN_SERVICE_URL=http://host.docker.internal:8010
-INLUMEN_CODEGEN_SERVICE_API_KEY=&lt;same value as CODEGEN_SERVICE_API_KEY&gt;
-</code></pre>
-<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> ../inlumen-codegen-service</span>
-cp .env.example .env
-docker compose up --build --wait -d
-
-<span class="pl-c"><span class="pl-c">#</span> ../inLUMEN</span>
-docker compose up --build -d</pre></div>
-<p dir="auto">For local caller-owned LLM configuration, set<br>
-<code class="notranslate">CODEGEN_ALLOW_REQUEST_LLM_CONFIG=true</code> in the codegen <code class="notranslate">.env</code>. The model,<br>
-provider URL, and API key selected in the inLUMEN Settings dialog are forwarded<br>
-through the backend; the provider key is moved to the <code class="notranslate">X-LLM-API-Key</code> request<br>
-header and is not included in the JSON sent to codegen. The coding request uses<br>
-the separate Code Generation Model field from that same Settings configuration.</p>
-<p dir="auto">Codegen can later be deployed independently without frontend changes. Set:</p>
+<p dir="auto">Code generation is included in this repository under <code class="notranslate">codegen/</code> and starts as<br>
+a private service with the root Compose stack. The browser never calls it<br>
+directly: inLUMEN creates a background job through the backend, and the backend<br>
+authenticates to <code class="notranslate">http://codegen:8010</code> over the internal Compose network.</p>
+<p dir="auto">Generation jobs and inLUMEN artifact-finalization metadata are stored in SQLite<br>
+databases on persistent volumes. A run therefore continues when its progress<br>
+panel is closed, can be rediscovered after a browser reload, and remains<br>
+inspectable after an application restart. Work that was executing during a<br>
+codegen-process restart is marked as interrupted and can be resumed from its<br>
+durable request snapshot.</p>
+<p dir="auto">Generation uses the dedicated code model selected in Settings. The design/chat<br>
+model remains independent. inLUMEN sends non-secret provider/model metadata in<br>
+the request and forwards the provider credential to codegen in an ephemeral<br>
+header; the credential is excluded from durable job snapshots. Generated code<br>
+is checked against reviewed task profiles, trusted adapters, package policy,<br>
+data contracts, and sandbox validation before it is persisted. The same private<br>
+service validates and optionally repairs generated Dagster and Argo deployment<br>
+bundles, so deployment validation requires no additional container or public<br>
+port.</p>
+<p dir="auto">Codegen remains independently deployable without frontend changes. Set:</p>
 <pre lang="text" class="notranslate"><code class="notranslate">INLUMEN_CODEGEN_SERVICE_URL=https://codegen.example.com
 INLUMEN_CODEGEN_SERVICE_API_KEY=&lt;deployed service token&gt;
 </code></pre>
-<p dir="auto">Use HTTPS for any non-local endpoint. A remote deployment can own its provider<br>
-configuration by keeping <code class="notranslate">CODEGEN_ALLOW_REQUEST_LLM_CONFIG=false</code> and setting<br>
-<code class="notranslate">CODEGEN_LLM_MODEL</code>, <code class="notranslate">CODEGEN_LLM_BASE_URL</code>, and its provider key on the<br>
-codegen service. In that mode, codegen ignores caller-supplied provider options.<br>
-The codegen service currently keeps async run state in memory, so deploy one<br>
-replica and avoid restarts during an active generation run.</p>
-<p dir="auto">For OpenRouter, use your OpenRouter API key after adding the provider key in OpenRouter settings. Short model aliases such as <code class="notranslate">gpt-oss-120b</code> are accepted by inLUMEN and normalized before the request is sent.</p>
+<p dir="auto">Use HTTPS for any non-local endpoint. The service token authenticates inLUMEN<br>
+to codegen; the separately forwarded provider credential authenticates codegen<br>
+to the configured model endpoint.</p>
+<p dir="auto">The embedded SQLite job store is durable and appropriate for a single codegen<br>
+replica. A horizontally scaled deployment should replace it with a shared job<br>
+database and worker queue. Production sandbox execution should likewise use<br>
+isolated workers or cluster jobs rather than expose a host Docker socket beyond<br>
+the dedicated codegen service.</p>
+<p dir="auto">For OpenRouter, use your OpenRouter API key after adding the provider key in OpenRouter settings. The model fields provide live autocomplete, per-million input/output token pricing, and Cerebras availability. Selecting a Cerebras-hosted model pins that specific chat or code-generation request to the <code class="notranslate">cerebras</code> OpenRouter provider; a Cerebras BYOK key configured as prioritized in OpenRouter is then attempted before shared capacity. Short model aliases such as <code class="notranslate">gpt-oss-120b</code> are accepted by inLUMEN and normalized before the request is sent. OpenRouter response usage is accumulated across generation and repair calls, then shown as USD cost and token usage in the generation run dialog. Chat and code-generation requests are automatically attributed to inLUMEN using the project repository URL and <code class="notranslate">inLUMEN</code> title.</p>
 <p dir="auto">You can also use Ollama Cloud with base URL <code class="notranslate">https://ollama.com/v1</code> and an Ollama Cloud model such as <code class="notranslate">gpt-oss:120b</code>. For a custom on-prem service, select Custom / On premise and enter the OpenAI-compatible base URL, API key, and model name exposed by that service.</p>
 <p dir="auto">For the best macOS/Windows experience:</p>
 <ul dir="auto">
@@ -213,26 +291,37 @@ replica and avoid restarts during an active generation run.</p>
 <p dir="auto">The frontend talks only to the inLUMEN backend gateway API on <code class="notranslate">INLUMEN_API_PORT</code>. That gateway owns graph and file orchestration through internal backend modules and keeps Neo4J and MinIO implementation details out of the browser and CLI contract. The frontend and CLI should use only <code class="notranslate">INLUMEN_API_PORT</code>.<br>
 LLM configuration metadata is also saved through the gateway by default (<code class="notranslate">VITE_ENABLE_REMOTE_CHATBOT_CONFIG_SYNC=true</code>); user-provided API keys remain browser-local and are never stored by the backend.</p>
 <p dir="auto">LLM agents use OpenAI-compatible Chat Completions endpoints. Configure OpenRouter, Ollama Cloud, or a custom on-prem endpoint in the Settings dialog. The backend rejects LLM requests that do not include a browser-supplied LLM configuration.</p>
-<h3 dir="auto">Bring your own node scripts</h3>
-<p dir="auto">Dagster deployment generation accepts files from any external source through the<br>
-normal node <strong>Upload Files</strong> control. The simple node-file rule is:</p>
+<h3 dir="auto">Run Python pipelines and bring your own task scripts</h3>
+<p dir="auto">Source and Destination components are boundary adapters managed by inLUMEN. A<br>
+File Source, for example, publishes the selected run input into the pipeline;<br>
+a Notification Destination captures or delivers the final result. They do not<br>
+ask the user for <code class="notranslate">main.py</code> and never require an LLM during export.</p>
+<p dir="auto">Only Task components have a <strong>Runtime Package</strong> section. The simple Python rule<br>
+is:</p>
 <ol dir="auto">
 <li>Attach <code class="notranslate">main.py</code>.</li>
-<li>Attach <code class="notranslate">requirements.txt</code> only when the script needs third-party packages.</li>
-<li>Attach each real input file to the first node that reads it.</li>
+<li>Attach <code class="notranslate">requirements.txt</code> only when the script needs third-party packages<br>
+(<code class="notranslate">requirements.py</code> is not a Python dependency format).</li>
+<li>Attach small repeatable data only as <strong>Test Fixtures</strong>.</li>
+<li>Supply actual input files from the <strong>Run</strong> tab. Run inputs are ephemeral and<br>
+replace fixtures for that execution; their filenames must match the root node<br>
+contract.</li>
 </ol>
-<p dir="auto">At runtime, the node's attachments and upstream outputs are placed in the<br>
-script's working directory. Ordinary scripts can read files such as <code class="notranslate">input.csv</code><br>
-and write result files there. inLUMEN automatically passes new or changed files<br>
-to the next node and creates all Dagster packaging. No Dagster code, manifest, or<br>
-Dockerfile is required from the user.</p>
+<p dir="auto">inLUMEN runs every Task in a standard workspace. Task code reads files from<br>
+<code class="notranslate">PIPELINE_INPUT_DIR</code> and writes downstream artifacts to<br>
+<code class="notranslate">PIPELINE_OUTPUT_DIR</code>. Source and Destination implementations are<br>
+platform-owned adapters.<br>
+The runtime inventories files after each process exits and moves them to the<br>
+next workspace internally, so the same Task package works locally, in Docker,<br>
+and in future distributed runners. Users upload only <code class="notranslate">main.py</code> and, when it is<br>
+needed, <code class="notranslate">requirements.txt</code>.</p>
 <p dir="auto">The <strong>Generate Runtime Scripts</strong> action reuses the high-level prompt that created<br>
 the pipeline. Users can either select <strong>Generate and attach</strong>, or select<br>
 <strong>Copy prompt</strong> and paste the ready-made request into any external AI. Both paths<br>
 produce the same simple node files. The external AI is asked to return code only;<br>
-input data always comes from the user. Its response includes an input upload map<br>
-with the correct node ID for each input. Bundle generation also catches clear<br>
-cases where an input was attached to a later node instead of its first consumer.<br>
+input data always comes from the user. Its response includes a Run Input Map with<br>
+the exact filename and root consumer for each input. Bundle generation rejects<br>
+inputs that do not match the declared root contract.<br>
 Clearly malformed or placeholder inputs<br>
 (for example a text placeholder renamed to <code class="notranslate">.wav</code>) are rejected before a bundle<br>
 is generated.</p>
@@ -247,6 +336,14 @@ mounts that volume read-only for node execution. The isolated Dagster code<br>
 service then runs with Hugging Face and Transformers offline modes enabled, so a<br>
 pipeline run cannot stall on a model-hub download. Set <code class="notranslate">HF_TOKEN</code> in the shell<br>
 that launches <code class="notranslate">docker compose up</code>; it is used only by model prefetch.</p>
+<p dir="auto">The Run tab uses Dagster as the primary local execution adapter. A generated<br>
+bundle runs with <code class="notranslate">docker compose up --build</code> and exposes Dagster at<br>
+<code class="notranslate">http://localhost:3000</code>. Runs return <code class="notranslate">inlumen.run-result@1</code>, and materialized<br>
+output files are included under <code class="notranslate">outputs/</code> in the downloaded bundle. Argo is an<br>
+optional Kubernetes export. Its bundle builds<br>
+one content-addressed shared pipeline image from <code class="notranslate">argo/Dockerfile</code>; it does not<br>
+require an image per step unless incompatible dependency environments are split<br>
+explicitly in a future export.</p>
 <p dir="auto">API key handling:</p>
 <ul dir="auto">
 <li>Provider API keys are entered only in the UI, kept in browser localStorage so they survive refreshes, browser restarts, and container restarts, sent to the backend only inside the specific LLM request payload, and are not saved by the backend <code class="notranslate">/api/chatbot-configs</code> endpoints.</li>
@@ -299,7 +396,7 @@ curl -H "Authorization: Bearer $API_AUTH_TOKEN_OR_KEYCLOAK_JWT" \
 curl -X POST http://localhost:5000/api/graph/nodes \
   -H "Authorization: Bearer $API_AUTH_TOKEN_OR_KEYCLOAK_JWT" \
   -H "Content-Type: application/json" \
-  -d '{"properties":{"flow_id":"retrieve","label":"Retrieve","type":"input","x":100,"y":120}}'
+  -d '{"properties":{"flow_id":"retrieve","label":"Retrieve","type":"source","x":100,"y":120}}'
 
 curl -X POST http://localhost:5000/simple_chat \
   -H "Authorization: Bearer $API_AUTH_TOKEN_OR_KEYCLOAK_JWT" \
@@ -309,7 +406,7 @@ curl -X POST http://localhost:5000/simple_chat \
 <p dir="auto">Available gateway endpoint groups:</p>
 <ul dir="auto">
 <li><code class="notranslate">Pipelines</code>: create, list, fetch, and list versions for the current design pipeline</li>
-<li><code class="notranslate">Artifacts</code>: generate Dockerfiles with the configured LLM, then assemble Argo Workflow YAML deterministically from the pipeline graph and Dockerfile metadata</li>
+<li><code class="notranslate">Artifacts</code>: generate the engine-neutral Run Spec, a runnable Dagster Docker Compose bundle, and an optional shared-image Argo Workflow export</li>
 <li><code class="notranslate">Workflows</code>: list available workflow metadata, associated pipeline IDs, version metadata, and temporary MinIO signed access URLs when files are available</li>
 <li><code class="notranslate">Canvas Graph</code>: replicate UI node and edge creation, deletion, property updates, and position changes through the gateway API</li>
 <li><code class="notranslate">Pipeline State</code>: fetch the current graph, overview metadata, and saved UI pipeline versions</li>
