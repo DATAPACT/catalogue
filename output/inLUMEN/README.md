@@ -13,7 +13,7 @@ In DATAPACT, the **intent** translates to the pipeline goal: both in terms of st
 
 The user remains in control of the design, however supported by dedidated agents whose role is to make these visions come to life. inLUMEN materializes their intents by generating the pipeline steps as a directed graph, and gives recommandations on compliance-strengthening design choices.
 
-Additionally, it generates deployment artifacts such as containers and workflow blueprints for external execution targets. inLUMEN designs, validates, and exports pipelines; it does not execute them. Provenance is given via tracking reports on decisions taken by the user and agents during the design process.
+Additionally, it generates deployment artifacts such as containers and workflow blueprints for external execution targets. Saved pipelines can be tested through durable background Dagster execution directly from the Run workspace, and the exact tested snapshot remains available as a downloadable Dagster bundle. Provenance is given via tracking reports on decisions taken by the user and agents during design and execution.
 
 ## **Related Compliance aspects**
 - Compliance by design
@@ -22,6 +22,7 @@ Additionally, it generates deployment artifacts such as containers and workflow 
 ## **Main Goal/Functionalities**
 - Co-design Intelligent Pipeline Design Editor (GUI with chat dialog window)
 - Deployment Artifact Generation (Dockerfiles, YAML)
+- Durable background pipeline testing through Dagster
 - Agentic AI Backend (agents assist with compliance-strenghtening design refinements)
 
 ## **Pipeline component model**
@@ -98,15 +99,16 @@ The canonical Pipeline IR is JSON: nodes contain their structural kind, template
 implementation metadata, parameters, explicit ports, and project-file references;
 edges identify both endpoint nodes and port IDs. This JSON contract drives version
 storage, project import/export, agent context, and deployment generation. Executable
-bundles add an engine-neutral `inlumen.run-spec@1`; the Dagster project (including
+bundles add an engine-neutral `inlumen.run-spec@3`; the Dagster project (including
 Docker Compose) and optional Argo Workflow are adapters derived from that contract.
 YAML is not an internal representation and the canvas deliberately accepts
 JSON project imports only; generated YAML remains export-only.
 
-The normative V2 export schemas are published in
+The current flat runtime schemas are published in
+[`contracts/v3`](../contracts/v3/README.md); legacy schemas remain available in
 [`contracts/v2`](../contracts/v2/README.md). The architecture, format choices,
-compatibility rules, and current-surface inventory are recorded in
-[ADR 0001](./adr/0001-export-output-contracts.md).
+compatibility rules, and current-surface inventory are recorded in [ADR
+0001](./adr/0001-export-output-contracts.md).
 
 ## **Architecture**
 The picture below shows the component in the DATAPACT architecture.
@@ -114,7 +116,7 @@ The picture below shows the component in the DATAPACT architecture.
 ![Component Diagram](./images/component-image.png)
 
 
-The current deployment uses a gateway architecture. Frontend and CLI/API clients call only the backend gateway API. The backend owns access to Neo4j and MinIO and brokers code generation and deployment validation through one private codegen service. Configured OpenRouter, Ollama Cloud, or custom OpenAI-compatible LLM providers remain external services reached through the backend/codegen boundary.
+The current deployment uses a gateway architecture. Frontend and CLI/API clients call only the backend gateway API. The backend owns access to Neo4j and MinIO, brokers code generation and deployment validation through one private codegen service, and submits durable background lifecycle jobs to a private runner service. Configured OpenRouter, Ollama Cloud, or custom OpenAI-compatible LLM providers remain external services reached through the backend/codegen boundary.
 
 
 ![Current inLUMEN Architecture](./images/current-architecture.png)
@@ -154,7 +156,8 @@ inLUMEN's core functionality is provided by LLM-powered agents that serve as hel
 
 The consolidated regression suite covers backend units and gateway APIs,
 deployment bundle validation, frontend graph and configuration behavior,
-frontend lint/type/build checks, and both Docker Compose configurations.
+runner lifecycle and artifact handling, frontend lint/type/build checks, and both
+Docker Compose configurations.
 
 Install the test dependencies from the repository root:
 
@@ -175,6 +178,7 @@ During development, run a smaller part of the suite by selecting a component:
 ```bash
 python scripts/run_tests.py --component backend
 python scripts/run_tests.py --component codegen
+python scripts/run_tests.py --component runner
 python scripts/run_tests.py --component frontend
 python scripts/run_tests.py --component compose
 ```
@@ -191,19 +195,19 @@ Software Requirements:
 1. [Docker Desktop](https://www.docker.com/%20products/docker-desktop/) installed. 
 2. Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-The custom version for DATAPACT is still under development. To try the current stable version, follow the installation steps below:
+The custom version for DATAPACT is still under development. To try the current prerelease, follow the installation steps below:
 
 Step 1: Clone this repository on your computer. 
 
 Step 2: Navigate to the cloned project directory.
 
-Step 3: Copy `.env.example` to `.env`, set the public backend URL, and replace the two token placeholders. Static-token authentication is enabled by default; uncomment the Keycloak block and set `AUTH_ENABLED=true` when deploying with Keycloak. The same `.env` file is used by both the development and production Compose stacks. Neo4J, MinIO, and codegen routing remain private and use Compose-owned defaults.
+Step 3: Copy `.env.example` to `.env`, set the public backend URL, and replace the three token placeholders. Static-token authentication is enabled by default; uncomment the Keycloak block and set `AUTH_ENABLED=true` when deploying with Keycloak. The same `.env` file is used by both the development and production Compose stacks. Neo4J, MinIO, codegen, and runner routing remain private and use Compose-owned defaults.
 
 The Docker setup derives frontend API URLs, Neo4J URI, and MinIO endpoint from the Compose service names, ports, and credential values, so you do not need separate `NEO4J_URI`, `MINIO_ENDPOINT`, or `VITE_*_API_URL` entries for normal local use. The backend sends permissive CORS headers by default.
 
 The sample contains the public backend URL and API tokens, with Keycloak configuration ready as a commented optional block. Shared frontend/backend ports and development-only inspection ports are also included as commented overrides. Compose provides their defaults together with memory, Neo4J and MinIO credentials, internal service URLs, storage paths, timeouts, and development watchers.
 
-The browser uses `INLUMEN_API_PUBLIC_URL`. The backend reaches codegen privately as `http://codegen:8010`, including when the Compose project runs on a VM behind Cloudflare; the frontend never calls codegen directly.
+The browser uses `INLUMEN_API_PUBLIC_URL`. The backend reaches codegen privately as `http://codegen:8010` and the runner as `http://runner:8020`, including when the Compose project runs on a VM behind Cloudflare; the frontend never calls either private service directly.
 
 Set `AUTH_ENABLED=false` for local static-token authentication or keep it `true` for Keycloak. Advanced deployments can still override any Compose variable directly; for example, a separately hosted codegen service can set `INLUMEN_CODEGEN_SERVICE_URL`.
 
@@ -239,7 +243,7 @@ curl -i -X OPTIONS "$INLUMEN_API_PUBLIC_URL/health" \
 The response should include `Access-Control-Allow-Origin: *`.
 
 Step 5: Wait for the stack to finish starting. The root compose file now:
-- starts Neo4J, MinIO, codegen, the backend gateway, and the frontend together
+- starts Neo4J, MinIO, codegen, the background runner, the backend gateway, and the frontend together
 - builds the `backend` service from the Python source under `backend/`
 - mounts the frontend and backend source folders for development
 - keeps graph and object storage logic inside the backend gateway instead of exposing adapter services
@@ -331,10 +335,12 @@ is:
    replace fixtures for that execution; their filenames must match the root node
    contract.
 
-inLUMEN runs every Task in a standard workspace. Task code reads files from
-`PIPELINE_INPUT_DIR` and writes downstream artifacts to
-`PIPELINE_OUTPUT_DIR`. Source and Destination implementations are
-platform-owned adapters.
+inLUMEN runs every Task in a standard, flat workspace. Upstream files are
+staged directly in `PIPELINE_INPUT_DIR`, and Task code writes downstream
+artifacts directly to `PIPELINE_OUTPUT_DIR`. Port names are orchestration
+metadata and never create implicit subdirectories. Artifact-owned relative
+paths are preserved, and path collisions fail before execution. Source and
+Destination implementations are platform-owned adapters.
 The runtime inventories files after each process exits and moves them to the
 next workspace internally, so the same Task package works locally, in Docker,
 and in future distributed runners. Users upload only `main.py` and, when it is
@@ -364,14 +370,44 @@ service then runs with Hugging Face and Transformers offline modes enabled, so a
 pipeline run cannot stall on a model-hub download. Set `HF_TOKEN` in the shell
 that launches `docker compose up`; it is used only by model prefetch.
 
-The Run tab uses Dagster as the primary local execution adapter. A generated
-bundle runs with `docker compose up --build` and exposes Dagster at
+The Run tab uses the durable background execution control plane described in
+[ADR 0002](adr/0002-native-background-execution.md). Each run freezes the saved
+graph, reviewed uploaded or AI-generated node packages, Source inputs, connector
+runtimes, and Run Spec, then materializes that exact snapshot through Dagster in
+a constrained one-off container. The tested snapshot and produced output files
+remain downloadable from the run. A generated Dagster bundle runs with
+`docker compose up --build` and exposes Dagster at
 `http://localhost:3000`. Runs return `inlumen.run-result@1`, and materialized
 output files are included under `outputs/` in the downloaded bundle. Argo is an
 optional Kubernetes export. Its bundle builds
 one content-addressed shared pipeline image from `argo/Dockerfile`; it does not
 require an image per step unless incompatible dependency environments are split
 explicitly in a future export.
+
+Native runs use platform-managed resource profiles instead of user-facing CPU
+or memory settings. Bundle metadata and implementation dependencies select a
+`lightweight`, `standard`, or `ml_cpu` profile. The effective allocation is
+bounded by host capacity, reserves room for inLUMEN and the operating system,
+and is admitted through a FIFO queue. The Run tab displays the selected profile,
+CPU, memory, and queue position while waiting, so a capacity wait is distinct
+from a stalled pipeline.
+
+The local runner accepts four outstanding runs. Further submissions receive a
+structured `429 Too Many Requests` response until a run reaches a terminal
+state; retrying the same idempotency key still returns the original run. This
+bounds durable queue growth independently from the CPU/memory scheduler.
+
+Terminal outcomes are persisted in Neo4j as concise, idempotent
+`PIPELINE_RUN_SUMMARY` records linked to the captured pipeline and version. The
+current pipeline also exposes its latest run status, duration, output count, and
+snapshot digest. Full logs, events, secrets, bundles, and outputs remain in the
+runner lifecycle and artifact stores.
+
+The runner's embedded SQLite lifecycle store and separate filesystem artifact
+store are durable for a single runner replica; bundle and output bytes are not
+embedded in lifecycle rows. Production configures the Dagster adapter through the private codegen
+execution service. A horizontally scaled runner must use a shared job store and
+worker queue; user execution must never be placed in the gateway process.
 
 API key handling:
 - Provider API keys are entered only in the UI, kept in browser localStorage so they survive refreshes, browser restarts, and container restarts, sent to the backend only inside the specific LLM request payload, and are not saved by the backend `/api/chatbot-configs` endpoints.
@@ -454,6 +490,7 @@ Available gateway endpoint groups:
 - `Workflows`: list available workflow metadata, associated pipeline IDs, version metadata, and temporary MinIO signed access URLs when files are available
 - `Canvas Graph`: replicate UI node and edge creation, deletion, property updates, and position changes through the gateway API
 - `Pipeline State`: fetch the current graph, overview metadata, and saved UI pipeline versions
+- `Pipeline Runs`: submit, list, inspect, cancel, and read incremental events for durable background runs
 - `Files`: upload, remove, read, and update node-attached files without exposing MinIO credentials
 - `Agentic`: call the same chat and artifact-generation operations available in the UI
 - `Settings`: save and manage LLM configurations; provider API keys are browser-local and are supplied per request
