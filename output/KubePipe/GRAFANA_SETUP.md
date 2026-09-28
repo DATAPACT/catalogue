@@ -128,7 +128,7 @@ metrics = monitor.parse_metrics()
 
 ```bash
 # Setup monitoring
-curl -X POST http://127.0.0.1:8000/api/v1/monitor/setup \
+curl -X POST http://127.0.0.1:8001/api/v1/monitor/setup \
   -H "Content-Type: application/json" \
   -d '{
     "grafana_url": "http://localhost:3001",
@@ -290,7 +290,7 @@ curl -H "Authorization: Bearer $KUBEPIPE_GRAFANA_TOKEN" \
 pkill -f uvicorn
 source ~/.kubepipe_env
 cd ~/Documents/Kubepipe
-uv run uvicorn kubepipe.api.main:app --reload --host 127.0.0.1 --port 8000
+uv run uvicorn kubepipe.api.main:app --reload --host 127.0.0.1 --port 8001
 ```
 
 ## Advanced Configuration

@@ -4,6 +4,11 @@
 
 KubePipe integrates the [W3C ODRL (Open Digital Rights Language) Information Model 2.1](https://www.w3.org/TR/odrl-model/) to enforce data usage policies on ML pipelines. The integration ensures that pipeline execution is governed by formal, machine-readable policies that encode consent constraints, data retention limits, and usage prohibitions.
 
+See also: [CONSENT_MANAGER.md](CONSENT_MANAGER.md) for the consent lifecycle that
+feeds this engine, and
+[CONSENT_AND_POLICY_WALKTHROUGH.md](CONSENT_AND_POLICY_WALKTHROUGH.md) for a full,
+live-verified end-to-end example plus known gaps in the current implementation.
+
 ## Architecture
 
 ```
@@ -138,9 +143,15 @@ The pipeline proceeds normally. The gate result is stored as the `policy_evaluat
 
 | Endpoint | Gate Behavior |
 |----------|---------------|
-| `POST /api/v1/execute` | Blocks KFP run if `deny` |
-| `POST /api/v1/pipelines/{id}/create-run` | Blocks KFP run if `deny` |
-| `POST /api/v1/argo/deploy` | Blocks Argo deploy if `deny` |
+| `POST /api/v1/execute` | Blocks KFP run if `deny` — **only** when `pipeline_id` is a real KFP UUID and `execution.mode == "kfp"`; the local/mock execution path does not evaluate the gate at all |
+| `POST /api/v1/pipelines/{id}/create-run` | Blocks KFP run if `deny` — **but** the `kfp.Client(...)` connection is established before the gate check, inside the same exception handler; if the KFP host is unreachable, the gate is never reached and a generic connection error is returned instead |
+| `POST /api/v1/argo/deploy` | Blocks Argo deploy if `deny` — gate runs before any Kubernetes client is constructed, so this is the one endpoint where the gate reliably fires independent of cluster reachability |
+
+> **These caveats were confirmed by live testing, not just code review** — see
+> [CONSENT_AND_POLICY_WALKTHROUGH.md](CONSENT_AND_POLICY_WALKTHROUGH.md#known-issues-verified-live)
+> for the reproduction steps and actual request/response evidence, plus two further
+> gaps in the consent→policy auto-bridge (an unsatisfiable default duty, and
+> revocation re-opening execution instead of blocking it).
 
 #### Post-Execution Evaluation
 

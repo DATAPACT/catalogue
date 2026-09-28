@@ -163,7 +163,7 @@ Kubepipe/
 2. **Start the backend**:
    ```bash
    # Terminal 1
-   uv run uvicorn kubepipe.api.main:app --reload --host 127.0.0.1 --port 8000
+   uv run uvicorn kubepipe.api.main:app --reload --host 127.0.0.1 --port 8001
    ```
 
 3. **Start the UI**:
@@ -175,8 +175,8 @@ Kubepipe/
 
 4. **Access the UI**:
    - Open browser to `http://localhost:3000`
-   - API available at `http://127.0.0.1:8000`
-   - API docs at `http://127.0.0.1:8000/docs`
+   - API available at `http://127.0.0.1:8001`
+   - API docs at `http://127.0.0.1:8001/docs`
 
 ### Or Use the All-in-One Script
 
@@ -281,7 +281,7 @@ Select option 1 for full stack (API + UI).
    ```
 2. Go to Settings, set:
    - Execution Mode: KFP
-   - KFP Host: http://127.0.0.1:8888
+   - KFP Host: http://127.0.0.1:8080
    - KFP UI: http://127.0.0.1:8080
 3. Execute real pipelines
 4. View in embedded Kubeflow UI

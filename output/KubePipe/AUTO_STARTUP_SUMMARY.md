@@ -113,7 +113,7 @@ Based on your last health check:
 
 | Service | Status | Action Needed |
 |---------|--------|---------------|
-| FastAPI Backend | 🟢 Healthy | None - running on port 8000 |
+| FastAPI Backend | 🟢 Healthy | None - running on port 8001 |
 | Kubeflow Pipelines | ⚪ Not Configured | Click "Start Services" in UI |
 | Kubernetes Cluster | 🔴 Error | Click "Start Services" in UI |
 | Argo Workflows | 🔴 Error | Click "Start Services" in UI |
@@ -194,10 +194,10 @@ Services:
 Once everything is running:
 
 - **KubePipe UI**: http://localhost:3000
-- **KubePipe API**: http://127.0.0.1:8000
+- **KubePipe API**: http://127.0.0.1:8001
 - **Kubeflow Pipelines**: http://localhost:8080
 - **Argo Workflows**: https://localhost:2746
-- **API Docs**: http://127.0.0.1:8000/docs
+- **API Docs**: http://127.0.0.1:8001/docs
 
 ## Useful Commands
 
@@ -235,7 +235,7 @@ tail -f /tmp/argo-port-forward.log
 **Check**:
 ```bash
 # Backend running?
-curl http://127.0.0.1:8000/
+curl http://127.0.0.1:8001/
 
 # Minikube running?
 minikube status

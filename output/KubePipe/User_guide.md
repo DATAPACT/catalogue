@@ -16,14 +16,15 @@ From the source directory of KubePipe, start the backend API and the Web UI by r
 bash scripts/start_all.sh
 ```
 This typically starts:
-- **Backend API**: `http://127.0.0.1:8001` (or `8000`)
+- **Backend API**: `http://127.0.0.1:8001` 
 - **Web UI**: `http://localhost:3000`
 
 ### Execution Modes
 KubePipe's behavior is governed by the `kubepipe.yaml` configuration file at the root of the project. Pay attention to the `execution.mode` setting:
 - **`mock` mode**: Simulates API responses without talking to a real Kubernetes backend. Perfect for testing, local UI exploration, or development.
 - **`kfp` mode**: Executes pipelines on a real Kubeflow Pipelines instance. 
-  - *Note: To use this mode, you must have KFP running on your cluster and port-forwarded locally (e.g., `kubectl -n kubeflow port-forward svc/ml-pipeline 8888:8888`).*
+  - The default client host is `http://127.0.0.1:8080`. `start_all.sh` forwards `ml-pipeline-ui` there.
+  - To use the API service directly, run `kubectl -n kubeflow port-forward svc/ml-pipeline 8888:8888` and set `kfp_host` to `http://127.0.0.1:8888`.
 
 ---
 

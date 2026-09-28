@@ -32,7 +32,7 @@
                                      ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                    KubePipe FastAPI Backend                                  │
-│                    Running on localhost:8000                                 │
+│                    Running on localhost:8001                                 │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                               │
 │  API Endpoints:                                                               │
@@ -62,7 +62,7 @@
 │  • Compile pipelines    │      │  • List workflows       │
 │  • List experiments     │      │  • Delete workflows     │
 │                         │      │                         │
-│  Host: 127.0.0.1:8888   │      │  Via: kubectl/K8s API   │
+│  Host: 127.0.0.1:8080   │      │  Via: kubectl/K8s API   │
 │  Namespace: kubeflow    │      │  Namespace: argo        │
 │                         │      │                         │
 └────────────┬────────────┘      └────────────┬────────────┘
@@ -265,7 +265,7 @@ Development:
 │       ↓                                                                       │
 │  1. Start server on port 3000                                                │
 │  2. Enable Hot Module Replacement (HMR)                                      │
-│  3. Proxy /api requests → localhost:8000                                     │
+│  3. Proxy /api requests → localhost:8001                                     │
 │  4. Compile React/JSX on-the-fly                                             │
 │  5. Process Tailwind CSS                                                     │
 │  6. Serve index.html + assets                                                │

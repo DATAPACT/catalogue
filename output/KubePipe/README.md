@@ -113,7 +113,7 @@ uv run python demo_converter.py
 # kubepipe.yaml
 execution:
   mode: "mock"  # mock | kfp
-  kfp_host: "http://127.0.0.1:8888"
+  kfp_host: "http://127.0.0.1:8080"
 ```
 
 ## **Other Information**

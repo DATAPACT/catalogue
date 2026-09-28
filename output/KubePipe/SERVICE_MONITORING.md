@@ -11,7 +11,7 @@ KubePipe UI includes comprehensive real-time service monitoring that automatical
 
 ### Monitored Services
 
-1. **FastAPI Backend** (`http://127.0.0.1:8000`)
+1. **FastAPI Backend** (`http://127.0.0.1:8001`)
    - API server availability
    - Endpoint accessibility
 
@@ -84,7 +84,7 @@ Returns comprehensive health status for all services.
       "name": "FastAPI Backend",
       "status": "healthy",
       "message": "API server is running",
-      "endpoint": "http://127.0.0.1:8000"
+      "endpoint": "http://127.0.0.1:8001"
     },
     "kubeflow": {
       "name": "Kubeflow Pipelines",
@@ -129,7 +129,7 @@ Returns comprehensive health status for all services.
 **Solution**:
 ```bash
 cd /home/shekar/Documents/Kubepipe
-uv run uvicorn kubepipe.api.main:app --reload --host 127.0.0.1 --port 8000
+uv run uvicorn kubepipe.api.main:app --reload --host 127.0.0.1 --port 8001
 ```
 
 ### Kubeflow Not Configured

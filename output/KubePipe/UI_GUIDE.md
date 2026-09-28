@@ -47,10 +47,10 @@ In a separate terminal:
 
 ```bash
 # From project root
-uv run uvicorn kubepipe.api.main:app --reload --host 127.0.0.1 --port 8000
+uv run uvicorn kubepipe.api.main:app --reload --host 127.0.0.1 --port 8001
 ```
 
-The API will be available at: **http://127.0.0.1:8000**
+The API will be available at: **http://127.0.0.1:8001**
 
 ## 📡 API Setup
 
@@ -62,7 +62,7 @@ Perfect for local development without Kubernetes:
 
 ```bash
 # Start API in mock mode (default)
-uv run uvicorn kubepipe.api.main:app --reload --host 127.0.0.1 --port 8000
+uv run uvicorn kubepipe.api.main:app --reload --host 127.0.0.1 --port 8001
 ```
 
 ### Production Mode (with Kubeflow)
@@ -70,15 +70,12 @@ uv run uvicorn kubepipe.api.main:app --reload --host 127.0.0.1 --port 8000
 For real pipeline execution with Kubeflow Pipelines:
 
 ```bash
-# 1. Port-forward Kubeflow services
-kubectl -n kubeflow port-forward svc/ml-pipeline 8888:8888
-
-# 2. Set environment variables
+# Default client host. start_all.sh forwards ml-pipeline-ui to this port.
 export KUBEPIPE_EXECUTION_MODE=kfp
-export KUBEPIPE_KFP_HOST=http://127.0.0.1:8888
+export KUBEPIPE_KFP_HOST=http://127.0.0.1:8080
 
-# 3. Start API
-uv run uvicorn kubepipe.api.main:app --reload --host 127.0.0.1 --port 8000
+# Start API
+uv run uvicorn kubepipe.api.main:app --reload --host 127.0.0.1 --port 8001
 ```
 
 ## 🔧 Configuration
@@ -88,8 +85,8 @@ uv run uvicorn kubepipe.api.main:app --reload --host 127.0.0.1 --port 8000
 Create a `.env` file in the `ui/` directory:
 
 ```env
-# API endpoint (default: /api/v1 proxied to localhost:8000)
-VITE_API_URL=http://127.0.0.1:8000/api/v1
+# API endpoint (default: /api/v1 proxied to localhost:8001)
+VITE_API_URL=http://127.0.0.1:8001/api/v1
 ```
 
 ### Runtime Configuration
@@ -270,7 +267,7 @@ kubectl -n kubeflow port-forward svc/ml-pipeline-ui 8080:80
 **Error**: `Network Error` or `Connection Refused`
 
 **Solutions**:
-1. Ensure API is running: `curl http://127.0.0.1:8000/`
+1. Ensure API is running: `curl http://127.0.0.1:8001/`
 2. Check proxy in `vite.config.js`
 3. Verify CORS settings in API
 
@@ -376,7 +373,7 @@ server {
     }
     
     location /api {
-        proxy_pass http://localhost:8000;
+        proxy_pass http://localhost:8001;
     }
 }
 ```
