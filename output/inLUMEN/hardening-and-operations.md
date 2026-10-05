@@ -91,6 +91,15 @@ removed while the relevant workers are stopped. They are not shared across
 workspaces. Cached model availability and download latency should be measured
 in the staging workload.
 
+Isolated Dagster workers keep their writable home, library caches, Hugging Face
+downloads, and temporary files under `/runtime`, backed by that job's disk
+workspace. These files are removed with the validation workspace and are not
+result artifacts or a shared model cache. The separate `/tmp` tmpfs remains
+limited to 256 MB; model downloads must not use it. Monitor free disk space on
+the host backing `CODEGEN_DEPLOYMENT_VALIDATION_WORKDIR`. An ENOSPC error can
+otherwise be wrapped by model libraries as "Can't load the model"; the run UI
+and runner preserve the storage failure when it appears in the captured trace.
+
 ## Backups and isolated restore
 
 Run from the repository root with access to the target Docker daemon. This is
@@ -144,8 +153,10 @@ npm audit --audit-level=moderate
 ```
 
 Use Python 3.11 with backend `requirements.lock`, frozen `uv.lock` environments
-for codegen/runner, and Node 22.12+ for frontend checks. The Python runner uses
-its invoking interpreter for backend tests. To update shared code, edit
+for codegen/runner, and Node 22.12+ for frontend checks. Backend tests use pytest;
+the runner prefers the backend's managed virtualenv when present, otherwise its
+invoking interpreter. Install test dependencies into the selected environment.
+To update shared code, edit
 `shared/leases.py`, `shared/request_diagnostics.py`, or the backend core node
 manifest, then run `python scripts/sync_shared.py`. CI checks generated copies.
 
