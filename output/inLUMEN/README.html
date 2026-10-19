@@ -109,6 +109,17 @@ JSON project imports only; generated YAML remains export-only.</p>
 <a href="../contracts/v2/README.md"><code class="notranslate">contracts/v2</code></a>. The architecture, format choices,<br>
 compatibility rules, and current-surface inventory are recorded in <a href="./adr/0001-export-output-contracts.md">ADR<br>
 0001</a>.</p>
+<h3 dir="auto">Plugins (third-party tools)</h3>
+<p dir="auto">A Source, Task or Destination can be backed by a <strong>plugin</strong>: a JSON definition<br>
+of a third-party tool that is already deployed behind a REST API (for example the<br>
+JSI Wikifier). The inLUMEN team writes the definition from what the tool owner<br>
+tells us about the API and adds it to <code class="notranslate">backend/plugins/manifests</code>; administrators<br>
+can also add one in the UI. Users drag plugins from the<br>
+<strong>Plugins</strong> palette group and configure parameters and encrypted secrets in the<br>
+inspector. At run time a platform-owned adapter calls the tool's endpoint. The<br>
+Pipeline Designer can use installed plugins when they match a request. See<br>
+<a href="./plugins.md">plugins.md</a> for the manifest format, catalog API contract and a<br>
+local demo.</p>
 <h2 dir="auto"><strong>Architecture</strong></h2>
 <p dir="auto">The picture below shows the component in the DATAPACT architecture.</p>
 <p dir="auto"><a target="_blank" rel="noopener noreferrer" href="./images/component-image.png"><img src="./images/component-image.png" alt="Component Diagram" style="max-width: 100%;"></a></p>
