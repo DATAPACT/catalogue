@@ -242,6 +242,35 @@ Infrastructure images continue to use their configured registry images.
 For deployment from prebuilt registry images, configure the `INLUMEN_*_IMAGE`
 overrides and set `INLUMEN_APP_PULL_POLICY=always`.
 
+The `Container images` workflow (`.github/workflows/container-images.yml`)
+publishes these images to GHCR after the Test suite passes for a push to
+`main`. Each image is tagged with the full commit SHA and with `main`:
+
+| Compose setting | Image |
+|---|---|
+| `INLUMEN_BACKEND_IMAGE` (also used by `migrate`) | `ghcr.io/datapact/inlumen-backend` |
+| `INLUMEN_CODEGEN_IMAGE` | `ghcr.io/datapact/inlumen-codegen-service` |
+| `INLUMEN_RUNNER_IMAGE` | `ghcr.io/datapact/inlumen-runner-service` |
+| `INLUMEN_FRONTEND_IMAGE` | `ghcr.io/datapact/inlumen-frontend` |
+
+Deploy a specific commit tag rather than `main`, so that a restart cannot
+silently change versions and a rollback is a change of tag. On pull requests
+that change Dockerfiles or dependency locks, the workflow only checks that the
+images build.
+
+The frontend bundle contains its public URL and Keycloak settings, fixed at
+build time. The workflow reads them from the repository variables
+`INLUMEN_PUBLIC_URL`, `VITE_KEYCLOAK_URL`, `VITE_KEYCLOAK_REALM`,
+`VITE_KEYCLOAK_CLIENT_ID` and `VITE_REVIEW_AI_CHANGES_DEFAULT`, and refuses to
+publish without the first two. The published frontend image therefore serves
+one deployment; another deployment with different values must build its own
+frontend image. These values are not secrets, since every browser receives
+them.
+
+New GHCR packages may start as private. A host can pull private images only
+after `docker login ghcr.io` with a token that has `read:packages`; making the
+packages public removes that step.
+
 Application containers have configurable memory/PID limits and bounded logs
 (three 20 MB files per service). The frontend health check verifies Nginx's
 `/healthz` endpoint; backend readiness remains a separate check. These limits
@@ -262,6 +291,41 @@ its execution admission controller is process-local. These limits protect the
 execution budget; measure chat/provider capacity separately. For an 8-vCPU/30-GiB
 host these defaults leave capacity for application services; adjust the budgets
 for other hosts and workloads. See [the VM load-test guide](vm-load-test.md).
+
+### Automated deploys
+
+The `Deploy` workflow (`.github/workflows/deploy.yml`) starts after
+`Container images` publishes a commit from `main`. It waits for approval in
+the `production` GitHub environment, then runs `scripts/deploy_vm.sh` on a
+self-hosted runner on the VM (label `inlumen-vm`). The script:
+
+1. Pulls the commit's images while the current version keeps running.
+2. Backs up the project's volumes with `scripts/backup_volumes.py`, together
+   with a copy of `.env.production`. inLUMEN is stopped during the backup.
+   The newest three backups are kept in `~/backups/inlumen`.
+3. Checks out the commit and starts it. Compose runs `migrate` first.
+4. Waits until backend, codegen, runner and frontend are healthy, run the
+   expected images, and the public `/healthz` answers.
+5. If any of this fails, checks out the previous commit with its previous
+   images and starts it again.
+
+The rollback restores code and images, not data. If a migration ran before
+the failure, restore the database from that deploy's backup with
+`scripts/backup_volumes.py restore`.
+
+The chosen images are written to `.env.deploy` beside `.env.production`;
+Compose must read both, in that order, for manual commands to use the same
+images. Each deploy is recorded in `state/deployments/`.
+
+To redeploy or roll back to an earlier commit, run the `Deploy` workflow
+manually with that commit's full SHA; its images must already be published.
+The `skip_backup` input shortens downtime but leaves no restore point.
+
+The workflow needs the repository variables `INLUMEN_VM_CHECKOUT` (the VM
+checkout path) and `INLUMEN_PUBLIC_URL`. Because the repository is public,
+only workflows that cannot be started from forks may use the `inlumen-vm`
+runner, and pull requests from outside contributors must require approval
+before their workflows run.
 
 ### Routing more applications through the shared connector
 
